@@ -47,9 +47,9 @@ CheckOptions:
     value: 'true'
 # These seem to be the most common identifier styles
   - key: 'readability-identifier-naming.AbstractClassCase'
-    value: 'lower_case'
+    value: 'CamelCase'
   - key: 'readability-identifier-naming.ClassCase'
-    value: 'lower_case'
+    value: 'CamelCase'
   - key: 'readability-identifier-naming.ClassConstantCase'
     value: 'lower_case'
   - key: 'readability-identifier-naming.ClassMemberCase'
