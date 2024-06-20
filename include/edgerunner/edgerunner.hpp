@@ -1,11 +1,12 @@
 #pragma once
 
+#include <filesystem>
 #include <string>
+#include <vector>
 
 #include "edgerunner/edgerunner_export.hpp"
 
-namespace edge
-{
+namespace edge {
 
 /**
  * A note about the MSVC warning C4251:
@@ -54,22 +55,54 @@ namespace edge
  *
  * Please see the note above for considerations when creating shared libraries.
  */
-class EDGERUNNER_EXPORT Model
-{
+template<typename Tensor>
+class EDGERUNNER_EXPORT Model {
   public:
     /**
      * @brief Initializes the name field to the name of the project
      */
-    Model();
+    Model() = default;
+
+    Model(const Model&) = default;
+    Model(Model&&) = delete;
+    auto operator=(const Model&) -> Model& = default;
+    auto operator=(Model&&) -> Model& = delete;
+
+    virtual ~Model() = default;
+
+    virtual void loadModel(const std::filesystem::path& modelPath) = 0;
+
+    auto getNumInputs() const -> size_t { return m_inputs.size(); }
+
+    auto getNumOutputs() const -> size_t { return m_outputs.size(); }
+
+    auto getInput(size_t index) const -> Tensor&;
+
+    auto getOutput(size_t index) const -> Tensor&;
+
+    virtual void execute() = 0;
 
     /**
      * @brief Returns a non-owning pointer to the string stored in this class
      */
-    auto name() const -> char const*;
+    auto name() const -> char const* { return m_name.c_str(); }
+
+  protected:
+    auto accessInputs() -> std::vector<Tensor>& { return m_inputs; }
+
+    auto accessOutputs() -> std::vector<Tensor>& { return m_outputs; }
+
+    void setName(const std::string& name) { m_name = name; }
 
   private:
     EDGERUNNER_SUPPRESS_C4251
     std::string m_name;
+
+    EDGERUNNER_SUPPRESS_C4251
+    std::vector<Tensor> m_inputs;
+
+    EDGERUNNER_SUPPRESS_C4251
+    std::vector<Tensor> m_outputs;
 };
 
 }  // namespace edge
