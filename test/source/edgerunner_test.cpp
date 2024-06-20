@@ -1,11 +1,11 @@
 #include <string>
 
-#include "edgerunner/edgerunner.hpp"
-
 #include <catch2/catch_test_macros.hpp>
 
-TEST_CASE("Name is edgerunner", "[library]")
-{
-    auto const model = edge::Model {};
-    REQUIRE(std::string("edgerunner") == model.name());
+#include "edgerunner/dummy/dummy.hpp"
+
+TEST_CASE("Name is edgerunner", "[library]") {
+    auto model = edge::Dummy {};
+    model.loadModel("model.bin");
+    REQUIRE(std::string("model") == model.name());
 }
