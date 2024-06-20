@@ -6,6 +6,6 @@
 
 TEST_CASE("Name is edgerunner", "[library]")
 {
-  auto const exported = exported_class {};
-  REQUIRE(std::string("edgerunner") == exported.name());
+    auto const model = edge::Model {};
+    REQUIRE(std::string("edgerunner") == model.name());
 }

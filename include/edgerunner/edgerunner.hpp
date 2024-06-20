@@ -4,6 +4,9 @@
 
 #include "edgerunner/edgerunner_export.hpp"
 
+namespace edge
+{
+
 /**
  * A note about the MSVC warning C4251:
  * This warning should be suppressed for private data members of the project's
@@ -51,20 +54,22 @@
  *
  * Please see the note above for considerations when creating shared libraries.
  */
-class EDGERUNNER_EXPORT exported_class
+class EDGERUNNER_EXPORT Model
 {
-public:
-  /**
-   * @brief Initializes the name field to the name of the project
-   */
-  exported_class();
+  public:
+    /**
+     * @brief Initializes the name field to the name of the project
+     */
+    Model();
 
-  /**
-   * @brief Returns a non-owning pointer to the string stored in this class
-   */
-  auto name() const -> char const*;
+    /**
+     * @brief Returns a non-owning pointer to the string stored in this class
+     */
+    auto name() const -> char const*;
 
-private:
-  EDGERUNNER_SUPPRESS_C4251
-  std::string m_name;
+  private:
+    EDGERUNNER_SUPPRESS_C4251
+    std::string m_name;
 };
+
+}  // namespace edge
