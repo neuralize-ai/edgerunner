@@ -60,6 +60,9 @@ target_compile_features(edgerunner_edgerunner PUBLIC cxx_std_17)
 find_package(fmt REQUIRED)
 target_link_libraries(edgerunner_edgerunner PRIVATE fmt::fmt)
 
+find_package(span-lite REQUIRED)
+target_link_libraries(edgerunner_edgerunner PUBLIC nonstd::span-lite)
+
 # ---- Install rules ----
 
 if(NOT CMAKE_SKIP_INSTALL_RULES)
