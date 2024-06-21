@@ -1,10 +1,14 @@
+#include <cstddef>
 #include <functional>
 #include <numeric>
+#include <string>
 #include <vector>
 
-#include "edgerunner/tflite/tensor.hpp"
+#include "edgerunner/tensor.hpp"
 
-#include <edgerunner/edgerunner_export.hpp>
+#include <tensorflow/lite/core/c/c_api_types.h>
+
+#include "edgerunner/tflite/tensor.hpp"
 
 namespace edge::tflite {
 

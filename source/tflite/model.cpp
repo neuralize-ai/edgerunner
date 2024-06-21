@@ -1,12 +1,12 @@
+#include <cstddef>
+#include <filesystem>
+#include <memory>
+
 #include "edgerunner/tflite/model.hpp"
 
-#include <fmt/core.h>
-#include <fmt/ranges.h>
-#include <tensorflow/lite/core/c/c_api_types.h>
-#include <tensorflow/lite/core/c/common.h>
-#include <tensorflow/lite/interpreter.h>
+#include <tensorflow/lite/interpreter_builder.h>
 #include <tensorflow/lite/kernels/register.h>
-#include <tensorflow/lite/model.h>
+#include <tensorflow/lite/model_builder.h>
 
 namespace edge::tflite {
 
