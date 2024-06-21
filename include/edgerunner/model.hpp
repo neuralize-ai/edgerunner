@@ -52,6 +52,11 @@ namespace edge {
  * they also solve some other problems that make them worth the time invested.
  */
 
+enum EDGERUNNER_EXPORT class DELEGATE {
+    CPU,
+    GPU,
+    NPU,
+};
 
 enum EDGERUNNER_EXPORT class STATUS {
     SUCCESS,
@@ -96,7 +101,6 @@ class EDGERUNNER_EXPORT Model {
         return {};
     }
 
-    virtual void execute() = 0;
 
     virtual auto execute() -> STATUS = 0;
 
