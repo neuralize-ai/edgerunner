@@ -1,7 +1,6 @@
 #include <vector>
 
 #include <edgerunner/edgerunner_export.hpp>
-#include <tensorflow/lite/core/c/c_api_types.h>
 #include <tensorflow/lite/core/c/common.h>
 
 #include "edgerunner/tensor.hpp"

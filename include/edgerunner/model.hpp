@@ -52,6 +52,12 @@ namespace edge {
  * they also solve some other problems that make them worth the time invested.
  */
 
+
+enum EDGERUNNER_EXPORT class STATUS {
+    SUCCESS,
+    FAIL
+};
+
 /**
  * @brief Reports the name of the library
  *
@@ -91,6 +97,8 @@ class EDGERUNNER_EXPORT Model {
     }
 
     virtual void execute() = 0;
+
+    virtual auto execute() -> STATUS = 0;
 
     /**
      * @brief Returns a non-owning pointer to the string stored in this class

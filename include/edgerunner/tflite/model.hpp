@@ -1,5 +1,3 @@
-#include <fmt/core.h>
-#include <fmt/ranges.h>
 #include <tensorflow/lite/core/c/c_api_types.h>
 #include <tensorflow/lite/core/c/common.h>
 #include <tensorflow/lite/interpreter.h>
@@ -11,17 +9,23 @@
 
 namespace edge::tflite {
 
-class EDGERUNNER_EXPORT ModelImpl : public Model {
+class EDGERUNNER_EXPORT ModelImpl final : public Model {
   public:
     explicit ModelImpl(const std::filesystem::path& modelPath) {
         loadModel(modelPath);
     }
+
+    ModelImpl(const ModelImpl&) = delete;
+    ModelImpl(ModelImpl&&) = delete;
+    auto operator=(const ModelImpl&) -> ModelImpl& = delete;
+    auto operator=(ModelImpl&&) -> ModelImpl& = delete;
 
     ModelImpl() = default;
 
     void loadModel(const std::filesystem::path& modelPath) final;
 
     void execute() final { m_interpreter->Invoke(); }
+    auto execute() -> STATUS final;
 
   private:
     EDGERUNNER_SUPPRESS_C4251
