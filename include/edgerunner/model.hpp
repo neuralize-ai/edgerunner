@@ -101,6 +101,11 @@ class EDGERUNNER_EXPORT Model {
         return {};
     }
 
+    void setDelegate(const DELEGATE& delegate) { m_delegate = delegate; }
+
+    auto getDelegate() const -> DELEGATE { return m_delegate; }
+
+    virtual auto applyDelegate() -> STATUS = 0;
 
     virtual auto execute() -> STATUS = 0;
 
@@ -129,6 +134,9 @@ class EDGERUNNER_EXPORT Model {
 
     EDGERUNNER_SUPPRESS_C4251
     std::vector<std::shared_ptr<Tensor>> m_outputs;
+
+    EDGERUNNER_SUPPRESS_C4251
+    DELEGATE m_delegate = DELEGATE::CPU;
 };
 
 }  // namespace edge
