@@ -56,12 +56,42 @@ void ModelImpl::allocate() {
     }
 }
 
+auto ModelImpl::applyDelegate() -> STATUS {
+    /* undo any previous delegate */
+    createInterpreter();
+    deleteDelegate();
+
+    STATUS status = STATUS::SUCCESS;
+
+    if (getDelegate() == DELEGATE::GPU) {
+        m_delegate = TfLiteGpuDelegateV2Create(nullptr);
+
+        if (m_interpreter->ModifyGraphWithDelegate(m_delegate) != kTfLiteOk) {
+            status = STATUS::FAIL;
+        }
+    }
+
+    allocate();
+
+    return status;
+}
+
 auto ModelImpl::execute() -> STATUS {
     if (m_interpreter->Invoke() != kTfLiteOk) {
         return STATUS::FAIL;
     }
 
     return STATUS::SUCCESS;
+}
+
+void ModelImpl::deleteDelegate() {
+    if (getDelegate() == DELEGATE::GPU && m_delegate != nullptr) {
+        TfLiteGpuDelegateV2Delete(m_delegate);
+    }
+}
+
+ModelImpl::~ModelImpl() {
+    deleteDelegate();
 }
 
 }  // namespace edge::tflite

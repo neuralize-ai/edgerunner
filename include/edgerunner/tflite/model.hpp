@@ -22,12 +22,21 @@ class EDGERUNNER_EXPORT ModelImpl final : public Model {
 
     ModelImpl() = default;
 
+    ~ModelImpl() final;
+
     void loadModel(const std::filesystem::path& modelPath) final;
 
-    void execute() final { m_interpreter->Invoke(); }
+    auto applyDelegate() -> STATUS final;
+
     auto execute() -> STATUS final;
 
   private:
+    void createInterpreter();
+
+    void allocate();
+
+    void deleteDelegate();
+
     EDGERUNNER_SUPPRESS_C4251
     std::filesystem::path m_modelPath;
 
@@ -36,6 +45,9 @@ class EDGERUNNER_EXPORT ModelImpl final : public Model {
 
     EDGERUNNER_SUPPRESS_C4251
     std::unique_ptr<::tflite::Interpreter> m_interpreter;
+
+    EDGERUNNER_SUPPRESS_C4251
+    TfLiteDelegate* m_delegate = nullptr;
 };
 
 }  // namespace edge::tflite
