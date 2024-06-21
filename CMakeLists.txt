@@ -63,6 +63,9 @@ target_link_libraries(edgerunner_edgerunner PRIVATE fmt::fmt)
 find_package(span-lite REQUIRED)
 target_link_libraries(edgerunner_edgerunner PUBLIC nonstd::span-lite)
 
+find_package(tensorflowlite REQUIRED)
+target_link_libraries(edgerunner_edgerunner PUBLIC tensorflow::tensorflowlite)
+
 # ---- Install rules ----
 
 if(NOT CMAKE_SKIP_INSTALL_RULES)
