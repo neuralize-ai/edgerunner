@@ -2,12 +2,13 @@
 #include <string>
 #include <vector>
 
+#include <catch2/benchmark/catch_benchmark.hpp>
 #include <catch2/catch_test_macros.hpp>
 
 #include "edgerunner/tensor.hpp"
 #include "edgerunner/tflite/model.hpp"
 
-TEST_CASE("Tflite runtime", "[tflite]") {
+TEST_CASE("Tflite default runtime (CPU)", "[tflite][cpu]") {
     const std::string modelPath = "models/tflite/mobilenet_v3_small.tflite";
     auto model = edge::tflite::ModelImpl {modelPath};
 
@@ -31,8 +32,6 @@ TEST_CASE("Tflite runtime", "[tflite]") {
 
     REQUIRE(inputData.size() == input->getSize());
 
-    model.execute();
-
     auto output = model.getOutput(0);
 
     REQUIRE(output->getDimensions() == std::vector<size_t> {1, 1000});
@@ -42,4 +41,12 @@ TEST_CASE("Tflite runtime", "[tflite]") {
     auto outputData = output->getTensorAs<float>();
 
     REQUIRE(outputData.size() == output->getSize());
+
+    const auto executionStatus = model.execute();
+
+    REQUIRE(executionStatus == edge::STATUS::SUCCESS);
+
+    BENCHMARK("execution") {
+        return model.execute();
+    };
 }
