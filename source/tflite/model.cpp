@@ -16,12 +16,10 @@ void ModelImpl::loadModel(const std::filesystem::path& modelPath) {
 
     m_modelBuffer = ::tflite::FlatBufferModel::BuildFromFile(modelPath.c_str());
 
-    ::tflite::ops::builtin::BuiltinOpResolver resolver;
+    const ::tflite::ops::builtin::BuiltinOpResolver resolver;
     ::tflite::InterpreterBuilder(*m_modelBuffer, resolver)(&m_interpreter);
 
     m_interpreter->AllocateTensors();
-
-    const auto metadata = m_modelBuffer->ReadAllMetadata();
 
     const auto numInputs = m_interpreter->inputs().size();
 
