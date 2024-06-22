@@ -8,16 +8,32 @@ include(../cmake/folders.cmake)
 # ---- Dependencies ----
 
 if(PROJECT_IS_TOP_LEVEL)
-  find_package(edgerunner REQUIRED)
-  enable_testing()
+    find_package(edgerunner REQUIRED)
+    enable_testing()
 endif()
 
 find_package(Catch2 REQUIRED)
 include(Catch)
 
+# ---- Test data ----
+
+set(MODELS_DIR "${CMAKE_SOURCE_DIR}/models")
+set(MODELS_DEST_DIR "${CMAKE_CURRENT_BINARY_DIR}/models")
+if(UNIX)
+    execute_process(COMMAND ln -sfn ${MODELS_DIR} ${MODELS_DEST_DIR})
+elseif(WIN32)
+    execute_process(COMMAND cmd.exe /c mklink ${MODELS_DEST_DIR} ${MODELS_DIR})
+endif()
+
 # ---- Tests ----
 
-add_executable(edgerunner_test source/edgerunner_test.cpp)
+set(TEST_SOURCES source/tflite_test.cpp)
+
+if (edgerunner_ENABLE_GPU)
+    list(APPEND TEST_SOURCES source/tflite_gpu_test.cpp)
+endif()
+
+add_executable(edgerunner_test ${TEST_SOURCES})
 target_link_libraries(
     edgerunner_test PRIVATE
     edgerunner::edgerunner

@@ -2,9 +2,11 @@
 
 #include <filesystem>
 #include <string>
-#include <vector>
+
+#include <nonstd/span.hpp>
 
 #include "edgerunner/edgerunner_export.hpp"
+#include "tensor.hpp"
 
 namespace edge {
 
@@ -50,17 +52,24 @@ namespace edge {
  * they also solve some other problems that make them worth the time invested.
  */
 
+enum class DELEGATE {
+    CPU,
+    GPU,
+    NPU,
+};
+
+enum class STATUS {
+    SUCCESS,
+    FAIL
+};
+
 /**
  * @brief Reports the name of the library
  *
  * Please see the note above for considerations when creating shared libraries.
  */
-template<typename Tensor>
 class EDGERUNNER_EXPORT Model {
   public:
-    /**
-     * @brief Initializes the name field to the name of the project
-     */
     Model() = default;
 
     Model(const Model&) = default;
@@ -76,11 +85,29 @@ class EDGERUNNER_EXPORT Model {
 
     auto getNumOutputs() const -> size_t { return m_outputs.size(); }
 
-    auto getInput(size_t index) const -> Tensor&;
+    auto getInput(size_t index) const -> std::shared_ptr<Tensor> {
+        if (index < getNumInputs()) {
+            return m_inputs[index];
+        }
 
-    auto getOutput(size_t index) const -> Tensor&;
+        return {};
+    }
 
-    virtual void execute() = 0;
+    auto getOutput(size_t index) const -> std::shared_ptr<Tensor> {
+        if (index < getNumOutputs()) {
+            return m_outputs[index];
+        }
+
+        return {};
+    }
+
+    void setDelegate(const DELEGATE& delegate) { m_delegate = delegate; }
+
+    auto getDelegate() const -> DELEGATE { return m_delegate; }
+
+    virtual auto applyDelegate() -> STATUS = 0;
+
+    virtual auto execute() -> STATUS = 0;
 
     /**
      * @brief Returns a non-owning pointer to the string stored in this class
@@ -88,9 +115,13 @@ class EDGERUNNER_EXPORT Model {
     auto name() const -> char const* { return m_name.c_str(); }
 
   protected:
-    auto accessInputs() -> std::vector<Tensor>& { return m_inputs; }
+    auto accessInputs() -> std::vector<std::shared_ptr<Tensor>>& {
+        return m_inputs;
+    }
 
-    auto accessOutputs() -> std::vector<Tensor>& { return m_outputs; }
+    auto accessOutputs() -> std::vector<std::shared_ptr<Tensor>>& {
+        return m_outputs;
+    }
 
     void setName(const std::string& name) { m_name = name; }
 
@@ -99,10 +130,13 @@ class EDGERUNNER_EXPORT Model {
     std::string m_name;
 
     EDGERUNNER_SUPPRESS_C4251
-    std::vector<Tensor> m_inputs;
+    std::vector<std::shared_ptr<Tensor>> m_inputs;
 
     EDGERUNNER_SUPPRESS_C4251
-    std::vector<Tensor> m_outputs;
+    std::vector<std::shared_ptr<Tensor>> m_outputs;
+
+    EDGERUNNER_SUPPRESS_C4251
+    DELEGATE m_delegate = DELEGATE::CPU;
 };
 
 }  // namespace edge

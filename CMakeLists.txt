@@ -17,7 +17,8 @@ include(cmake/variables.cmake)
 
 add_library(
     edgerunner_edgerunner
-    source/edgerunner.cpp
+    source/tflite/model.cpp
+    source/tflite/tensor.cpp
 )
 add_library(edgerunner::edgerunner ALIAS edgerunner_edgerunner)
 
@@ -30,7 +31,11 @@ generate_export_header(
 )
 
 if(NOT BUILD_SHARED_LIBS)
-  target_compile_definitions(edgerunner_edgerunner PUBLIC EDGERUNNER_STATIC_DEFINE)
+    target_compile_definitions(
+        edgerunner_edgerunner
+        PUBLIC
+        EDGERUNNER_STATIC_DEFINE
+    )
 endif()
 
 set_target_properties(
@@ -60,18 +65,32 @@ target_compile_features(edgerunner_edgerunner PUBLIC cxx_std_17)
 find_package(fmt REQUIRED)
 target_link_libraries(edgerunner_edgerunner PRIVATE fmt::fmt)
 
+find_package(span-lite REQUIRED)
+target_link_libraries(edgerunner_edgerunner PUBLIC nonstd::span-lite)
+
+find_package(tensorflowlite REQUIRED)
+target_link_libraries(edgerunner_edgerunner PUBLIC tensorflow::tensorflowlite)
+
+if(edgerunner_ENABLE_GPU)
+    target_compile_definitions(
+        edgerunner_edgerunner
+        PUBLIC
+        EDGERUNNER_GPU
+    )
+endif()
+
 # ---- Install rules ----
 
 if(NOT CMAKE_SKIP_INSTALL_RULES)
-  include(cmake/install-rules.cmake)
+    include(cmake/install-rules.cmake)
 endif()
 
 # ---- Developer mode ----
 
 if(NOT edgerunner_DEVELOPER_MODE)
-  return()
+    return()
 elseif(NOT PROJECT_IS_TOP_LEVEL)
-  message(
+    message(
       AUTHOR_WARNING
       "Developer mode is intended for developers of edgerunner"
   )
