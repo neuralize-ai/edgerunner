@@ -9,7 +9,7 @@
 
 namespace edge {
 
-enum class EDGERUNNER_EXPORT TensorType {
+enum class TensorType {
     UNSUPPORTED,
     NOTYPE,
     FLOAT32,

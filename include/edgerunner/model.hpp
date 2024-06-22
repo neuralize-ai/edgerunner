@@ -52,13 +52,13 @@ namespace edge {
  * they also solve some other problems that make them worth the time invested.
  */
 
-enum EDGERUNNER_EXPORT class DELEGATE {
+enum class DELEGATE {
     CPU,
     GPU,
     NPU,
 };
 
-enum EDGERUNNER_EXPORT class STATUS {
+enum class STATUS {
     SUCCESS,
     FAIL
 };
