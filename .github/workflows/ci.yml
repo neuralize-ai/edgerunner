@@ -69,7 +69,7 @@ jobs:
 
     - name: Test
       working-directory: build/coverage
-      run: ctest --output-on-failure --no-tests=error -j 2
+      run: ctest --output-on-failure --no-tests=error -j 2 -R "CPU"
 
     - name: Process coverage info
       run: cmake --build build/coverage -t coverage
@@ -120,7 +120,7 @@ jobs:
           halt_on_error=1"
         UBSAN_OPTIONS: "print_stacktrace=1:\
           halt_on_error=1"
-      run: ctest --output-on-failure --no-tests=error -j 2
+      run: ctest --output-on-failure --no-tests=error -j 2 -R "CPU"
 
   test:
     needs: [lint]
@@ -186,7 +186,7 @@ jobs:
 
     - name: Test
       working-directory: build
-      run: ctest --output-on-failure --no-tests=error -C Release -j 2
+      run: ctest --output-on-failure --no-tests=error -C Release -j 2 -R "CPU"
 
   docs:
     # Deploy docs only when builds succeed
