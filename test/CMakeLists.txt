@@ -20,14 +20,14 @@ include(Catch)
 set(MODELS_DIR "${CMAKE_SOURCE_DIR}/models")
 set(MODELS_DEST_DIR "${CMAKE_CURRENT_BINARY_DIR}/models")
 if(UNIX)
-    execute_process(COMMAND ln -s ${MODELS_DIR} ${MODELS_DEST_DIR})
+    execute_process(COMMAND ln -sfn ${MODELS_DIR} ${MODELS_DEST_DIR})
 elseif(WIN32)
     execute_process(COMMAND cmd.exe /c mklink ${MODELS_DEST_DIR} ${MODELS_DIR})
 endif()
 
 # ---- Tests ----
 
-add_executable(edgerunner_test source/tflite_test.cpp)
+add_executable(edgerunner_test source/tflite_test.cpp source/tflite_gpu_test.cpp)
 target_link_libraries(
     edgerunner_test PRIVATE
     edgerunner::edgerunner
