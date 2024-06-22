@@ -27,7 +27,13 @@ endif()
 
 # ---- Tests ----
 
-add_executable(edgerunner_test source/tflite_test.cpp source/tflite_gpu_test.cpp)
+set(TEST_SOURCES source/tflite_test.cpp)
+
+if (edgerunner_ENABLE_GPU)
+    list(APPEND TEST_SOURCES source/tflite_gpu_test.cpp)
+endif()
+
+add_executable(edgerunner_test ${TEST_SOURCES})
 target_link_libraries(
     edgerunner_test PRIVATE
     edgerunner::edgerunner

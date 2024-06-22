@@ -5,10 +5,13 @@
 #include "edgerunner/tflite/model.hpp"
 
 #include <tensorflow/lite/core/c/c_api_types.h>
-#include <tensorflow/lite/delegates/gpu/delegate.h>
 #include <tensorflow/lite/interpreter_builder.h>
 #include <tensorflow/lite/kernels/register.h>
 #include <tensorflow/lite/model_builder.h>
+
+#ifdef EDGERUNNER_GPU
+#    include <tensorflow/lite/delegates/gpu/delegate.h>
+#endif
 
 #include "edgerunner/model.hpp"
 
@@ -64,11 +67,15 @@ auto ModelImpl::applyDelegate() -> STATUS {
     STATUS status = STATUS::SUCCESS;
 
     if (getDelegate() == DELEGATE::GPU) {
+#ifdef EDGERUNNER_GPU
         m_delegate = TfLiteGpuDelegateV2Create(nullptr);
 
         if (m_interpreter->ModifyGraphWithDelegate(m_delegate) != kTfLiteOk) {
             status = STATUS::FAIL;
         }
+#else
+        status = STATUS::FAIL;
+#endif
     }
 
     allocate();
@@ -85,8 +92,12 @@ auto ModelImpl::execute() -> STATUS {
 }
 
 void ModelImpl::deleteDelegate() {
-    if (getDelegate() == DELEGATE::GPU && m_delegate != nullptr) {
-        TfLiteGpuDelegateV2Delete(m_delegate);
+    if (m_delegate != nullptr) {
+#ifdef EDGERUNNER_GPU
+        if (getDelegate() == DELEGATE::GPU) {
+            TfLiteGpuDelegateV2Delete(m_delegate);
+        }
+#endif
     }
 }
 

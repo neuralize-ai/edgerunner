@@ -5,8 +5,8 @@
 # Targets necessary to build the project must be provided unconditionally, so
 # consumers can trivially build and package the project
 if(PROJECT_IS_TOP_LEVEL)
-  option(edgerunner_DEVELOPER_MODE "Enable developer mode" OFF)
-  option(BUILD_SHARED_LIBS "Build shared libs." OFF)
+    option(edgerunner_DEVELOPER_MODE "Enable developer mode" OFF)
+    option(BUILD_SHARED_LIBS "Build shared libs." OFF)
 endif()
 
 # ---- Suppress C4251 on Windows ----
@@ -29,13 +29,15 @@ set(pragma_suppress_c4251 "
 # add_subdirectory or FetchContent is used to consume this project
 set(warning_guard "")
 if(NOT PROJECT_IS_TOP_LEVEL)
-  option(
+    option(
       edgerunner_INCLUDES_WITH_SYSTEM
       "Use SYSTEM modifier for edgerunner's includes, disabling warnings"
       ON
   )
-  mark_as_advanced(edgerunner_INCLUDES_WITH_SYSTEM)
-  if(edgerunner_INCLUDES_WITH_SYSTEM)
-    set(warning_guard SYSTEM)
-  endif()
+    mark_as_advanced(edgerunner_INCLUDES_WITH_SYSTEM)
+    if(edgerunner_INCLUDES_WITH_SYSTEM)
+        set(warning_guard SYSTEM)
+    endif()
 endif()
+
+option(edgerunner_ENABLE_GPU "Enable GPU support" OFF)
