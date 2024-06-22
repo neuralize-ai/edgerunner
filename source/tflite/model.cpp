@@ -16,7 +16,7 @@ namespace edge::tflite {
 
 void ModelImpl::loadModel(const std::filesystem::path& modelPath) {
     m_modelPath = modelPath;
-    setName(modelPath.stem());
+    setName(modelPath.stem().string());
 
     m_modelBuffer = ::tflite::FlatBufferModel::BuildFromFile(modelPath.c_str());
 
