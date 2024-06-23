@@ -1,3 +1,5 @@
+#pragma once
+
 #include <tensorflow/lite/core/c/c_api_types.h>
 #include <tensorflow/lite/core/c/common.h>
 #include <tensorflow/lite/interpreter.h>
@@ -5,7 +7,6 @@
 #include <tensorflow/lite/model.h>
 
 #include "edgerunner/model.hpp"
-#include "tensor.hpp"
 
 namespace edge::tflite {
 
@@ -26,7 +27,7 @@ class EDGERUNNER_EXPORT ModelImpl final : public Model {
 
     void loadModel(const std::filesystem::path& modelPath) final;
 
-    auto applyDelegate() -> STATUS final;
+    auto applyDelegate(const DELEGATE& delegate) -> STATUS final;
 
     auto execute() -> STATUS final;
 

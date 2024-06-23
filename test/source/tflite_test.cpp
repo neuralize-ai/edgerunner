@@ -15,6 +15,8 @@ TEST_CASE("Tflite default runtime (CPU)", "[tflite][cpu]") {
 
     REQUIRE(std::string {"mobilenet_v3_small"} == model.name());
 
+    REQUIRE(model.getDelegate() == edge::DELEGATE::CPU);
+
     const auto numInputs = model.getNumInputs();
 
     REQUIRE(numInputs == 1);

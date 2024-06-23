@@ -101,11 +101,9 @@ class EDGERUNNER_EXPORT Model {
         return {};
     }
 
-    void setDelegate(const DELEGATE& delegate) { m_delegate = delegate; }
-
     auto getDelegate() const -> DELEGATE { return m_delegate; }
 
-    virtual auto applyDelegate() -> STATUS = 0;
+    virtual auto applyDelegate(const DELEGATE& delegate) -> STATUS = 0;
 
     virtual auto execute() -> STATUS = 0;
 
@@ -122,6 +120,8 @@ class EDGERUNNER_EXPORT Model {
     auto accessOutputs() -> std::vector<std::shared_ptr<Tensor>>& {
         return m_outputs;
     }
+
+    void setDelegate(const DELEGATE& delegate) { m_delegate = delegate; }
 
     void setName(const std::string& name) { m_name = name; }
 

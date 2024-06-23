@@ -41,10 +41,11 @@ TEST_CASE("Tflite GPU runtime", "[tflite][gpu]") {
     std::vector<float> cpuResult(cpuOutput.size());
     std::copy(cpuOutput.cbegin(), cpuOutput.cend(), cpuResult.begin());
 
-    model.setDelegate(edge::DELEGATE::GPU);
-    const auto delegateStatus = model.applyDelegate();
+    const auto delegateStatus = model.applyDelegate(edge::DELEGATE::GPU);
 
     REQUIRE(delegateStatus == edge::STATUS::SUCCESS);
+
+    REQUIRE(model.getDelegate() == edge::DELEGATE::GPU);
 
     const auto numInputs = model.getNumInputs();
 
