@@ -153,6 +153,10 @@ These targets run the clang-format tool on the codebase to check errors and to
 fix them respectively. Customization available using the `FORMAT_PATTERNS` and
 `FORMAT_COMMAND` cache variables.
 
+#### run-examples
+
+Runs all the examples created by the add_example command.
+
 #### `spell-check` and `spell-fix`
 
 These targets run the codespell tool on the codebase to check errors and to fix
