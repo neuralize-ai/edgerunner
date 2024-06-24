@@ -29,7 +29,7 @@ endif()
 
 set(TEST_SOURCES source/tflite_test.cpp)
 
-if (edgerunner_ENABLE_GPU)
+if(edgerunner_ENABLE_GPU)
     list(APPEND TEST_SOURCES source/tflite_gpu_test.cpp)
 endif()
 
