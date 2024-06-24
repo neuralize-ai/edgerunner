@@ -169,7 +169,9 @@ jobs:
 
     - name: Install dependencies
       shell: bash
-      run: bash < .github/scripts/conan-ci-setup.sh
+      run: >-
+        sudo apt-get install libx11-dev libx11-xcb-dev libfontenc-dev libice-dev libsm-dev libxau-dev libxaw7-dev -y -q
+        bash < .github/scripts/conan-ci-setup.sh
 
     - name: Setup MultiToolTask
       if: matrix.os == 'windows-2022'
