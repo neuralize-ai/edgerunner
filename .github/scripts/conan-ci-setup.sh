@@ -19,8 +19,6 @@ echo "tools.system.package_manager:sudo=True" >>"$profile"
 
 rm "${profile}.bak"
 
-cat "$profile"
-
 if [ -f conan_cache_save.tgz ]; then
 	conan cache restore conan_cache_save.tgz
 fi

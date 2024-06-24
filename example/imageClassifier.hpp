@@ -130,7 +130,7 @@ inline auto ImageClassifier::predict(const size_t numPredictions)
 inline void ImageClassifier::toRGBFloat(cv::Mat& image) {
     // Convert the image to float and scale it to [0, 1] range
     cv::cvtColor(image, image, cv::COLOR_BGR2RGB);
-    image.convertTo(image, CV_32F, 1.0 / std::numeric_limits<uint8_t>::max());
+    image.convertTo(image, CV_32FC3, 1.0 / std::numeric_limits<uint8_t>::max());
 }
 
 inline void ImageClassifier::resize(cv::Mat& image, const size_t size) {
@@ -188,10 +188,8 @@ inline void ImageClassifier::centerCrop(cv::Mat& image,
 }
 
 inline void ImageClassifier::normalize(cv::Mat& image) {
-    const auto mean =
-        cv::Mat(image.size(), CV_32FC3, cv::Scalar(0.485, 0.456, 0.406));
-    const auto std =
-        cv::Mat(image.size(), CV_32FC3, cv::Scalar(0.229, 0.224, 0.225));
+    const cv::Scalar mean(0.485, 0.456, 0.406);
+    const cv::Scalar std(0.229, 0.224, 0.225);
 
     cv::subtract(image, mean, image);
     cv::divide(image, std, image);
