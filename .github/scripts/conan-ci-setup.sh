@@ -12,12 +12,12 @@ std=17
 profile="$(conan profile path default)"
 
 mv "$profile" "${profile}.bak"
-sed 's/^\(compiler\.cppstd=\).\{1,\}$/\1'"$std/" "${profile}.bak" > "$profile"
+sed 's/^\(compiler\.cppstd=\).\{1,\}$/\1'"$std/" "${profile}.bak" >"$profile"
 rm "${profile}.bak"
 
 if [ -f conan_cache_save.tgz ]; then
-  conan cache restore conan_cache_save.tgz
+	conan cache restore conan_cache_save.tgz
 fi
 conan remove \* --lru=1M -c
-conan install . -b missing
+conan install . -b missing -c tools.system.package_manager:mode=install
 conan cache save '*/*:*' --file=conan_cache_save.tgz

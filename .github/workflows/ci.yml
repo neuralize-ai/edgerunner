@@ -168,14 +168,9 @@ jobs:
         key: conan-${{ matrix.os }}-${{ hashFiles('conan*.[pl][yo]*') }}
 
     - name: Install dependencies
-      if: matrix.os == 'ubuntu-22.04'
       shell: bash
       run: >-
-        sudo apt-get install libx11-dev libx11-xcb-dev libfontenc-dev libice-dev libsm-dev libxau-dev libxaw7-dev -y -q
-
-    - name: Install conan dependencies
-      shell: bash
-      run: bash < .github/scripts/conan-ci-setup.sh
+        sudo bash < .github/scripts/conan-ci-setup.sh
 
     - name: Setup MultiToolTask
       if: matrix.os == 'windows-2022'
