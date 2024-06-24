@@ -1,4 +1,5 @@
 #include <cstddef>
+#include <limits>
 #include <string>
 #include <vector>
 
@@ -8,6 +9,7 @@
 #include "edgerunner/model.hpp"
 #include "edgerunner/tensor.hpp"
 #include "edgerunner/tflite/model.hpp"
+#include "utils.hpp"
 
 TEST_CASE("Tflite default runtime (CPU)", "[tflite][cpu]") {
     const std::string modelPath = "models/tflite/mobilenet_v3_small.tflite";
@@ -52,4 +54,12 @@ TEST_CASE("Tflite default runtime (CPU)", "[tflite][cpu]") {
     BENCHMARK("execution") {
         return model.execute();
     };
+
+    /* verify output buffer is persistent across execution */
+    const auto outputDataAfter = model.getOutput(0)->getTensorAs<float>();
+
+    const auto outputMse = meanSquaredError(outputData, outputDataAfter);
+
+    CAPTURE(outputMse);
+    REQUIRE(outputMse < std::numeric_limits<float>::epsilon());
 }
