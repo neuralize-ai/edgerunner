@@ -1,7 +1,7 @@
 [codespell]
-builtin = clear,rare,en-GB_to_en-US,names,informal,code
+builtin = clear,rare,names,informal,code
 check-filenames =
 check-hidden =
 skip = */.git,*/build,*/prefix,*/conan
 quiet-level = 2
-ignore-words-list=lite
+ignore-words-list=lite,crate
