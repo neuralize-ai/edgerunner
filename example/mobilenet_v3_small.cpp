@@ -38,7 +38,9 @@ auto main() -> int {
                                                                       - start)
                     .count();
 
-            fmt::print(fmt::fg(fmt::color::green), "predictions:\n");
+            fmt::print(fmt::fg(fmt::color::green),
+                       "predictions for {}:\n",
+                       imagePath.filename().string());
             for (const auto& prediction : predictions) {
                 fmt::print(fmt::fg(fmt::color::green),
                            "\t{} ({:.2f}%)\n",
