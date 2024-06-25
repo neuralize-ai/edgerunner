@@ -1,3 +1,9 @@
+/**
+ * @file tensor.hpp
+ * @brief Definition of the Tensor class, an opaque handler for model input and
+ * output data
+ */
+
 #pragma once
 
 #include <string>
@@ -12,8 +18,8 @@ namespace edge {
 /**
  * @brief Enum class representing different types of tensors
  *
- * This enum class defines different types of tensors that can be used in a
- * system. Each type corresponds to a specific data type that the tensor can
+ * This enum class defines types of input and output Tensors for a Model.
+ * Each type corresponds to a specific data type that the tensor can
  * hold.
  *
  * Possible values:
@@ -26,8 +32,7 @@ namespace edge {
  * - INT8: Represents a tensor with 8-bit integer data type
  * - UINT8: Represents a tensor with unsigned 8-bit integer data type
  *
- * @note This enum class is used to specify the data type of tensors in the
- * system
+ * @note This enum class is used to specify the data type of a Tensor
  */
 enum class TensorType {
     UNSUPPORTED,
