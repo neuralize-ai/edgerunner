@@ -1,6 +1,6 @@
 <h1 align="center">
     <br>
-    <a href="https://runlocal.ai"><img src="./images/large-logo.png" width="400"></a>
+    <a href="https://runlocal.ai"><img src="./images/large-logo.png" width="300"></a>
     <br><br>
     <span style="font-size: larger;">Edgerunner</span>
     <br>
