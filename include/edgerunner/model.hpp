@@ -1,3 +1,9 @@
+/**
+ * @file model.hpp
+ * @brief Definition of the Model class, a base class for machine learning
+ * models.
+ */
+
 #pragma once
 
 #include <filesystem>
