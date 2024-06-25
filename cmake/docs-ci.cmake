@@ -13,17 +13,25 @@ set(src "${PROJECT_SOURCE_DIR}")
 set(mcss_SOURCE_DIR "${bin}/docs/.ci")
 if(NOT IS_DIRECTORY "${mcss_SOURCE_DIR}")
     file(MAKE_DIRECTORY "${mcss_SOURCE_DIR}")
-
-    include(FetchContent)
-    FetchContent_Declare(
-        mcss
-        GIT_REPOSITORY https://github.com/mosra/m.css
-        GIT_TAG        523506668a61646603ed299e1b60b7f77a8ebd77
-        SOURCE_DIR "${mcss_SOURCE_DIR}/mcss.zip"
-        UPDATE_DISCONNECTED YES
-        ${extract_timestamps}
-    )
-    FetchContent_MakeAvailable(mcss)
+    file(
+      DOWNLOAD
+      https://github.com/friendlyanon/m.css/releases/download/release-1/mcss.zip
+      "${mcss_SOURCE_DIR}/mcss.zip"
+      STATUS status
+      EXPECTED_MD5 00cd2757ebafb9bcba7f5d399b3bec7f
+  )
+    if(NOT status MATCHES "^0;")
+        message(FATAL_ERROR "Download failed with ${status}")
+    endif()
+    execute_process(
+      COMMAND "${CMAKE_COMMAND}" -E tar xf mcss.zip
+      WORKING_DIRECTORY "${mcss_SOURCE_DIR}"
+      RESULT_VARIABLE result
+  )
+    if(NOT result EQUAL "0")
+        message(FATAL_ERROR "Extraction failed with ${result}")
+    endif()
+    file(REMOVE "${mcss_SOURCE_DIR}/mcss.zip")
 endif()
 
 find_program(Python3_EXECUTABLE NAMES python3 python)
