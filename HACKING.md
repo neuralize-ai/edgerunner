@@ -155,7 +155,14 @@ fix them respectively. Customization available using the `FORMAT_PATTERNS` and
 
 #### run-examples
 
-Runs all the examples created by the add_example command.
+Available if `-o examples=True` was supplied to the `conan install` invocation.
+This is because the examples may require additional dependencies for pre and post
+processing that we do not wish the bundle with the main project.
+
+Runs all the examples created by the `add_example` command.
+
+Individual examples can be executed using `run_<example_name>` (without the
+extension) instead of `run-examples`.
 
 #### `spell-check` and `spell-fix`
 
