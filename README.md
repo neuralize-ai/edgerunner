@@ -15,6 +15,7 @@ See the [BUILDING](BUILDING.md) document.
 ## Contributing
 
 See the [CONTRIBUTING](CONTRIBUTING.md) document.
+Join our [Discord](https://discord.gg/y9EzZEkwbR) for feedback and discussion
 
 ## Licensing
 
