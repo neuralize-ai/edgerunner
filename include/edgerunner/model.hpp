@@ -94,13 +94,7 @@ class EDGERUNNER_EXPORT Model {
      * @return The input tensor at the specified index, or nullptr if index is
      * out of bounds
      */
-    auto getInput(size_t index) const -> std::shared_ptr<Tensor> {
-        if (index < getNumInputs()) {
-            return m_inputs[index];
-        }
-
-        return {};
-    }
+    auto getInput(size_t index) const -> std::shared_ptr<Tensor>;
 
     /**
      * @brief Get the output tensor at the specified index.
@@ -109,18 +103,12 @@ class EDGERUNNER_EXPORT Model {
      * @return The output tensor at the specified index, or nullptr if index is
      * out of bounds
      */
-    auto getOutput(size_t index) const -> std::shared_ptr<Tensor> {
-        if (index < getNumOutputs()) {
-            return m_outputs[index];
-        }
-
-        return {};
-    }
+    auto getOutput(size_t index) const -> std::shared_ptr<Tensor>;
 
     /**
-     * @brief Get the delegate used for model execution.
+     * @brief Get the current delegate used for model execution.
      *
-     * @return The delegate used for model execution
+     * @return The delegate currently set for model execution
      */
     auto getDelegate() const -> DELEGATE { return m_delegate; }
 
@@ -195,5 +183,21 @@ class EDGERUNNER_EXPORT Model {
     DELEGATE m_delegate =
         DELEGATE::CPU; /**< Delegate used for model execution */
 };
+
+inline auto Model::getInput(size_t index) const -> std::shared_ptr<Tensor> {
+    if (index < getNumInputs()) {
+        return m_inputs[index];
+    }
+
+    return nullptr;
+}
+
+inline auto Model::getOutput(size_t index) const -> std::shared_ptr<Tensor> {
+    if (index < getNumOutputs()) {
+        return m_outputs[index];
+    }
+
+    return nullptr;
+}
 
 }  // namespace edge

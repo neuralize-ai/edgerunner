@@ -124,19 +124,7 @@ class EDGERUNNER_EXPORT Tensor {
      * @return A non-owning span of type T representing the tensor data
      */
     template<typename T>
-    auto getTensorAs() -> nonstd::span<T> {
-        auto* dataPtr = getDataPtr();
-
-        if (dataPtr == nullptr) {
-            return {};
-        }
-
-        const auto numBytes = getNumBytes();
-        const auto numElementBytes = sizeof(T);
-
-        const auto numElements = numBytes / numElementBytes;
-        return {static_cast<T*>(dataPtr), numElements};
-    }
+    auto getTensorAs() -> nonstd::span<T>;
 
   protected:
     /**
@@ -153,5 +141,20 @@ class EDGERUNNER_EXPORT Tensor {
      */
     virtual auto getNumBytes() -> size_t = 0;
 };
+
+template<typename T>
+auto Tensor::getTensorAs() -> nonstd::span<T> {
+    auto* dataPtr = getDataPtr();
+
+    if (dataPtr == nullptr) {
+        return {};
+    }
+
+    const auto numBytes = getNumBytes();
+    const auto numElementBytes = sizeof(T);
+
+    const auto numElements = numBytes / numElementBytes;
+    return {static_cast<T*>(dataPtr), numElements};
+}
 
 }  // namespace edge
