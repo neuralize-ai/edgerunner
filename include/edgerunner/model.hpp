@@ -27,9 +27,13 @@ enum class DELEGATE {
     NPU /**< NPU delegate */
 };
 
+/**
+ * @enum STATUS
+ * @brief Enum class representing the status of an operation.
+ */
 enum class STATUS {
-    SUCCESS,
-    FAIL
+    SUCCESS, /**< Operation was successful */
+    FAIL /**< Operation failed */
 };
 
 /**
