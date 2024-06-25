@@ -50,6 +50,10 @@ This repo is in its early stages of development (see [Features](#features) and [
 
 See the [BUILDING](BUILDING.md) document.
 
+## Usage
+
+See [examples](./example) for basic usage.
+
 ## Contributing
 
 See the [CONTRIBUTING](CONTRIBUTING.md) document.
