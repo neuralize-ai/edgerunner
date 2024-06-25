@@ -33,6 +33,20 @@ This repo is in its early stages of development (see [Features](#features) and [
 - Linux support
 - TFLite support (XNNPACK, GPU)
 
+### Roadmap
+
+- Android CPU support
+- Android GPU support
+- Apple silicon CPU support
+- Apple silicon GPU support
+- Qualcomm NPU support
+- MediaTek NPU support
+- Samsung NPU support
+- Automatic runtime detection
+- Java bindings (for Android app support)
+- Objective-C bindings (for Apple app support)
+- Sister project implementing common pre and post-processing functionality
+
 ## Building and installing
 
 See the [BUILDING](BUILDING.md) document.
