@@ -5,15 +5,22 @@ project(edgerunnerExamples CXX)
 include(../cmake/project-is-top-level.cmake)
 include(../cmake/folders.cmake)
 
+add_library(examples_interface INTERFACE)
+
 if(PROJECT_IS_TOP_LEVEL)
     find_package(edgerunner REQUIRED)
 endif()
+
+target_link_libraries(examples_interface INTERFACE edgerunner::edgerunner)
+
+find_package(OpenCV REQUIRED)
+target_link_libraries(examples_interface INTERFACE opencv::opencv)
 
 add_custom_target(run-examples)
 
 function(add_example NAME)
     add_executable("${NAME}" "${NAME}.cpp")
-    target_link_libraries("${NAME}" PRIVATE edgerunner::edgerunner)
+    target_link_libraries("${NAME}" PRIVATE examples_interface)
     target_compile_features("${NAME}" PRIVATE cxx_std_17)
     add_custom_target("run_${NAME}" COMMAND "${NAME}" VERBATIM)
     add_dependencies("run_${NAME}" "${NAME}")

@@ -1,4 +1,5 @@
 from conan import ConanFile
+from conan.tools.cmake import CMakeToolchain
 
 
 class Recipe(ConanFile):
