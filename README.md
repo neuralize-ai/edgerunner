@@ -19,20 +19,38 @@
 
 ## :bulb: Introduction
 
-The purpose of Edgerunner is to facilitate quick and easy integration of arbitrary AI models that are targeted for consumer mobile devices (smartphones, laptops, wearables, etc.).
+The purpose of Edgerunner is to facilitate quick and easy integration of
+arbitrary AI models that are targeted for consumer mobile devices
+(smartphones, laptops, wearables, etc.).
 
-Currently, on-device inference tooling is highly fragmented. To run AI models efficiently on end-user devices, developers require a deep understanding of every chip/device platform (Apple, Qualcomm, MediaTek, etc.) and on-device AI frameworks ([TFLite](https://ai.google.dev/edge/lite), [CoreML](https://developer.apple.com/documentation/coreml), [QNN](https://www.qualcomm.com/developer/software/neural-processing-sdk-for-ai), etc.). Developers also need to maintain entirely separate ML stacks for iOS and Android, increasing the effort required to support and maintain their cross-platform systems.
+Currently, on-device inference tooling is highly fragmented. To run AI models
+efficiently on end-user devices, developers require a deep understanding of
+every chip/device platform (Apple, Qualcomm, MediaTek, etc.) and on-device AI
+frameworks (
+[TFLite](https://ai.google.dev/edge/lite),
+[CoreML](https://developer.apple.com/documentation/coreml),
+[QNN](https://www.qualcomm.com/developer/software/neural-processing-sdk-for-ai),
+etc.).
+Developers also need to maintain entirely separate ML stacks for iOS and
+Android, increasing the effort required to support and maintain their
+cross-platform systems.
 
-Edgerunner aims to consolidate existing on-device AI frameworks, abstracting away cross-platform on-device AI complexities. This will be achieved through a runtime-agnostic API, which can load and interact with arbitrary instances of on-device AI models with just a few lines of code.
+Edgerunner aims to consolidate existing on-device AI frameworks, abstracting
+away cross-platform on-device AI complexities. This will be achieved through a
+runtime-agnostic API, which can load and interact with arbitrary instances of
+on-device AI models with just a few lines of code.
 
-This repo is in its early stages of development (see [Features](#features)). There is lots of work to be done in order to achieve this vision, and your [contributions](#contributing) will be important to make this happen!
+This repo is in its early stages of development (see [Features](#gift-features)).
+There is lots of work to be done in order to achieve this vision, and your
+[contributions](#trophy-contributing) will be important to make this happen!
 
 ## :gift: Features
 
 |              Feature              |          Status          |
 | ----------------------------------|:------------------------:|
 | Runtime-agnostic API              | :white_check_mark:       |
-| Linux                             | :white_check_mark:       |
+| Linux CPU                         | :white_check_mark:       |
+| Linux GPU                         | :white_check_mark:       |
 | TFLite (XNNPACK, GPU)             | :white_check_mark:       |
 | Android CPU                       | :hourglass_flowing_sand: |
 | Android GPU                       | :hourglass_flowing_sand: |
