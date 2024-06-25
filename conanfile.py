@@ -43,6 +43,6 @@ class Recipe(ConanFile):
     def generate(self):
         toolchain = CMakeToolchain(self)
 
-        toolchain.cache_variables["BUILD_EXAMPLES"] = self.options.examples
+        toolchain.variables["BUILD_EXAMPLES"] = self.options.examples
 
         toolchain.generate()
