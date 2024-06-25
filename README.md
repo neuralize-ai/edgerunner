@@ -29,23 +29,22 @@ This repo is in its early stages of development (see [Features](#features) and [
 
 ## Features
 
-- Runtime-agnostic API
-- Linux support
-- TFLite support (XNNPACK, GPU)
-
-### Roadmap
-
-- Android CPU support
-- Android GPU support
-- Apple silicon CPU support
-- Apple silicon GPU support
-- Qualcomm NPU support
-- MediaTek NPU support
-- Samsung NPU support
-- Automatic runtime detection
-- Java bindings (for Android app support)
-- Objective-C bindings (for Apple app support)
-- Sister project implementing common pre and post-processing functionality
+|              Feature              |          Status          |
+| ----------------------------------|:------------------------:|
+| Runtime-agnostic API              | :white_check_mark:       |
+| Linux                             | :white_check_mark:       |
+| TFLite (XNNPACK, GPU)             | :white_check_mark:       |
+| Android CPU                       | :hourglass_flowing_sand: |
+| Android GPU                       | :hourglass_flowing_sand: |
+| Apple silicon CPU                 | :hourglass_flowing_sand: |
+| Apple silicon GPU                 | :hourglass_flowing_sand: |
+| Qualcomm NPU                      | :hourglass_flowing_sand: |
+| MediaTek NPU                      | :hourglass_flowing_sand: |
+| Samsung NPU                       | :hourglass_flowing_sand: |
+| Automatic runtime detection       | :hourglass_flowing_sand: |
+| Java bindings                     | :hourglass_flowing_sand: |
+| Objective-C bindings              | :hourglass_flowing_sand: |
+| Pre/Post-Processing functionality | :hourglass_flowing_sand: |
 
 ## Building and installing
 
