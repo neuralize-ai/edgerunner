@@ -12,12 +12,12 @@
 
 <div align="center">
     <a href="https://runlocal.ai">Website</a> |
+    <a href="https://runlocal.ai#contact">Contact</a> |
     <a href="https://discord.gg/y9EzZEkwbR">Discord</a> |
-    <a href="https://x.com/Neuralize_AI">Twitter</a> |
-    <a href="https://runlocal.ai#contact">Contact</a>
+    <a href="https://x.com/Neuralize_AI">Twitter</a>
 </div>
 
-## Introduction
+## :bulb: Introduction
 
 The purpose of Edgerunner is to facilitate quick and easy integration of arbitrary AI models that are targeted for consumer mobile devices (smartphones, laptops, wearables, etc.).
 
@@ -25,9 +25,9 @@ Currently, on-device inference tooling is highly fragmented. To run AI models ef
 
 Edgerunner aims to consolidate existing on-device AI frameworks, abstracting away cross-platform on-device AI complexities. This will be achieved through a runtime-agnostic API, which can load and interact with arbitrary instances of on-device AI models with just a few lines of code.
 
-This repo is in its early stages of development (see [Features](#features) and [Roadmap](#roadmap)). There is lots of work to be done in order to achieve this vision, and your [contributions](#contributing) will be important to make this happen!
+This repo is in its early stages of development (see [Features](#features)). There is lots of work to be done in order to achieve this vision, and your [contributions](#contributing) will be important to make this happen!
 
-## Features
+## :gift: Features
 
 |              Feature              |          Status          |
 | ----------------------------------|:------------------------:|
@@ -46,19 +46,22 @@ This repo is in its early stages of development (see [Features](#features) and [
 | Objective-C bindings              | :hourglass_flowing_sand: |
 | Pre/Post-Processing functionality | :hourglass_flowing_sand: |
 
-## Building and installing
+Please request additional features through Github issues or on our [Discord](https://discord.gg/y9EzZEkwbR).
+
+## :hammer_and_wrench: Building and installing
 
 See the [BUILDING](BUILDING.md) document.
 
-## Usage
+## :joystick: Usage
 
-See [examples](./example) for basic usage.
+See [examples](./example) for basic usage instructions.
 
-## Contributing
+## :trophy: Contributing
 
 See the [CONTRIBUTING](CONTRIBUTING.md) document.
-Join our [Discord](https://discord.gg/y9EzZEkwbR) for feedback and discussion
 
-## Licensing
+Join our [Discord](https://discord.gg/y9EzZEkwbR) for discussing any issues.
+
+## :scroll: Licensing
 
 See the [LICENSING](LICENSE.txt) document.
