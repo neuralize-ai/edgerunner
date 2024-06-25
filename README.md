@@ -1,5 +1,4 @@
 <h1 align="center">
-    <br>
     <a href="https://runlocal.ai"><img src="./images/large-logo.png" width="300"></a>
     <br><br>
     <span style="font-size: larger;">Edgerunner</span>
@@ -40,31 +39,45 @@ away cross-platform on-device AI complexities. This will be achieved through a
 runtime-agnostic API, which can load and interact with arbitrary instances of
 on-device AI models with just a few lines of code.
 
-This repo is in its early stages of development (see [Features](#gift-features)).
+This repo is in its early stages of development (see [Features](#gift-features) and [Support](#electricplug-support)).
 There is lots of work to be done in order to achieve this vision, and your
 [contributions](#trophy-contributing) will be important to make this happen!
 
 ## :gift: Features
 
-|              Feature              |          Status          |
-| ----------------------------------|:------------------------:|
-| Runtime-agnostic API              | :white_check_mark:       |
-| Linux CPU                         | :white_check_mark:       |
-| Linux GPU                         | :white_check_mark:       |
-| TFLite (XNNPACK, GPU)             | :white_check_mark:       |
-| Android CPU                       | :hourglass_flowing_sand: |
-| Android GPU                       | :hourglass_flowing_sand: |
-| Apple silicon CPU                 | :hourglass_flowing_sand: |
-| Apple silicon GPU                 | :hourglass_flowing_sand: |
-| Qualcomm NPU                      | :hourglass_flowing_sand: |
-| MediaTek NPU                      | :hourglass_flowing_sand: |
-| Samsung NPU                       | :hourglass_flowing_sand: |
-| Automatic runtime detection       | :hourglass_flowing_sand: |
-| Java bindings                     | :hourglass_flowing_sand: |
-| Objective-C bindings              | :hourglass_flowing_sand: |
-| Pre/Post-Processing functionality | :hourglass_flowing_sand: |
+|           Feature                   |          Status          |
+| ------------------------------------|:------------------------:|
+| Runtime-agnostic API                | :white_check_mark:       |
+| Model loading                       | :white_check_mark:       |
+| Model execution                     | :white_check_mark:       |
+| Automatic framework detection       | :hourglass_flowing_sand: |
+| Choose optimal execution at runtime | :hourglass_flowing_sand: |
+| Java bindings                       | :hourglass_flowing_sand: |
+| Objective-C bindings                | :hourglass_flowing_sand: |
 
 Please request additional features through Github issues or on our [Discord](https://discord.gg/y9EzZEkwbR).
+
+## :electric_plug: Support
+
+### OS
+
+| Linux              | MacOS              | Windows                  | Android                  | iOS                      |
+|:------------------:|:------------------:|:------------------------:|:------------------------:|:------------------------:|
+| :white_check_mark: | :white_check_mark: | :hourglass_flowing_sand: | :hourglass_flowing_sand: | :hourglass_flowing_sand: |
+
+### Runtime Framework
+
+| TFLite             | CoreML                   | Onnx                     | QNN                      | OpenVino                 | Ryzen AI                 | NeuroPilot               |
+|:------------------:|:------------------------:|:------------------------:|:------------------------:|:------------------------:|:------------------------:|:------------------------:|
+| :white_check_mark: | :hourglass_flowing_sand: | :hourglass_flowing_sand: | :hourglass_flowing_sand: | :hourglass_flowing_sand: | :hourglass_flowing_sand: | :hourglass_flowing_sand: |
+
+### Chip Vendor
+
+|     | Apple                    | Qualcomm                 | MediaTek                 | Samsung                  | Intel                    | AMD                      | NVIDIA                   |
+|:---:|:------------------------:|:------------------------:|:------------------------:|:------------------------:|:------------------------:|:------------------------:|:------------------------:|
+| CPU | :white_check_mark:       | :white_check_mark:       | :white_check_mark:       | :white_check_mark:       | :white_check_mark:       | :white_check_mark:       | :no_entry:               |
+| GPU | :hourglass_flowing_sand: | :hourglass_flowing_sand: | :hourglass_flowing_sand: | :hourglass_flowing_sand: | :white_check_mark:       | :white_check_mark:       | :hourglass_flowing_sand: |
+| NPU | :hourglass_flowing_sand: | :hourglass_flowing_sand: | :hourglass_flowing_sand: | :no_entry:               | :hourglass_flowing_sand: | :hourglass_flowing_sand: | :no_entry:               |
 
 ## :hammer_and_wrench: Building and installing
 
