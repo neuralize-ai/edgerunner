@@ -88,7 +88,7 @@ endif()
 # ---- Examples ----
 
 if(PROJECT_IS_TOP_LEVEL)
-    option(BUILD_EXAMPLES "Build examples tree." "${edgerunner_DEVELOPER_MODE}")
+    option(BUILD_EXAMPLES "Build examples tree." OFF)
     if(BUILD_EXAMPLES)
         add_subdirectory(example)
     endif()

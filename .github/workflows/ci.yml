@@ -131,8 +131,6 @@ jobs:
   test:
     needs: [lint]
 
-    if: false
-
     strategy:
       matrix:
         os: [ubuntu-22.04] #, macos-14, windows-2022]
@@ -171,8 +169,7 @@ jobs:
 
     - name: Install dependencies
       shell: bash
-      run: >-
-        sudo bash < .github/scripts/conan-ci-setup.sh
+      run: bash < .github/scripts/conan-ci-setup.sh
 
     - name: Setup MultiToolTask
       if: matrix.os == 'windows-2022'
