@@ -43,7 +43,8 @@ enum class STATUS {
  */
 class EDGERUNNER_EXPORT Model {
   public:
-    Model() = default;
+    explicit Model(const std::filesystem::path& modelPath)
+        : m_name(modelPath.stem().string()) {}
 
     Model(const Model&) = default;
     Model(Model&&) = delete;

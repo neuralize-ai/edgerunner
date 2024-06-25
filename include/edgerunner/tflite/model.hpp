@@ -12,7 +12,8 @@ namespace edge::tflite {
 
 class EDGERUNNER_EXPORT ModelImpl final : public Model {
   public:
-    explicit ModelImpl(const std::filesystem::path& modelPath) {
+    explicit ModelImpl(const std::filesystem::path& modelPath)
+        : Model(modelPath) {
         loadModel(modelPath);
     }
 
@@ -20,8 +21,6 @@ class EDGERUNNER_EXPORT ModelImpl final : public Model {
     ModelImpl(ModelImpl&&) = delete;
     auto operator=(const ModelImpl&) -> ModelImpl& = delete;
     auto operator=(ModelImpl&&) -> ModelImpl& = delete;
-
-    ModelImpl() = default;
 
     ~ModelImpl() final;
 
