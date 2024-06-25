@@ -39,8 +39,8 @@ away cross-platform on-device AI complexities. This will be achieved through a
 runtime-agnostic API, which can load and interact with arbitrary instances of
 on-device AI models with just a few lines of code.
 
-This repo is in its early stages of development (see [Features](#gift-features) and [Support](#electricplug-support)).
-There is lots of work to be done in order to achieve this vision, and your
+This repo is in its early stages of development (see [Features](#gift-features) and [Support](#electric_plug-support)). The local inference space is quickly evolving and, as such, the goals of this project are subject to change.
+There is lots of work to be done in order to achieve our vision, and your
 [contributions](#trophy-contributing) will be important to make this happen!
 
 ## :gift: Features
@@ -50,6 +50,7 @@ There is lots of work to be done in order to achieve this vision, and your
 | Runtime-agnostic API                | :white_check_mark:       |
 | Model loading                       | :white_check_mark:       |
 | Model execution                     | :white_check_mark:       |
+| Quantized models                    | :hourglass_flowing_sand: |
 | Automatic framework detection       | :hourglass_flowing_sand: |
 | Choose optimal execution at runtime | :hourglass_flowing_sand: |
 | Java bindings                       | :hourglass_flowing_sand: |
