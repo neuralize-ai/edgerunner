@@ -6,7 +6,9 @@
     <br>
 </h1>
 
-Edgerunner is a cross-platform, cross-runtime ML inference library for mobile devices. The motivation for Edgerunner is to facilitate quick and easy integration of arbitrary ML models that are targeted for consumer mobile devices (smartphones, laptops, wearables, etc). This is achieved through a convenient runtime-agnostic API.
+<h4 align="center">
+    A cross-platform, cross-runtime on-device AI inference library for mobile devices.
+</h4>
 
 ## Building and installing
 
