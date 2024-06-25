@@ -50,6 +50,7 @@ There is lots of work to be done in order to achieve our vision, and your
 | Runtime-agnostic API                | :white_check_mark:       |
 | Model loading                       | :white_check_mark:       |
 | Model execution                     | :white_check_mark:       |
+| Quantized models                    | :hourglass_flowing_sand: |
 | Automatic framework detection       | :hourglass_flowing_sand: |
 | Choose optimal execution at runtime | :hourglass_flowing_sand: |
 | Java bindings                       | :hourglass_flowing_sand: |
