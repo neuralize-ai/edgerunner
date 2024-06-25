@@ -1,7 +1,5 @@
 #include <algorithm>
 #include <cstddef>
-#include <functional>
-#include <numeric>
 #include <string>
 #include <vector>
 
@@ -11,22 +9,7 @@
 #include "edgerunner/model.hpp"
 #include "edgerunner/tensor.hpp"
 #include "edgerunner/tflite/model.hpp"
-
-constexpr float mseThreshold = 4.0;
-
-template<typename C1, typename C2, typename T = typename C1::value_type>
-auto meanSquaredError(const C1& input1, const C2& input2) -> T {
-    return std::transform_reduce(input1.cbegin(),
-                                 input1.cend(),
-                                 input2.cbegin(),
-                                 static_cast<T>(0),
-                                 std::plus<>(),
-                                 [](auto val1, auto val2) {
-                                     const auto error = val1 - val2;
-                                     return error * error;
-                                 })
-        / static_cast<T>(input1.size());
-}
+#include "utils.hpp"
 
 TEST_CASE("Tflite GPU runtime", "[tflite][gpu]") {
     const std::string modelPath = "models/tflite/mobilenet_v3_small.tflite";
@@ -34,17 +17,29 @@ TEST_CASE("Tflite GPU runtime", "[tflite][gpu]") {
 
     REQUIRE(std::string {"mobilenet_v3_small"} == model.name());
 
+    REQUIRE(model.getDelegate() == edge::DELEGATE::CPU);
+
+    auto cpuInputData = model.getInput(0)->getTensorAs<float>();
+    for (auto& cpuInputDatum : cpuInputData) {
+        cpuInputDatum = 0;
+    }
+
     model.execute();
 
     const auto cpuOutput = model.getOutput(0)->getTensorAs<float>();
 
-    std::vector<float> cpuResult(cpuOutput.size());
-    std::copy(cpuOutput.cbegin(), cpuOutput.cend(), cpuResult.begin());
+    /* applying a new delegate releases memory, so need to copy cpu output to
+     * compare */
+    std::vector<float> cpuResult;
+    cpuResult.reserve(cpuOutput.size());
+    std::copy(
+        cpuOutput.cbegin(), cpuOutput.cend(), std::back_inserter(cpuResult));
 
-    model.setDelegate(edge::DELEGATE::GPU);
-    const auto delegateStatus = model.applyDelegate();
+    const auto delegateStatus = model.applyDelegate(edge::DELEGATE::GPU);
 
     REQUIRE(delegateStatus == edge::STATUS::SUCCESS);
+
+    REQUIRE(model.getDelegate() == edge::DELEGATE::GPU);
 
     const auto numInputs = model.getNumInputs();
 
@@ -64,6 +59,14 @@ TEST_CASE("Tflite GPU runtime", "[tflite][gpu]") {
 
     REQUIRE(inputData.size() == input->getSize());
 
+    for (auto& inputDatum : inputData) {
+        inputDatum = 0;
+    }
+
+    const auto executionStatus = model.execute();
+
+    REQUIRE(executionStatus == edge::STATUS::SUCCESS);
+
     auto output = model.getOutput(0);
 
     REQUIRE(output->getDimensions() == std::vector<size_t> {1, 1000});
@@ -74,12 +77,9 @@ TEST_CASE("Tflite GPU runtime", "[tflite][gpu]") {
 
     REQUIRE(outputData.size() == output->getSize());
 
-    const auto executionStatus = model.execute();
-
-    REQUIRE(executionStatus == edge::STATUS::SUCCESS);
-
     const auto mse = meanSquaredError(cpuResult, outputData);
 
+    CAPTURE(mse);
     REQUIRE(mse < mseThreshold);
 
     BENCHMARK("execution") {

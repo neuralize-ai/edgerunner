@@ -9,6 +9,8 @@
 #include <tensorflow/lite/kernels/register.h>
 #include <tensorflow/lite/model_builder.h>
 
+#include "edgerunner/tflite/tensor.hpp"
+
 #ifdef EDGERUNNER_GPU
 #    include <tensorflow/lite/delegates/gpu/delegate.h>
 #endif
@@ -59,20 +61,22 @@ void ModelImpl::allocate() {
     }
 }
 
-auto ModelImpl::applyDelegate() -> STATUS {
+auto ModelImpl::applyDelegate(const DELEGATE& delegate) -> STATUS {
     /* undo any previous delegate */
     createInterpreter();
     deleteDelegate();
 
     STATUS status = STATUS::SUCCESS;
 
-    if (getDelegate() == DELEGATE::GPU) {
+    if (delegate == DELEGATE::GPU) {
 #ifdef EDGERUNNER_GPU
         m_delegate = TfLiteGpuDelegateV2Create(nullptr);
 
         if (m_interpreter->ModifyGraphWithDelegate(m_delegate) != kTfLiteOk) {
             status = STATUS::FAIL;
         }
+
+        setDelegate(delegate);
 #else
         status = STATUS::FAIL;
 #endif

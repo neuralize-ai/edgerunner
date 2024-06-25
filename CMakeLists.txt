@@ -71,6 +71,9 @@ target_link_libraries(edgerunner_edgerunner PUBLIC nonstd::span-lite)
 find_package(tensorflowlite REQUIRED)
 target_link_libraries(edgerunner_edgerunner PUBLIC tensorflow::tensorflowlite)
 
+find_package(OpenCV REQUIRED)
+target_link_libraries(edgerunner_edgerunner PUBLIC opencv::opencv)
+
 if(edgerunner_ENABLE_GPU)
     target_compile_definitions(
         edgerunner_edgerunner
@@ -83,6 +86,15 @@ endif()
 
 if(NOT CMAKE_SKIP_INSTALL_RULES)
     include(cmake/install-rules.cmake)
+endif()
+
+# ---- Examples ----
+
+if(PROJECT_IS_TOP_LEVEL)
+    option(BUILD_EXAMPLES "Build examples tree." "${edgerunner_DEVELOPER_MODE}")
+    if(BUILD_EXAMPLES)
+        add_subdirectory(example)
+    endif()
 endif()
 
 # ---- Developer mode ----

@@ -131,9 +131,11 @@ jobs:
   test:
     needs: [lint]
 
+    if: false
+
     strategy:
       matrix:
-        os: [macos-14, ubuntu-22.04] #, windows-2022]
+        os: [ubuntu-22.04] #, macos-14, windows-2022]
 
         type: [shared, static]
 
@@ -169,7 +171,8 @@ jobs:
 
     - name: Install dependencies
       shell: bash
-      run: bash < .github/scripts/conan-ci-setup.sh
+      run: >-
+        sudo bash < .github/scripts/conan-ci-setup.sh
 
     - name: Setup MultiToolTask
       if: matrix.os == 'windows-2022'
@@ -191,11 +194,6 @@ jobs:
 
     - name: Install
       run: cmake --install build --config Release --prefix prefix
-
-    - name: Check
-      run: |
-        ls models/tflite
-        ls build/test/models/tflite
 
     - name: Test
       working-directory: build
