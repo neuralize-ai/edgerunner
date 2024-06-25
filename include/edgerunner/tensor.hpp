@@ -9,6 +9,26 @@
 
 namespace edge {
 
+/**
+ * @brief Enum class representing different types of tensors
+ *
+ * This enum class defines different types of tensors that can be used in a
+ * system. Each type corresponds to a specific data type that the tensor can
+ * hold.
+ *
+ * Possible values:
+ * - UNSUPPORTED: Represents an unsupported tensor type
+ * - NOTYPE: Represents a tensor with no specific data type
+ * - FLOAT32: Represents a tensor with 32-bit floating point data type
+ * - FLOAT16: Represents a tensor with 16-bit floating point data type
+ * - INT32: Represents a tensor with 32-bit integer data type
+ * - UINT32: Represents a tensor with unsigned 32-bit integer data type
+ * - INT8: Represents a tensor with 8-bit integer data type
+ * - UINT8: Represents a tensor with unsigned 8-bit integer data type
+ *
+ * @note This enum class is used to specify the data type of tensors in the
+ * system
+ */
 enum class TensorType {
     UNSUPPORTED,
     NOTYPE,
