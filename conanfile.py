@@ -3,7 +3,15 @@ from conan import ConanFile
 
 class Recipe(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
-    generators = "CMakeToolchain", "CMakeDeps", "VirtualRunEnv"
+    generators = "CMakeDeps", "VirtualRunEnv"
+
+    options = {
+        "shared": [True, False],
+        "fPIC": [True, False],
+        "examples": [True, False],
+    }
+
+    default_options = {"shared": False, "fPIC": True, "examples": False}
 
     def layout(self):
         self.folders.generators = "conan"
