@@ -27,6 +27,12 @@ Edgerunner aims to consolidate existing on-device AI frameworks, abstracting awa
 
 This repo is in its early stages of development (see [Features](#features) and [Roadmap](#roadmap)). There is lots of work to be done in order to achieve this vision, and your [contributions](#contributing) will be important to make this happen!
 
+## Features
+
+- Runtime-agnostic API
+- Linux support
+- TFLite support (XNNPACK, GPU)
+
 ## Building and installing
 
 See the [BUILDING](BUILDING.md) document.
