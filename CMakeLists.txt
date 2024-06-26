@@ -17,6 +17,7 @@ include(cmake/variables.cmake)
 
 add_library(
     edgerunner_edgerunner
+    source/edgerunner.cpp
     source/tflite/model.cpp
     source/tflite/tensor.cpp
 )
