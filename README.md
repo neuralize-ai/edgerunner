@@ -6,7 +6,7 @@
 </h1>
 
 <h4 align="center">
-    A cross-platform, cross-runtime on-device AI inference library for mobile devices.
+    Universal AI inference library for mobile devices.
 </h4>
 
 <div align="center">
@@ -20,7 +20,7 @@
 
 The purpose of Edgerunner is to facilitate quick and easy integration of
 arbitrary AI models that are targeted for consumer mobile devices
-(smartphones, laptops, wearables, etc.).
+(smartphones, laptops, tablets, wearables, etc.).
 
 Currently, on-device inference tooling is highly fragmented. To run AI models
 efficiently on end-user devices, developers require a deep understanding of
@@ -35,7 +35,7 @@ Android, increasing the effort required to support and maintain their
 cross-platform systems.
 
 Edgerunner aims to consolidate existing on-device AI frameworks, abstracting
-away cross-platform on-device AI complexities. This will be achieved through a
+cross-platform on-device AI complexities. This will be achieved through a
 runtime-agnostic API, which can load and interact with arbitrary instances of
 on-device AI models with just a few lines of code.
 
