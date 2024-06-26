@@ -196,12 +196,11 @@ jobs:
 
   docs:
     # Deploy docs only when builds succeed
-    # needs: [sanitize, test]
-    needs: [lint]
+    needs: [sanitize, test]
 
     runs-on: ubuntu-22.04
 
-    if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/main'
       && github.event_name == 'push'
       && github.repository_owner == 'ciaranbor'
 
