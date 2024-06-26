@@ -50,8 +50,8 @@ There is lots of work to be done in order to achieve our vision, and your
 | Runtime-agnostic API                | :white_check_mark:       |
 | Model loading                       | :white_check_mark:       |
 | Model execution                     | :white_check_mark:       |
+| Automatic framework detection       | :white_check_mark:       |
 | Quantized models                    | :hourglass_flowing_sand: |
-| Automatic framework detection       | :hourglass_flowing_sand: |
 | Choose optimal execution at runtime | :hourglass_flowing_sand: |
 | Java bindings                       | :hourglass_flowing_sand: |
 | Objective-C bindings                | :hourglass_flowing_sand: |
@@ -62,9 +62,9 @@ Please request additional features through Github issues or on our [Discord](htt
 
 ### OS
 
-| Linux              | MacOS              | Windows                  | Android                  | iOS                      |
-|:------------------:|:------------------:|:------------------------:|:------------------------:|:------------------------:|
-| :white_check_mark: | :white_check_mark: | :hourglass_flowing_sand: | :hourglass_flowing_sand: | :hourglass_flowing_sand: |
+| Linux              | MacOS              | Windows                  | Android            | iOS                      |
+|:------------------:|:------------------:|:------------------------:|:------------------:|:------------------------:|
+| :white_check_mark: | :white_check_mark: | :hourglass_flowing_sand: | :white_check_mark: | :hourglass_flowing_sand: |
 
 ### Runtime Framework
 
