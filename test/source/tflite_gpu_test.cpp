@@ -7,27 +7,29 @@
 #include <catch2/catch_message.hpp>
 #include <catch2/catch_test_macros.hpp>
 
+#include "edgerunner/edgerunner.hpp"
 #include "edgerunner/model.hpp"
 #include "edgerunner/tensor.hpp"
-#include "edgerunner/tflite/model.hpp"
 #include "utils.hpp"
 
 TEST_CASE("Tflite GPU runtime", "[tflite][gpu]") {
     const std::string modelPath = "models/tflite/mobilenet_v3_small.tflite";
-    auto model = edge::tflite::ModelImpl {modelPath};
+    auto model = edge::createModel(modelPath);
 
-    REQUIRE(std::string {"mobilenet_v3_small"} == model.name());
+    REQUIRE(model != nullptr);
 
-    REQUIRE(model.getDelegate() == edge::DELEGATE::CPU);
+    REQUIRE(std::string {"mobilenet_v3_small"} == model->name());
 
-    auto cpuInputData = model.getInput(0)->getTensorAs<float>();
+    REQUIRE(model->getDelegate() == edge::DELEGATE::CPU);
+
+    auto cpuInputData = model->getInput(0)->getTensorAs<float>();
     for (auto& cpuInputDatum : cpuInputData) {
         cpuInputDatum = 0;
     }
 
-    model.execute();
+    model->execute();
 
-    const auto cpuOutput = model.getOutput(0)->getTensorAs<float>();
+    const auto cpuOutput = model->getOutput(0)->getTensorAs<float>();
 
     /* applying a new delegate releases memory, so need to copy cpu output to
      * compare */
@@ -36,21 +38,21 @@ TEST_CASE("Tflite GPU runtime", "[tflite][gpu]") {
     std::copy(
         cpuOutput.cbegin(), cpuOutput.cend(), std::back_inserter(cpuResult));
 
-    const auto delegateStatus = model.applyDelegate(edge::DELEGATE::GPU);
+    const auto delegateStatus = model->applyDelegate(edge::DELEGATE::GPU);
 
     REQUIRE(delegateStatus == edge::STATUS::SUCCESS);
 
-    REQUIRE(model.getDelegate() == edge::DELEGATE::GPU);
+    REQUIRE(model->getDelegate() == edge::DELEGATE::GPU);
 
-    const auto numInputs = model.getNumInputs();
+    const auto numInputs = model->getNumInputs();
 
     REQUIRE(numInputs == 1);
 
-    const auto numOutputs = model.getNumOutputs();
+    const auto numOutputs = model->getNumOutputs();
 
     REQUIRE(numOutputs == 1);
 
-    auto input = model.getInput(0);
+    auto input = model->getInput(0);
 
     REQUIRE(input->getDimensions() == std::vector<size_t> {1, 224, 224, 3});
 
@@ -64,11 +66,11 @@ TEST_CASE("Tflite GPU runtime", "[tflite][gpu]") {
         inputDatum = 0;
     }
 
-    const auto executionStatus = model.execute();
+    const auto executionStatus = model->execute();
 
     REQUIRE(executionStatus == edge::STATUS::SUCCESS);
 
-    auto output = model.getOutput(0);
+    auto output = model->getOutput(0);
 
     REQUIRE(output->getDimensions() == std::vector<size_t> {1, 1000});
 
@@ -84,6 +86,6 @@ TEST_CASE("Tflite GPU runtime", "[tflite][gpu]") {
     REQUIRE(mse < mseThreshold);
 
     BENCHMARK("execution") {
-        return model.execute();
+        return model->execute();
     };
 }
