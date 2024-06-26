@@ -36,6 +36,10 @@ class Recipe(ConanFile):
 
     def configure(self):
 
+        if self.settings.os == "Android":
+            # TODO: fix tflite Android gpu
+            self.options.gpu = False
+
         if self.options.gpu:
             self.options["tensorflow-lite"].with_gpu = True
 
@@ -54,5 +58,6 @@ class Recipe(ConanFile):
         toolchain = CMakeToolchain(self)
 
         toolchain.variables["BUILD_EXAMPLES"] = self.options.examples
+        toolchain.variables["edgerunner_ENABLE_GPU"] = self.options.gpu
 
         toolchain.generate()
