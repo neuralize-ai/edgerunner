@@ -20,7 +20,7 @@ namespace edge::tflite {
  * @class ModelImpl
  * @brief Implementation of the Model interface for TensorFlow Lite models.
  */
-class EDGERUNNER_EXPORT ModelImpl final : public Model {
+class ModelImpl final : public Model {
   public:
     /**
      * @brief Constructor for ModelImpl.
