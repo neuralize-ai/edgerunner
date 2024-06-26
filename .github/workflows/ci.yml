@@ -71,7 +71,7 @@ jobs:
 
     - name: Test
       working-directory: build/coverage
-      run: ctest --output-on-failure --no-tests=error -j 2 -R "CPU"
+      run: ctest --output-on-failure --no-tests=error -j 2
 
     - name: Process coverage info
       run: cmake --build build/coverage -t coverage
@@ -88,8 +88,6 @@ jobs:
     runs-on: ubuntu-22.04
 
     env: { CXX: clang++-14 }
-
-    if: false
 
     steps:
     - uses: actions/checkout@v4
@@ -126,7 +124,7 @@ jobs:
           halt_on_error=1"
         UBSAN_OPTIONS: "print_stacktrace=1:\
           halt_on_error=1"
-      run: ctest --output-on-failure --no-tests=error -j 2 -R "CPU"
+      run: ctest --output-on-failure --no-tests=error -j 2
 
   test:
     needs: [lint]
@@ -194,7 +192,7 @@ jobs:
 
     - name: Test
       working-directory: build
-      run: ctest --output-on-failure --no-tests=error -C Release -j 2 -R "CPU"
+      run: ctest --output-on-failure --no-tests=error -C Release -j 2
 
   docs:
     # Deploy docs only when builds succeed
@@ -205,7 +203,7 @@ jobs:
 
     if: github.ref == 'refs/heads/master'
       && github.event_name == 'push'
-      && github.repository_owner == 'neuralize-ai'
+      && github.repository_owner == 'ciaranbor'
 
     permissions:
       contents: write
