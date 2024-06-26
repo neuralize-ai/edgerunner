@@ -25,7 +25,15 @@ function(add_example NAME)
     add_executable("${NAME}" "${NAME}.cpp")
     target_link_libraries("${NAME}" PRIVATE examples_interface)
     target_compile_features("${NAME}" PRIVATE cxx_std_17)
-    add_custom_target("run_${NAME}" COMMAND "${NAME}" VERBATIM)
+    if(ANDROID)
+        add_custom_target(
+            "run_${NAME}"
+            COMMAND "${CMAKE_SOURCE_DIR}/example/run_with_adb.sh" -b "${CMAKE_BINARY_DIR}" -e "${NAME}"
+            VERBATIM
+        )
+    else()
+        add_custom_target("run_${NAME}" COMMAND "${NAME}" VERBATIM)
+    endif()
     add_dependencies("run_${NAME}" "${NAME}")
     add_dependencies(run-examples "run_${NAME}")
 endfunction()
