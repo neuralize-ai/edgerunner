@@ -11,8 +11,6 @@
 
 #include <nonstd/span.hpp>
 
-#include "edgerunner/edgerunner_export.hpp"
-
 namespace edge {
 
 /**
@@ -55,7 +53,7 @@ enum class TensorType {
  * @note This class is meant to be used as a base class and should be subclassed
  * to provide concrete implementations.
  */
-class EDGERUNNER_EXPORT Tensor {
+class Tensor {
   public:
     /**
      * @brief Default constructor for Tensor
