@@ -202,7 +202,7 @@ jobs:
 
     if: github.ref == 'refs/heads/main'
       && github.event_name == 'push'
-      && github.repository_owner == 'ciaranbor'
+      && github.repository_owner == 'neuralize-ai'
 
     permissions:
       contents: write
