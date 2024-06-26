@@ -8,12 +8,11 @@
 
 #include <fmt/core.h>
 #include <fmt/ranges.h>
-#include <opencv2/imgcodecs.hpp>
 #include <opencv4/opencv2/highgui.hpp>
 #include <opencv4/opencv2/imgproc.hpp>
 
+#include "edgerunner/edgerunner.hpp"
 #include "edgerunner/model.hpp"
-#include "edgerunner/tflite/model.hpp"
 
 class ImageClassifier {
   public:
@@ -66,7 +65,7 @@ class ImageClassifier {
         return power;
     }
 
-    edge::tflite::ModelImpl m_model;
+    std::unique_ptr<edge::Model> m_model;
 
     std::vector<std::string> m_labelList;
 
@@ -76,10 +75,10 @@ class ImageClassifier {
 inline ImageClassifier::ImageClassifier(
     const std::filesystem::path& modelPath,
     const std::filesystem::path& labelListPath)
-    : m_model(modelPath)
+    : m_model(edge::createModel(modelPath))
     , m_labelList(loadLabelList(labelListPath)) {
 #ifdef EDGERUNNER_GPU
-    m_model.applyDelegate(edge::DELEGATE::GPU);
+    m_model->applyDelegate(edge::DELEGATE::GPU);
 #endif
 }
 
@@ -98,7 +97,7 @@ inline auto ImageClassifier::loadImage(const std::filesystem::path& imagePath)
 
 inline auto ImageClassifier::predict(const size_t numPredictions)
     -> std::vector<std::pair<std::string, float>> {
-    auto input = m_model.getInput(0);
+    auto input = m_model->getInput(0);
 
     const auto inputDimensions = input->getDimensions();
 
@@ -106,11 +105,11 @@ inline auto ImageClassifier::predict(const size_t numPredictions)
 
     preprocess(m_image, inputDimensions, inputBuffer);
 
-    if (m_model.execute() != edge::STATUS::SUCCESS) {
+    if (m_model->execute() != edge::STATUS::SUCCESS) {
         return {};
     }
 
-    auto output = m_model.getOutput(0)->getTensorAs<float>();
+    auto output = m_model->getOutput(0)->getTensorAs<float>();
 
     const auto probabilities = softmax(output);
 
