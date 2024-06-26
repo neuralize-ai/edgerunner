@@ -9,10 +9,16 @@ class Recipe(ConanFile):
     options = {
         "shared": [True, False],
         "fPIC": [True, False],
+        "gpu": [True, False],
         "examples": [True, False],
     }
 
-    default_options = {"shared": False, "fPIC": True, "examples": False}
+    default_options = {
+        "shared": False,
+        "fPIC": True,
+        "gpu": False,
+        "examples": False,
+    }
 
     def layout(self):
         self.folders.generators = "conan"
@@ -29,6 +35,10 @@ class Recipe(ConanFile):
         self.test_requires("catch2/3.6.0")
 
     def configure(self):
+
+        if self.options.gpu:
+            self.options["tensorflow-lite"].with_gpu = True
+
         if self.options.examples:
             self.options["opencv"].with_quirc = False
             self.options["opencv"].with_ffmpeg = False
