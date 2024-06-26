@@ -164,6 +164,8 @@ Runs all the examples created by the `add_example` command.
 Individual examples can be executed using `run_<example_name>` (without the
 extension) instead of `run-examples`.
 
+See [examples](./example) for more details.
+
 #### `spell-check` and `spell-fix`
 
 These targets run the codespell tool on the codebase to check errors and to fix
