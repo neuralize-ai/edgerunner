@@ -33,6 +33,8 @@ following to your `CMakeUserPresets.json`:
 }
 ```
 
+For MacOS, replace "Unix Makefiles" with "Xcode".
+
 > [!NOTE]
 > Examples require additional dependencies to the main library. As such, it is
 required to supply `-o examples=True` to the `conan install` command.
