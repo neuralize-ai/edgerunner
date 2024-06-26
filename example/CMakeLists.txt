@@ -9,9 +9,12 @@ add_library(examples_interface INTERFACE)
 
 if(PROJECT_IS_TOP_LEVEL)
     find_package(edgerunner REQUIRED)
+    find_package(fmt REQUIRED)
 endif()
 
 target_link_libraries(examples_interface INTERFACE edgerunner::edgerunner)
+
+target_link_libraries(examples_interface INTERFACE fmt::fmt)
 
 find_package(OpenCV REQUIRED)
 target_link_libraries(examples_interface INTERFACE opencv::opencv)
