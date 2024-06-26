@@ -274,7 +274,6 @@ inline auto ImageClassifier::loadLabelList(
     std::ifstream file(labelListPath);
     std::string line;
     while (std::getline(file, line)) {
-        line.pop_back();
         labels.push_back(line);
     }
     return labels;
