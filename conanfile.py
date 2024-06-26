@@ -40,8 +40,7 @@ class Recipe(ConanFile):
             # TODO: fix tflite Android gpu
             self.options.gpu = False
 
-        if self.options.gpu:
-            self.options["tensorflow-lite"].with_gpu = True
+        self.options["tensorflow-lite"].with_gpu = self.options.gpu
 
         if self.options.examples:
             self.options["opencv"].with_quirc = False
