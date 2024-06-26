@@ -19,7 +19,7 @@ namespace edge {
  * This function takes a file path to a model and creates a new Model object
  * from it.
  *
- * This is the intended way to instanciate a Model using the edgerunner library
+ * This is the intended way to instantiate a Model using the edgerunner library
  *
  * @param modelPath The file path to the model file
  * @return A unique pointer to the created Model object
