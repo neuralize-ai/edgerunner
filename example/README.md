@@ -57,7 +57,7 @@ cmake --preset=rel
 cmake --build --preset=rel -t run-examples
 ```
 
-For GPU support, add `-o gpu=True` to the `conan install` command. If an existing build exists, you may need to run;
+For GPU support, add `-o gpu=True` to the `conan install` command. If an existing build exists, you may need to run:
 
 ```bash
 cmake --preset=rel -Dedgerunner_ENABLE_GPU=ON
@@ -93,4 +93,10 @@ project root directory:
 conan install . -b missing -pr android -o examples=True
 cmake --preset=rel
 cmake --build --preset=rel -t run-examples
+```
+
+To run an individual example, execute:
+
+```bash
+cmake --build --preset=rel -t run_<example_name>
 ```
