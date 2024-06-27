@@ -38,6 +38,14 @@ class Recipe(ConanFile):
         "source/*",
     )
 
+    def config_options(self):
+        if self.settings.os == "Windows":
+            del self.options.fPIC
+
+        if self.settings.os == "Android":
+            # TODO: fix TfLite Android gpu
+            del self.options.gpu
+
     def set_version(self):
         self.version = load(self, "version.txt")[:-1]
 
@@ -57,11 +65,6 @@ class Recipe(ConanFile):
         self.test_requires("catch2/3.6.0")
 
     def configure(self):
-
-        if self.settings.os == "Android":
-            # TODO: fix tflite Android gpu
-            self.options.gpu = False
-
         self.options["tensorflow-lite"].with_gpu = self.options.gpu
 
         if self.options.examples:
