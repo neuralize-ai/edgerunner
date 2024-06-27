@@ -16,7 +16,7 @@
     <a href="https://x.com/Neuralize_AI">Twitter</a>
 </div>
 
-## :bulb: Introduction
+## 💡 Introduction
 
 The purpose of Edgerunner is to facilitate quick and easy integration of
 arbitrary AI models that are targeted for consumer mobile devices
@@ -39,61 +39,61 @@ cross-platform on-device AI complexities. This will be achieved through a
 runtime-agnostic API, which can load and interact with arbitrary instances of
 on-device AI models with just a few lines of code.
 
-This repo is in its early stages of development (see [Features](#gift-features) and [Support](#electric_plug-support)). The local inference space is quickly evolving and, as such, the goals of this project are subject to change.
+This repo is in its early stages of development (see [Features](#🎁-features) and [Support](#🔌-support)). The local inference space is quickly evolving and, as such, the goals of this project are subject to change.
 There is lots of work to be done in order to achieve our vision, and your
-[contributions](#trophy-contributing) will be important to make this happen!
+[contributions](#🏆-contributing) will be important to make this happen!
 
-## :gift: Features
+## 🎁 Features
 
-|           Feature                   |          Status          |
-| ------------------------------------|:------------------------:|
-| Runtime-agnostic API                | :white_check_mark:       |
-| Model loading                       | :white_check_mark:       |
-| Model execution                     | :white_check_mark:       |
-| Automatic framework detection       | :white_check_mark:       |
-| Quantized models                    | :hourglass_flowing_sand: |
-| Choose optimal execution at runtime | :hourglass_flowing_sand: |
-| Java bindings                       | :hourglass_flowing_sand: |
-| Objective-C bindings                | :hourglass_flowing_sand: |
+|           Feature                   | Status |
+| ------------------------------------|:------:|
+| Runtime-agnostic API                |   ✅   |
+| Model loading                       |   ✅   |
+| Model execution                     |   ✅   |
+| Automatic framework detection       |   ✅   |
+| Quantized models                    |   ⏳   |
+| Choose optimal execution at runtime |   ⏳   |
+| Java bindings                       |   ⏳   |
+| Objective-C bindings                |   ⏳   |
 
 Please request additional features through Github issues or on our [Discord](https://discord.gg/y9EzZEkwbR).
 
-## :electric_plug: Support
+## 🔌 Support
 
 ### OS
 
-| Linux              | MacOS              | Windows                  | Android            | iOS                      |
-|:------------------:|:------------------:|:------------------------:|:------------------:|:------------------------:|
-| :white_check_mark: | :white_check_mark: | :hourglass_flowing_sand: | :white_check_mark: | :hourglass_flowing_sand: |
+| Linux | MacOS | Windows | Android | iOS |
+|:-----:|:-----:|:-------:|:-------:|:---:|
+|  ✅   |  ✅   |   ⏳    |   ✅    | ⏳  |
 
 ### Runtime Framework
 
-| TFLite             | CoreML                   | Onnx                     | QNN                      | OpenVino                 | Ryzen AI                 | NeuroPilot               |
-|:------------------:|:------------------------:|:------------------------:|:------------------------:|:------------------------:|:------------------------:|:------------------------:|
-| :white_check_mark: | :hourglass_flowing_sand: | :hourglass_flowing_sand: | :hourglass_flowing_sand: | :hourglass_flowing_sand: | :hourglass_flowing_sand: | :hourglass_flowing_sand: |
+| TFLite | CoreML | Onnx | QNN | OpenVino | Ryzen AI | NeuroPilot |
+|:------:|:------:|:----:|:---:|:--------:|:--------:|:----------:|
+|   ✅   |   ⏳   |  ⏳  | ⏳  |    ⏳    |    ⏳    |     ⏳     |
 
 ### Chip Vendor
 
-|     | Apple                    | Qualcomm                 | MediaTek                 | Samsung                  | Intel                    | AMD                      | NVIDIA                   |
-|:---:|:------------------------:|:------------------------:|:------------------------:|:------------------------:|:------------------------:|:------------------------:|:------------------------:|
-| CPU | :white_check_mark:       | :white_check_mark:       | :white_check_mark:       | :white_check_mark:       | :white_check_mark:       | :white_check_mark:       | :no_entry:               |
-| GPU | :hourglass_flowing_sand: | :hourglass_flowing_sand: | :hourglass_flowing_sand: | :hourglass_flowing_sand: | :white_check_mark:       | :white_check_mark:       | :hourglass_flowing_sand: |
-| NPU | :hourglass_flowing_sand: | :hourglass_flowing_sand: | :hourglass_flowing_sand: | :no_entry:               | :hourglass_flowing_sand: | :hourglass_flowing_sand: | :no_entry:               |
+|     | Apple | Qualcomm | MediaTek | Samsung | Intel | AMD | NVIDIA |
+|:---:|:-----:|:--------:|:--------:|:-------:|:-----:|:---:|:------:|
+| CPU |  ✅   |    ✅    |    ✅    |   ✅    |  ✅   | ✅  |   ⛔️   |
+| GPU |  ⏳   |    ⏳    |    ⏳    |   ⏳    |  ✅   | ✅  |   ⏳   |
+| NPU |  ⏳   |    ⏳    |    ⏳    |   ⛔️    |  ⏳   | ⏳  |   ⛔️   |
 
-## :hammer_and_wrench: Building and installing
+## 🛠 Building and installing
 
 See the [BUILDING](BUILDING.md) document.
 
-## :joystick: Usage
+## 🕹 Usage
 
-See [examples](./example) for basic usage instructions.
+See [examples](example/README.md) for basic usage instructions.
 
-## :trophy: Contributing
+## 🏆 Contributing
 
 See the [CONTRIBUTING](CONTRIBUTING.md) document.
 
 Join our [Discord](https://discord.gg/y9EzZEkwbR) for discussing any issues.
 
-## :scroll: Licensing
+## 📜 Licensing
 
 See the [LICENSING](LICENSE.txt) document.
