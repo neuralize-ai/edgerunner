@@ -1,10 +1,9 @@
 from conan import ConanFile
-from conan.tools.cmake import CMakeToolchain
 from conan.tools.cmake import CMakeToolchain, CMake, cmake_layout
 from conan.tools.files import load
 
 
-class Recipe(ConanFile):
+class EdgerunnerRecipe(ConanFile):
     name = "edgerunner"
     package_type = "library"
     license = "MIT"
@@ -85,3 +84,12 @@ class Recipe(ConanFile):
         toolchain.variables["edgerunner_ENABLE_GPU"] = self.options.gpu
 
         toolchain.generate()
+
+    def build(self):
+        cmake = CMake(self)
+        cmake.configure()
+        cmake.build()
+
+    def package(self):
+        cmake = CMake(self)
+        cmake.install()
