@@ -32,6 +32,8 @@ TEST_CASE("Tflite default runtime (CPU)", "[tflite][cpu]") {
 
     auto input = model->getInput(0);
 
+    REQUIRE(input->getName() == "image_tensor");
+
     REQUIRE(input->getDimensions() == std::vector<size_t> {1, 224, 224, 3});
 
     REQUIRE(input->getType() == edge::TensorType::FLOAT32);
@@ -41,6 +43,8 @@ TEST_CASE("Tflite default runtime (CPU)", "[tflite][cpu]") {
     REQUIRE(inputData.size() == input->getSize());
 
     auto output = model->getOutput(0);
+
+    REQUIRE(output->getName() == "output_0");
 
     REQUIRE(output->getDimensions() == std::vector<size_t> {1, 1000});
 

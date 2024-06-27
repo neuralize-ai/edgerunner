@@ -31,8 +31,8 @@ TEST_CASE("Tflite GPU runtime", "[tflite][gpu]") {
 
     const auto cpuOutput = model->getOutput(0)->getTensorAs<float>();
 
-    /* applying a new delegate releases memory, so need to copy cpu output to
-     * compare */
+    /* applying a new delegate releases memory, so need to copy CPU output to
+     * compare later */
     std::vector<float> cpuResult;
     cpuResult.reserve(cpuOutput.size());
     std::copy(
@@ -54,6 +54,8 @@ TEST_CASE("Tflite GPU runtime", "[tflite][gpu]") {
 
     auto input = model->getInput(0);
 
+    REQUIRE(input->getName() == "image_tensor");
+
     REQUIRE(input->getDimensions() == std::vector<size_t> {1, 224, 224, 3});
 
     REQUIRE(input->getType() == edge::TensorType::FLOAT32);
@@ -71,6 +73,8 @@ TEST_CASE("Tflite GPU runtime", "[tflite][gpu]") {
     REQUIRE(executionStatus == edge::STATUS::SUCCESS);
 
     auto output = model->getOutput(0);
+
+    REQUIRE(output->getName() == "output_0");
 
     REQUIRE(output->getDimensions() == std::vector<size_t> {1, 1000});
 
