@@ -34,12 +34,7 @@ jobs:
 
     runs-on: ubuntu-22.04
 
-    # To enable coverage, delete the last line from the conditional below and
-    # edit the "<name>" placeholder to your GitHub name.
-    # If you do not wish to use codecov, then simply delete this job from the
-    # workflow.
-    if: github.repository_owner == '<name>'
-      && false
+    if: github.repository_owner == 'neuralize-ai'
 
     steps:
     - uses: actions/checkout@v4
