@@ -1,9 +1,9 @@
 if(PROJECT_IS_TOP_LEVEL)
-  set(
-      CMAKE_INSTALL_INCLUDEDIR "include/edgerunner-${PROJECT_VERSION}"
+    set(
+      CMAKE_INSTALL_INCLUDEDIR "include"
       CACHE STRING ""
   )
-  set_property(CACHE CMAKE_INSTALL_INCLUDEDIR PROPERTY TYPE PATH)
+    set_property(CACHE CMAKE_INSTALL_INCLUDEDIR PROPERTY TYPE PATH)
 endif()
 
 include(CMakePackageConfigHelpers)
@@ -68,5 +68,5 @@ install(
 )
 
 if(PROJECT_IS_TOP_LEVEL)
-  include(CPack)
+    include(CPack)
 endif()
