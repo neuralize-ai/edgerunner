@@ -46,9 +46,9 @@ cross-platform on-device AI complexities. This will be achieved through a
 runtime-agnostic API, which can load and interact with arbitrary instances of
 on-device AI models with just a few lines of code.
 
-This repo is in its early stages of development (see [Features](#🎁-features) and [Support](#🔌-support)). The local inference space is quickly evolving and, as such, the goals of this project are subject to change.
+This repo is in its early stages of development (see [Features](#-features) and [Support](#-support)). The local inference space is quickly evolving and, as such, the goals of this project are subject to change.
 There is lots of work to be done in order to achieve our vision, and your
-[contributions](#🏆-contributing) will be important to make this happen!
+[contributions](#-contributing) will be important to make this happen!
 
 ## 🎁 Features
 
