@@ -7,6 +7,7 @@ class Recipe(ConanFile):
     name = "edgerunner"
     package_type = "library"
     license = "MIT"
+    author = "Ciarán O' Rourke ciaran@runlocal.ai"
     description = "Univeral AI inference library for mobile devices"
     homepage = "https://runlocal.ai"
     topics = ["cpp17", "machine-learning", "neural-networks"]
@@ -27,6 +28,14 @@ class Recipe(ConanFile):
         "gpu": False,
         "examples": False,
     }
+
+    exports_sources = (
+        "version.txt",
+        "CMakeLists.txt",
+        "cmake/*",
+        "include/*",
+        "source/*",
+    )
 
     def set_version(self):
         self.version = load(self, "version.txt")[:-1]
