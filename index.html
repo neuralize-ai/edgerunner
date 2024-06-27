@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>edgerunner</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,600i%7CSource+Code+Pro:400,400i,600" />
+  <link rel="stylesheet" href="m-dark+documentation.compiled.css" />
+  <link rel="icon" href="favicon-dark.png" type="image/png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#22272e" />
+</head>
+<body>
+<header><nav id="navigation">
+  <div class="m-container">
+    <div class="m-row">
+      <a href="index.html" id="m-navbar-brand" class="m-col-t-8 m-col-m-none m-left-m">edgerunner</a>
+      <div class="m-col-t-4 m-hide-m m-text-right m-nopadr">
+        <a href="#search" class="m-doc-search-icon" title="Search" onclick="return showSearch()"><svg style="height: 0.9rem;" viewBox="0 0 16 16">
+          <path id="m-doc-search-icon-path" d="m6 0c-3.31 0-6 2.69-6 6 0 3.31 2.69 6 6 6 1.49 0 2.85-0.541 3.89-1.44-0.0164 0.338 0.147 0.759 0.5 1.15l3.22 3.79c0.552 0.614 1.45 0.665 2 0.115 0.55-0.55 0.499-1.45-0.115-2l-3.79-3.22c-0.392-0.353-0.812-0.515-1.15-0.5 0.895-1.05 1.44-2.41 1.44-3.89 0-3.31-2.69-6-6-6zm0 1.56a4.44 4.44 0 0 1 4.44 4.44 4.44 4.44 0 0 1-4.44 4.44 4.44 4.44 0 0 1-4.44-4.44 4.44 4.44 0 0 1 4.44-4.44z"/>
+        </svg></a>
+        <a id="m-navbar-show" href="#navigation" title="Show navigation"></a>
+        <a id="m-navbar-hide" href="#" title="Hide navigation"></a>
+      </div>
+      <div id="m-navbar-collapse" class="m-col-t-12 m-show-m m-col-m-none m-right-m">
+        <div class="m-row">
+          <ol class="m-col-t-6 m-col-m-none">
+            <li>
+              <a href="pages.html">Pages</a>
+              <ol>
+                <li><a href="about.html">About</a></li>
+              </ol>
+            </li>
+            <li><a href="namespaces.html">Namespaces</a></li>
+          </ol>
+          <ol class="m-col-t-6 m-col-m-none" start="3">
+            <li><a href="annotated.html">Classes</a></li>
+            <li><a href="files.html">Files</a></li>
+            <li class="m-show-m"><a href="#search" class="m-doc-search-icon" title="Search" onclick="return showSearch()"><svg style="height: 0.9rem;" viewBox="0 0 16 16">
+              <use href="#m-doc-search-icon-path" />
+            </svg></a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav></header>
+<main><article>
+  <div class="m-container m-container-inflatable">
+    <div class="m-row">
+      <div class="m-col-l-10 m-push-l-1">
+        <h1>
+          edgerunner
+        </h1>
+<p><a name="md_README"></a></p><h5>Universal AI inference library for mobile devices. </h5><p><a href="https://runlocal.ai">Website</a> | <a href="https://runlocal.ai#contact">Contact</a> | <a href="https://discord.gg/y9EzZEkwbR">Discord</a> | <a href="https://x.com/Neuralize_AI">Twitter</a></p><section id="autotoc_md0"><h3><a href="#autotoc_md0">:bulb: Introduction</a></h3><p>The purpose of Edgerunner is to facilitate quick and easy integration of arbitrary AI models that are targeted for consumer mobile devices (smartphones, laptops, tablets, wearables, etc.).</p><p>Currently, on-device inference tooling is highly fragmented. To run AI models efficiently on end-user devices, developers require a deep understanding of every chip/device platform (Apple, Qualcomm, MediaTek, etc.) and on-device AI frameworks ( <a href="https://ai.google.dev/edge/lite">TFLite</a>, <a href="https://developer.apple.com/documentation/coreml">CoreML</a>, <a href="https://www.qualcomm.com/developer/software/neural-processing-sdk-for-ai">QNN</a>, etc.). Developers also need to maintain entirely separate ML stacks for iOS and Android, increasing the effort required to support and maintain their cross-platform systems.</p><p>Edgerunner aims to consolidate existing on-device AI frameworks, abstracting cross-platform on-device AI complexities. This will be achieved through a runtime-agnostic API, which can load and interact with arbitrary instances of on-device AI models with just a few lines of code.</p><p>This repo is in its early stages of development (see <a href="#gift-features">Features</a> and <a href="#electric_plug-support">Support</a>). The local inference space is quickly evolving and, as such, the goals of this project are subject to change. There is lots of work to be done in order to achieve our vision, and your <a href="#trophy-contributing">contributions</a> will be important to make this happen!</p></section><section id="autotoc_md1"><h3><a href="#autotoc_md1">:gift: Features</a></h3><table class="m-table"><thead><tr><th>Feature</th><th>Status</th></tr></thead><tbody><tr><td>Runtime-agnostic API</td><td>:white_check_mark:</td></tr><tr><td>Model loading</td><td>:white_check_mark:</td></tr><tr><td>Model execution</td><td>:white_check_mark:</td></tr><tr><td>Automatic framework detection</td><td>:white_check_mark:</td></tr><tr><td>Quantized models</td><td>:hourglass_flowing_sand:</td></tr><tr><td>Choose optimal execution at runtime</td><td>:hourglass_flowing_sand:</td></tr><tr><td>Java bindings</td><td>:hourglass_flowing_sand:</td></tr><tr><td>Objective-C bindings</td><td>:hourglass_flowing_sand:</td></tr></tbody></table><p>Please request additional features through Github issues or on our <a href="https://discord.gg/y9EzZEkwbR">Discord</a>.</p></section><section id="autotoc_md2"><h3><a href="#autotoc_md2">:electric_plug: Support</a></h3><section id="autotoc_md3"><h4><a href="#autotoc_md3">OS</a></h4><table class="m-table"><thead><tr><th>Linux</th><th>MacOS</th><th>Windows</th><th>Android</th><th>iOS</th></tr></thead><tbody><tr><td>:white_check_mark:</td><td>:white_check_mark:</td><td>:hourglass_flowing_sand:</td><td>:white_check_mark:</td><td>:hourglass_flowing_sand:</td></tr></tbody></table></section><section id="autotoc_md4"><h4><a href="#autotoc_md4">Runtime Framework</a></h4><table class="m-table"><thead><tr><th>TFLite</th><th>CoreML</th><th>Onnx</th><th>QNN</th><th>OpenVino</th><th>Ryzen AI</th><th>NeuroPilot</th></tr></thead><tbody><tr><td>:white_check_mark:</td><td>:hourglass_flowing_sand:</td><td>:hourglass_flowing_sand:</td><td>:hourglass_flowing_sand:</td><td>:hourglass_flowing_sand:</td><td>:hourglass_flowing_sand:</td><td>:hourglass_flowing_sand:</td></tr></tbody></table></section><section id="autotoc_md5"><h4><a href="#autotoc_md5">Chip Vendor</a></h4><table class="m-table"><thead><tr><th></th><th>Apple</th><th>Qualcomm</th><th>MediaTek</th><th>Samsung</th><th>Intel</th><th>AMD</th><th>NVIDIA</th></tr></thead><tbody><tr><td>CPU</td><td>:white_check_mark:</td><td>:white_check_mark:</td><td>:white_check_mark:</td><td>:white_check_mark:</td><td>:white_check_mark:</td><td>:white_check_mark:</td><td>:no_entry:</td></tr><tr><td>GPU</td><td>:hourglass_flowing_sand:</td><td>:hourglass_flowing_sand:</td><td>:hourglass_flowing_sand:</td><td>:hourglass_flowing_sand:</td><td>:white_check_mark:</td><td>:white_check_mark:</td><td>:hourglass_flowing_sand:</td></tr><tr><td>NPU</td><td>:hourglass_flowing_sand:</td><td>:hourglass_flowing_sand:</td><td>:hourglass_flowing_sand:</td><td>:no_entry:</td><td>:hourglass_flowing_sand:</td><td>:hourglass_flowing_sand:</td><td>:no_entry:</td></tr></tbody></table></section></section><section id="autotoc_md6"><h3><a href="#autotoc_md6">:hammer_and_wrench: Building and installing</a></h3><p>See the BUILDING document.</p></section><section id="autotoc_md7"><h3><a href="#autotoc_md7">:joystick: Usage</a></h3><p>See <a href="./example">examples</a> for basic usage instructions.</p></section><section id="autotoc_md8"><h3><a href="#autotoc_md8">:trophy: Contributing</a></h3><p>See the CONTRIBUTING document.</p><p>Join our <a href="https://discord.gg/y9EzZEkwbR">Discord</a> for discussing any issues.</p></section><section id="autotoc_md9"><h3><a href="#autotoc_md9">:scroll: Licensing</a></h3><p>See the <a href="LICENSE.txt">LICENSING</a> document.</p></section>
+      </div>
+    </div>
+  </div>
+</article></main>
+<div class="m-doc-search" id="search">
+  <a href="#!" onclick="return hideSearch()"></a>
+  <div class="m-container">
+    <div class="m-row">
+      <div class="m-col-m-8 m-push-m-2">
+        <div class="m-doc-search-header m-text m-small">
+          <div><span class="m-label m-default">Tab</span> / <span class="m-label m-default">T</span> to search, <span class="m-label m-default">Esc</span> to close</div>
+          <div id="search-symbolcount">&hellip;</div>
+        </div>
+        <div class="m-doc-search-content">
+          <form>
+            <input type="search" name="q" id="search-input" placeholder="Loading &hellip;" disabled="disabled" autofocus="autofocus" autocomplete="off" spellcheck="false" />
+          </form>
+          <noscript class="m-text m-danger m-text-center">Unlike everything else in the docs, the search functionality <em>requires</em> JavaScript.</noscript>
+          <div id="search-help" class="m-text m-dim m-text-center">
+            <p class="m-noindent">Search for symbols, directories, files, pages or
+            modules. You can omit any prefix from the symbol or file path; adding a
+            <code>:</code> or <code>/</code> suffix lists all members of given symbol or
+            directory.</p>
+            <p class="m-noindent">Use <span class="m-label m-dim">&darr;</span>
+            / <span class="m-label m-dim">&uarr;</span> to navigate through the list,
+            <span class="m-label m-dim">Enter</span> to go.
+            <span class="m-label m-dim">Tab</span> autocompletes common prefix, you can
+            copy a link to the result using <span class="m-label m-dim">⌘</span>
+            <span class="m-label m-dim">L</span> while <span class="m-label m-dim">⌘</span>
+            <span class="m-label m-dim">M</span> produces a Markdown link.</p>
+          </div>
+          <div id="search-notfound" class="m-text m-warning m-text-center">Sorry, nothing was found.</div>
+          <ul id="search-results"></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="search-v1.js"></script>
+<script src="searchdata-v1.js" async="async"></script>
+<footer><nav>
+  <div class="m-container">
+    <div class="m-row">
+      <div class="m-col-l-10 m-push-l-1">
+        <p>edgerunner. Created with <a href="https://doxygen.org/">Doxygen</a> 1.9.1 and <a href="https://mcss.mosra.cz/">m.css</a>.</p>
+      </div>
+    </div>
+  </div>
+</nav></footer>
+</body>
+</html>
