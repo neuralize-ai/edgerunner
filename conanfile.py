@@ -4,6 +4,13 @@ from conan.tools.files import load
 
 
 class Recipe(ConanFile):
+    name = "edgerunner"
+    package_type = "library"
+    license = "MIT"
+    description = "Univeral AI inference library for mobile devices"
+    homepage = "https://runlocal.ai"
+    topics = ["cpp17", "machine-learning", "neural-networks"]
+
     settings = "os", "compiler", "build_type", "arch"
     generators = "CMakeDeps", "VirtualRunEnv"
 
