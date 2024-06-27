@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Examples | edgerunner</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,600i%7CSource+Code+Pro:400,400i,600" />
+  <link rel="stylesheet" href="m-dark+documentation.compiled.css" />
+  <link rel="icon" href="favicon-dark.png" type="image/png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#22272e" />
+</head>
+<body>
+<header><nav id="navigation">
+  <div class="m-container">
+    <div class="m-row">
+      <a href="index.html" id="m-navbar-brand" class="m-col-t-8 m-col-m-none m-left-m">edgerunner</a>
+      <div class="m-col-t-4 m-hide-m m-text-right m-nopadr">
+        <a href="#search" class="m-doc-search-icon" title="Search" onclick="return showSearch()"><svg style="height: 0.9rem;" viewBox="0 0 16 16">
+          <path id="m-doc-search-icon-path" d="m6 0c-3.31 0-6 2.69-6 6 0 3.31 2.69 6 6 6 1.49 0 2.85-0.541 3.89-1.44-0.0164 0.338 0.147 0.759 0.5 1.15l3.22 3.79c0.552 0.614 1.45 0.665 2 0.115 0.55-0.55 0.499-1.45-0.115-2l-3.79-3.22c-0.392-0.353-0.812-0.515-1.15-0.5 0.895-1.05 1.44-2.41 1.44-3.89 0-3.31-2.69-6-6-6zm0 1.56a4.44 4.44 0 0 1 4.44 4.44 4.44 4.44 0 0 1-4.44 4.44 4.44 4.44 0 0 1-4.44-4.44 4.44 4.44 0 0 1 4.44-4.44z"/>
+        </svg></a>
+        <a id="m-navbar-show" href="#navigation" title="Show navigation"></a>
+        <a id="m-navbar-hide" href="#" title="Hide navigation"></a>
+      </div>
+      <div id="m-navbar-collapse" class="m-col-t-12 m-show-m m-col-m-none m-right-m">
+        <div class="m-row">
+          <ol class="m-col-t-6 m-col-m-none">
+            <li>
+              <a href="pages.html">Pages</a>
+              <ol>
+                <li><a href="about.html">About</a></li>
+              </ol>
+            </li>
+            <li><a href="namespaces.html">Namespaces</a></li>
+          </ol>
+          <ol class="m-col-t-6 m-col-m-none" start="3">
+            <li><a href="annotated.html">Classes</a></li>
+            <li><a href="files.html">Files</a></li>
+            <li class="m-show-m"><a href="#search" class="m-doc-search-icon" title="Search" onclick="return showSearch()"><svg style="height: 0.9rem;" viewBox="0 0 16 16">
+              <use href="#m-doc-search-icon-path" />
+            </svg></a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav></header>
+<main><article>
+  <div class="m-container m-container-inflatable">
+    <div class="m-row">
+      <div class="m-col-l-10 m-push-l-1">
+        <h1>
+          Examples
+        </h1>
+<p>Set up a <a href="/HACKING.md#presets"><code>CMakeUserPresets.json</code></a> and ensure <a href="/HACKING.md#dependency-manager">conan</a> is configured.</p><p>You may wish to add presets to build in <code>Release</code> mode. Add something like the following to your <code>CMakeUserPresets.json</code>:</p><pre class="m-code"><span class="p">{</span>
+<span class="w">  </span><span class="err">...</span>
+<span class="w">  </span><span class="nt">&quot;configurePresets&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="err">...</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;rel&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;binaryDir&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;${sourceDir}/build/rel&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;inherits&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;conan&quot;</span><span class="p">],</span>
+<span class="w">      </span><span class="nt">&quot;generator&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Unix Makefiles&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;cacheVariables&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;CMAKE_BUILD_TYPE&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Release&quot;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;buildPresets&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="err">...</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;rel&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;configurePreset&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;rel&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;configuration&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Release&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;jobs&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;num threads&gt;&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span></pre><p>For MacOS, replace &quot;Unix Makefiles&quot; with &quot;Xcode&quot;.</p><blockquote><p>[!NOTE] Examples require additional dependencies to the main library. As such, it is</p></blockquote><p>required to supply <code>-o examples=True</code> to the <code>conan install</code> command.</p><section id="autotoc_md11"><h2><a href="#autotoc_md11">Unix</a></h2><p>Run all examples using one of the following methods from the project root directory.</p><p>For <code>Debug</code>:</p><pre class="m-code">conan<span class="w"> </span>install<span class="w"> </span>.<span class="w"> </span>-b<span class="w"> </span>missing<span class="w"> </span>-s<span class="w"> </span><span class="nv">build_type</span><span class="o">=</span>Debug<span class="w"> </span>-o<span class="w"> </span><span class="nv">examples</span><span class="o">=</span>True
+cmake<span class="w"> </span>--preset<span class="o">=</span>dev
+cmake<span class="w"> </span>--build<span class="w"> </span>--preset<span class="o">=</span>dev<span class="w"> </span>-t<span class="w"> </span>run-examples</pre><p>For <code>Release</code>:</p><pre class="m-code">conan<span class="w"> </span>install<span class="w"> </span>.<span class="w"> </span>-b<span class="w"> </span>missing<span class="w"> </span>-o<span class="w"> </span><span class="nv">examples</span><span class="o">=</span>True
+cmake<span class="w"> </span>--preset<span class="o">=</span>rel
+cmake<span class="w"> </span>--build<span class="w"> </span>--preset<span class="o">=</span>rel<span class="w"> </span>-t<span class="w"> </span>run-examples</pre><p>For GPU support, add <code>-o gpu=True</code> to the <code>conan install</code> command. If an existing build exists, you may need to run:</p><pre class="m-code">cmake<span class="w"> </span>--preset<span class="o">=</span>rel<span class="w"> </span>-Dedgerunner_ENABLE_GPU<span class="o">=</span>ON</pre><p>To run an individual example, execute:</p><pre class="m-code">cmake<span class="w"> </span>--build<span class="w"> </span>--preset<span class="o">=</span>rel<span class="w"> </span>-t<span class="w"> </span>run_&lt;example_name&gt;</pre><p>where <code>example_name</code> is the example filename without the extension.</p></section><section id="autotoc_md12"><h2><a href="#autotoc_md12">Android</a></h2><p>Ensure <a href="https://developer.android.com/tools/adb">adb</a> is configured and a device with USB debugging enabled is connected.</p><p>An android <a href="https://docs.conan.io/2/reference/config_files/profiles.html">conan profile</a> is required to build for Android. To use the android profile provided with this repo, run</p><pre class="m-code">conan<span class="w"> </span>config<span class="w"> </span>install<span class="w"> </span>profiles<span class="w"> </span>-tf<span class="w"> </span>profiles</pre><p>from the project root directory.</p><p>Using the above presets, run all examples using the following steps from the project root directory:</p><pre class="m-code">conan<span class="w"> </span>install<span class="w"> </span>.<span class="w"> </span>-b<span class="w"> </span>missing<span class="w"> </span>-pr<span class="w"> </span>android<span class="w"> </span>-o<span class="w"> </span><span class="nv">examples</span><span class="o">=</span>True
+cmake<span class="w"> </span>--preset<span class="o">=</span>rel
+cmake<span class="w"> </span>--build<span class="w"> </span>--preset<span class="o">=</span>rel<span class="w"> </span>-t<span class="w"> </span>run-examples</pre><p>To run an individual example, execute:</p><pre class="m-code">cmake<span class="w"> </span>--build<span class="w"> </span>--preset<span class="o">=</span>rel<span class="w"> </span>-t<span class="w"> </span>run_&lt;example_name&gt;</pre></section>
+      </div>
+    </div>
+  </div>
+</article></main>
+<div class="m-doc-search" id="search">
+  <a href="#!" onclick="return hideSearch()"></a>
+  <div class="m-container">
+    <div class="m-row">
+      <div class="m-col-m-8 m-push-m-2">
+        <div class="m-doc-search-header m-text m-small">
+          <div><span class="m-label m-default">Tab</span> / <span class="m-label m-default">T</span> to search, <span class="m-label m-default">Esc</span> to close</div>
+          <div id="search-symbolcount">&hellip;</div>
+        </div>
+        <div class="m-doc-search-content">
+          <form>
+            <input type="search" name="q" id="search-input" placeholder="Loading &hellip;" disabled="disabled" autofocus="autofocus" autocomplete="off" spellcheck="false" />
+          </form>
+          <noscript class="m-text m-danger m-text-center">Unlike everything else in the docs, the search functionality <em>requires</em> JavaScript.</noscript>
+          <div id="search-help" class="m-text m-dim m-text-center">
+            <p class="m-noindent">Search for symbols, directories, files, pages or
+            modules. You can omit any prefix from the symbol or file path; adding a
+            <code>:</code> or <code>/</code> suffix lists all members of given symbol or
+            directory.</p>
+            <p class="m-noindent">Use <span class="m-label m-dim">&darr;</span>
+            / <span class="m-label m-dim">&uarr;</span> to navigate through the list,
+            <span class="m-label m-dim">Enter</span> to go.
+            <span class="m-label m-dim">Tab</span> autocompletes common prefix, you can
+            copy a link to the result using <span class="m-label m-dim">⌘</span>
+            <span class="m-label m-dim">L</span> while <span class="m-label m-dim">⌘</span>
+            <span class="m-label m-dim">M</span> produces a Markdown link.</p>
+          </div>
+          <div id="search-notfound" class="m-text m-warning m-text-center">Sorry, nothing was found.</div>
+          <ul id="search-results"></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="search-v1.js"></script>
+<script src="searchdata-v1.js" async="async"></script>
+<footer><nav>
+  <div class="m-container">
+    <div class="m-row">
+      <div class="m-col-l-10 m-push-l-1">
+        <p>edgerunner. Created with <a href="https://doxygen.org/">Doxygen</a> 1.9.1 and <a href="https://mcss.mosra.cz/">m.css</a>.</p>
+      </div>
+    </div>
+  </div>
+</nav></footer>
+</body>
+</html>
