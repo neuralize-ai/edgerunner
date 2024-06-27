@@ -1,5 +1,6 @@
 from conan import ConanFile
 from conan.tools.cmake import CMakeToolchain
+from conan.tools.files import load
 
 
 class Recipe(ConanFile):
@@ -19,6 +20,9 @@ class Recipe(ConanFile):
         "gpu": False,
         "examples": False,
     }
+
+    def set_version(self):
+        self.version = load(self, "version.txt")[:-1]
 
     def layout(self):
         self.folders.generators = "conan"

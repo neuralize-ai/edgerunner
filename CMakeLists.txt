@@ -2,9 +2,12 @@ cmake_minimum_required(VERSION 3.14)
 
 include(cmake/prelude.cmake)
 
+file(READ "version.txt" edgerunner_VERSION)
+string(STRIP ${edgerunner_VERSION} edgerunner_VERSION)
+
 project(
     edgerunner
-    VERSION 0.1.0
+    VERSION "${edgerunner_VERSION}"
     DESCRIPTION "Edgerunner is a cross-platform ML inference library for mobile devices"
     HOMEPAGE_URL "https://runlocal.ai"
     LANGUAGES CXX
