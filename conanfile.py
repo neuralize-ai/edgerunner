@@ -43,7 +43,7 @@ class EdgerunnerRecipe(ConanFile):
 
         if self.settings.os == "Android":
             # TODO: fix TfLite Android gpu
-            del self.options.gpu
+            self.options.gpu = False
 
     def set_version(self):
         self.version = load(self, "version.txt")[:-1]
