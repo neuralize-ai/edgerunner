@@ -17,6 +17,8 @@ TEST_CASE("Tflite default runtime (CPU)", "[tflite][cpu]") {
     auto model = edge::createModel(modelPath);
     REQUIRE(model != nullptr);
     REQUIRE(std::string {"mobilenet_v3_small"} == model->name());
+
+    model->applyDelegate(edge::DELEGATE::CPU);
     REQUIRE(model->getDelegate() == edge::DELEGATE::CPU);
 
     const auto inputs = model->getInputs();
@@ -39,7 +41,6 @@ TEST_CASE("Tflite default runtime (CPU)", "[tflite][cpu]") {
     REQUIRE(inputData.size() == input->getSize());
 
     auto badInput = model->getInput(1);
-
     REQUIRE(badInput == nullptr);
 
     auto output = model->getOutput(0);
@@ -52,7 +53,6 @@ TEST_CASE("Tflite default runtime (CPU)", "[tflite][cpu]") {
     REQUIRE(outputBuffer.size() == output->getSize());
 
     auto badOutput = model->getOutput(1);
-
     REQUIRE(badOutput == nullptr);
 
     const auto executionStatus = model->execute();
