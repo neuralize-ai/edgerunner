@@ -176,13 +176,6 @@ class EDGERUNNER_EXPORT Model {
      */
     void setDelegate(const DELEGATE& delegate) { m_delegate = delegate; }
 
-    /**
-     * @brief Set the name of the model.
-     *
-     * @param name The name of the model
-     */
-    void setName(const std::string& name) { m_name = name; }
-
   private:
     EDGERUNNER_SUPPRESS_C4251
     std::string m_name; /**< Name of the model */
