@@ -29,6 +29,18 @@ class ModelImpl final : public Model {
     explicit ModelImpl(const std::filesystem::path& modelPath)
         : Model(modelPath) {
         loadModel(modelPath);
+        createInterpreter();
+        allocate();
+    }
+
+    /**
+     * @brief Constructor for ModelImpl.
+     * @param modelPath The path to the TensorFlow Lite model file.
+     */
+    explicit ModelImpl(const nonstd::span<uint8_t>& modelBuffer) {
+        loadModel(modelBuffer);
+        createInterpreter();
+        allocate();
     }
 
     ModelImpl(const ModelImpl&) = delete;
@@ -46,6 +58,12 @@ class ModelImpl final : public Model {
      * @param modelPath The path to the TensorFlow Lite model file.
      */
     void loadModel(const std::filesystem::path& modelPath) final;
+
+    /**
+     * @brief Loads the TensorFlow Lite model from the specified buffer.
+     * @param modelBuffer The buffer containing the TensorFlow Lite model.
+     */
+    void loadModel(const nonstd::span<uint8_t>& modelBuffer) final;
 
     /**
      * @brief Applies a delegate to the TensorFlow Lite interpreter.

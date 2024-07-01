@@ -21,10 +21,11 @@ namespace edge::tflite {
 
 void ModelImpl::loadModel(const std::filesystem::path& modelPath) {
     m_modelBuffer = ::tflite::FlatBufferModel::BuildFromFile(modelPath.c_str());
+}
 
-    createInterpreter();
-
-    allocate();
+void ModelImpl::loadModel(const nonstd::span<uint8_t>& modelBuffer) {
+    m_modelBuffer = ::tflite::FlatBufferModel::BuildFromBuffer(
+        reinterpret_cast<char*>(modelBuffer.data()), modelBuffer.size());
 }
 
 void ModelImpl::createInterpreter() {
