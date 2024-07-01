@@ -27,7 +27,7 @@ endif()
 
 # ---- Tests ----
 
-set(TEST_SOURCES source/tflite_test.cpp)
+set(TEST_SOURCES source/tflite_test.cpp source/tflite_from_buffer_test.cpp)
 
 if(edgerunner_ENABLE_GPU)
     list(APPEND TEST_SOURCES source/tflite_gpu_test.cpp)
