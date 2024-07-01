@@ -56,6 +56,7 @@ class EDGERUNNER_EXPORT Model {
     explicit Model(const std::filesystem::path& modelPath)
         : m_name(modelPath.stem().string()) {}
 
+    Model() = default;
     Model(const Model&) = default;
     Model(Model&&) = delete;
     auto operator=(const Model&) -> Model& = default;
@@ -72,6 +73,13 @@ class EDGERUNNER_EXPORT Model {
      * @param modelPath The path to the model file
      */
     virtual void loadModel(const std::filesystem::path& modelPath) = 0;
+
+    /**
+     * @brief Pure virtual function to load a model from a file buffer.
+     *
+     * @param modelBuffer The buffer containing the model
+     */
+    virtual void loadModel(const nonstd::span<uint8_t>& modelBuffer) = 0;
 
     /**
      * @brief Get the number of input tensors in the model.
