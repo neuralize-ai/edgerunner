@@ -20,4 +20,14 @@ auto createModel(const std::filesystem::path& modelPath)
     return nullptr;
 }
 
+auto createModel(const nonstd::span<uint8_t>& modelBuffer,
+                 const std::string& modelExtension) -> std::unique_ptr<Model> {
+    if (modelExtension == "tflite") {
+        return std::make_unique<tflite::ModelImpl>(modelBuffer);
+    }
+
+    /* unsupported */
+    return nullptr;
+}
+
 }  // namespace edge
