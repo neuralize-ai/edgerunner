@@ -38,7 +38,7 @@ void ModelImpl::allocate() {
 
     const auto numInputs = m_interpreter->inputs().size();
 
-    auto& inputs = accessInputs();
+    auto& inputs = getInputs();
     inputs.clear();
     inputs.reserve(numInputs);
 
@@ -49,7 +49,7 @@ void ModelImpl::allocate() {
 
     const auto numOutputs = m_interpreter->outputs().size();
 
-    auto& outputs = accessOutputs();
+    auto& outputs = getOutputs();
     outputs.clear();
     outputs.reserve(numOutputs);
 
