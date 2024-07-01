@@ -114,6 +114,32 @@ class EDGERUNNER_EXPORT Model {
     auto getOutput(size_t index) const -> std::shared_ptr<Tensor>;
 
     /**
+     * @brief Get the inputs of the model.
+     *
+     * This function returns a reference to a vector of shared pointers to
+     * Tensor objects, which represent the inputs of the model.
+     *
+     * @return A reference to a vector of shared pointers to Tensor objects
+     * representing the inputs of the model.
+     */
+    auto getInputs() -> std::vector<std::shared_ptr<Tensor>>& {
+        return m_inputs;
+    }
+
+    /**
+     * @brief Get the outputs of the model.
+     *
+     * This function returns a reference to a vector of shared pointers to
+     * Tensor objects, which represent the outputs of the model.
+     *
+     * @return A reference to a vector of shared pointers to Tensor objects
+     * representing the outputs of the model.
+     */
+    auto getOutputs() -> std::vector<std::shared_ptr<Tensor>>& {
+        return m_outputs;
+    }
+
+    /**
      * @brief Get the current delegate used for model execution.
      *
      * @return The delegate currently set for model execution
@@ -143,24 +169,6 @@ class EDGERUNNER_EXPORT Model {
     auto name() const -> const std::string& { return m_name; }
 
   protected:
-    /**
-     * @brief Access the input tensors of the model.
-     *
-     * @return A reference to the input tensors
-     */
-    auto accessInputs() -> std::vector<std::shared_ptr<Tensor>>& {
-        return m_inputs;
-    }
-
-    /**
-     * @brief Access the output tensors of the model.
-     *
-     * @return A reference to the output tensors
-     */
-    auto accessOutputs() -> std::vector<std::shared_ptr<Tensor>>& {
-        return m_outputs;
-    }
-
     /**
      * @brief Set the delegate for model execution.
      *
