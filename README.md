@@ -50,6 +50,8 @@ This repo is in its early stages of development (see [Features](#-features) and 
 There is lots of work to be done in order to achieve our vision, and your
 [contributions](#-contributing) will be important to make this happen!
 
+Kotlin bindings for Android can be found at [edgerunner-android](https://github.com/neuralize-ai/edgerunner-android).
+
 ## 🎁 Features
 
 |           Feature                   | Status |
