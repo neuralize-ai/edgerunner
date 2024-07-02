@@ -84,6 +84,10 @@
               <span class="m-doc-wrap-bumper"><a href="#a76f92c086b49ec27abeacff944568496" class="m-doc">Model</a>(</span><span class="m-doc-wrap">const std::filesystem::path&amp; modelPath) <span class="m-label m-flat m-info">explicit</span> </span>
             </dt>
             <dd>Constructor for the <a href="classedge_1_1Model.html" class="m-doc">Model</a> class.</dd>
+            <dt id="aa76c79fc15b4dc1c0daf7f34ad886544">
+              <span class="m-doc-wrap-bumper"><a href="#aa76c79fc15b4dc1c0daf7f34ad886544" class="m-doc-self">Model</a>(</span><span class="m-doc-wrap">) <span class="m-label m-flat m-info">defaulted</span></span>
+            </dt>
+            <dd><span></span></dd>
             <dt id="a0669a7241c350edffc99cc2c97060e35">
               <span class="m-doc-wrap-bumper"><a href="#a0669a7241c350edffc99cc2c97060e35" class="m-doc-self">Model</a>(</span><span class="m-doc-wrap">const <a href="classedge_1_1Model.html" class="m-doc">Model</a>&amp;) <span class="m-label m-flat m-info">defaulted</span></span>
             </dt>
@@ -114,6 +118,10 @@
             </dt>
             <dd>Pure virtual function to load a model from a file path.</dd>
             <dt>
+              <span class="m-doc-wrap-bumper">void <a href="#a29be2bfce7e6be674b68f50c96b87d7f" class="m-doc">loadModel</a>(</span><span class="m-doc-wrap">const nonstd::span&lt;uint8_t&gt;&amp; modelBuffer) <span class="m-label m-flat m-warning">pure virtual</span></span>
+            </dt>
+            <dd>Pure virtual function to load a model from a file buffer.</dd>
+            <dt>
               <span class="m-doc-wrap-bumper">auto <a href="#aff3a1084a488b7a8c685e86de9989d53" class="m-doc">getNumInputs</a>(</span><span class="m-doc-wrap">) const -&gt; size_t</span>
             </dt>
             <dd>Get the number of input tensors in the model.</dd>
@@ -129,6 +137,14 @@
               <span class="m-doc-wrap-bumper">auto <a href="#ad210830be85ce46120a4f3be6c1613c2" class="m-doc">getOutput</a>(</span><span class="m-doc-wrap">size_t index) const -&gt; std::shared_ptr&lt; Tensor &gt;</span>
             </dt>
             <dd>Get the output tensor at the specified index.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#ab5670dbe3bc579c33d764d8c45be11fc" class="m-doc">getInputs</a>(</span><span class="m-doc-wrap">) -&gt; std::vector&lt; std::shared_ptr&lt; Tensor &gt;&gt; &amp;</span>
+            </dt>
+            <dd>Get the inputs of the model.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#ab33337fa553f7fe9824bb7f1e9ba3b78" class="m-doc">getOutputs</a>(</span><span class="m-doc-wrap">) -&gt; std::vector&lt; std::shared_ptr&lt; Tensor &gt;&gt; &amp;</span>
+            </dt>
+            <dd>Get the outputs of the model.</dd>
             <dt>
               <span class="m-doc-wrap-bumper">auto <a href="#adc49d73d953dc8da02369e24b0b9169b" class="m-doc">getDelegate</a>(</span><span class="m-doc-wrap">) const -&gt; DELEGATE</span>
             </dt>
@@ -150,14 +166,6 @@
         <section id="pro-methods">
           <h2><a href="#pro-methods">Protected functions</a></h2>
           <dl class="m-doc">
-            <dt>
-              <span class="m-doc-wrap-bumper">auto <a href="#a6facd831d047f754c1956490bd7d3722" class="m-doc">accessInputs</a>(</span><span class="m-doc-wrap">) -&gt; std::vector&lt; std::shared_ptr&lt; Tensor &gt;&gt; &amp;</span>
-            </dt>
-            <dd>Access the input tensors of the model.</dd>
-            <dt>
-              <span class="m-doc-wrap-bumper">auto <a href="#a56f74372b869b05f9625d85ae66da8e9" class="m-doc">accessOutputs</a>(</span><span class="m-doc-wrap">) -&gt; std::vector&lt; std::shared_ptr&lt; Tensor &gt;&gt; &amp;</span>
-            </dt>
-            <dd>Access the output tensors of the model.</dd>
             <dt>
               <span class="m-doc-wrap-bumper">void <a href="#ab4148431cd28c1cbd839f6b981bef700" class="m-doc">setDelegate</a>(</span><span class="m-doc-wrap">const <a href="namespaceedge.html#a0585b63a3b0b31103097f0cbae553e7f" class="m-doc">DELEGATE</a>&amp; delegate)</span>
             </dt>
@@ -201,6 +209,23 @@
                 <tr>
                   <td style="width: 1%">modelPath</td>
                   <td>The path to the model file</td>
+                </tr>
+              </tbody>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="a29be2bfce7e6be674b68f50c96b87d7f"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">void edge::<wbr />Model::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a29be2bfce7e6be674b68f50c96b87d7f" class="m-doc-self">loadModel</a>(</span><span class="m-doc-wrap">const nonstd::span&lt;uint8_t&gt;&amp; modelBuffer) <span class="m-label m-warning">pure virtual</span></span></span>
+            </h3>
+            <p>Pure virtual function to load a model from a file buffer.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">modelBuffer</td>
+                  <td>The buffer containing the model</td>
                 </tr>
               </tbody>
             </table>
@@ -279,6 +304,36 @@
               </tfoot>
             </table>
           </div></section>
+          <section class="m-doc-details" id="ab5670dbe3bc579c33d764d8c45be11fc"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">auto edge::<wbr />Model::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#ab5670dbe3bc579c33d764d8c45be11fc" class="m-doc-self">getInputs</a>(</span><span class="m-doc-wrap">) -&gt; std::vector&lt; std::shared_ptr&lt; Tensor &gt;&gt; &amp;</span></span>
+            </h3>
+            <p>Get the inputs of the model.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <tfoot>
+                <tr>
+                  <th style="width: 1%">Returns</th>
+                  <td>A reference to a vector of shared pointers to <a href="classedge_1_1Tensor.html" class="m-doc">Tensor</a> objects representing the inputs of the model.</td>
+                </tr>
+              </tfoot>
+            </table>
+<p>This function returns a reference to a vector of shared pointers to <a href="classedge_1_1Tensor.html" class="m-doc">Tensor</a> objects, which represent the inputs of the model.</p>
+          </div></section>
+          <section class="m-doc-details" id="ab33337fa553f7fe9824bb7f1e9ba3b78"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">auto edge::<wbr />Model::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#ab33337fa553f7fe9824bb7f1e9ba3b78" class="m-doc-self">getOutputs</a>(</span><span class="m-doc-wrap">) -&gt; std::vector&lt; std::shared_ptr&lt; Tensor &gt;&gt; &amp;</span></span>
+            </h3>
+            <p>Get the outputs of the model.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <tfoot>
+                <tr>
+                  <th style="width: 1%">Returns</th>
+                  <td>A reference to a vector of shared pointers to <a href="classedge_1_1Tensor.html" class="m-doc">Tensor</a> objects representing the outputs of the model.</td>
+                </tr>
+              </tfoot>
+            </table>
+<p>This function returns a reference to a vector of shared pointers to <a href="classedge_1_1Tensor.html" class="m-doc">Tensor</a> objects, which represent the outputs of the model.</p>
+          </div></section>
           <section class="m-doc-details" id="adc49d73d953dc8da02369e24b0b9169b"><div>
             <h3>
               <span class="m-doc-wrap-bumper">auto edge::<wbr />Model::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#adc49d73d953dc8da02369e24b0b9169b" class="m-doc-self">getDelegate</a>(</span><span class="m-doc-wrap">) const -&gt; DELEGATE</span></span>
@@ -340,34 +395,6 @@
                 <tr>
                   <th style="width: 1%">Returns</th>
                   <td>The name of the model</td>
-                </tr>
-              </tfoot>
-            </table>
-          </div></section>
-          <section class="m-doc-details" id="a6facd831d047f754c1956490bd7d3722"><div>
-            <h3>
-              <span class="m-doc-wrap-bumper">auto edge::<wbr />Model::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a6facd831d047f754c1956490bd7d3722" class="m-doc-self">accessInputs</a>(</span><span class="m-doc-wrap">) -&gt; std::vector&lt; std::shared_ptr&lt; Tensor &gt;&gt; &amp; <span class="m-label m-warning">protected</span></span></span>
-            </h3>
-            <p>Access the input tensors of the model.</p>
-            <table class="m-table m-fullwidth m-flat">
-              <tfoot>
-                <tr>
-                  <th style="width: 1%">Returns</th>
-                  <td>A reference to the input tensors</td>
-                </tr>
-              </tfoot>
-            </table>
-          </div></section>
-          <section class="m-doc-details" id="a56f74372b869b05f9625d85ae66da8e9"><div>
-            <h3>
-              <span class="m-doc-wrap-bumper">auto edge::<wbr />Model::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a56f74372b869b05f9625d85ae66da8e9" class="m-doc-self">accessOutputs</a>(</span><span class="m-doc-wrap">) -&gt; std::vector&lt; std::shared_ptr&lt; Tensor &gt;&gt; &amp; <span class="m-label m-warning">protected</span></span></span>
-            </h3>
-            <p>Access the output tensors of the model.</p>
-            <table class="m-table m-fullwidth m-flat">
-              <tfoot>
-                <tr>
-                  <th style="width: 1%">Returns</th>
-                  <td>A reference to the output tensors</td>
                 </tr>
               </tfoot>
             </table>

@@ -82,6 +82,10 @@
               <span class="m-doc-wrap-bumper"><a href="#a054192d69c2bc2e4de379a0b4bb97be3" class="m-doc">ModelImpl</a>(</span><span class="m-doc-wrap">const std::filesystem::path&amp; modelPath) <span class="m-label m-flat m-info">explicit</span> </span>
             </dt>
             <dd>Constructor for <a href="classedge_1_1tflite_1_1ModelImpl.html" class="m-doc">ModelImpl</a>.</dd>
+            <dt id="a2fa52ac4a943a8213a5c074059532d72">
+              <span class="m-doc-wrap-bumper"><a href="#a2fa52ac4a943a8213a5c074059532d72" class="m-doc-self">ModelImpl</a>(</span><span class="m-doc-wrap">const nonstd::span&lt;uint8_t&gt;&amp; modelBuffer) <span class="m-label m-flat m-info">explicit</span> </span>
+            </dt>
+            <dd>Constructor for <a href="classedge_1_1tflite_1_1ModelImpl.html" class="m-doc">ModelImpl</a>.</dd>
             <dt id="a725f17151df42cc41e9c236f9527e7b7">
               <span class="m-doc-wrap-bumper"><a href="#a725f17151df42cc41e9c236f9527e7b7" class="m-doc-self">ModelImpl</a>(</span><span class="m-doc-wrap">const <a href="classedge_1_1tflite_1_1ModelImpl.html" class="m-doc">ModelImpl</a>&amp;) <span class="m-label m-flat m-danger">deleted</span></span>
             </dt>
@@ -111,6 +115,10 @@
               <span class="m-doc-wrap-bumper">void <a href="#a32ce87edbca4927c63ab08cd9c374e00" class="m-doc">loadModel</a>(</span><span class="m-doc-wrap">const std::filesystem::path&amp; modelPath) <span class="m-label m-flat m-warning">final</span></span>
             </dt>
             <dd>Loads the TensorFlow Lite model from the specified path.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">void <a href="#a8fa3f843f74e4ed567405ee10b6d01b4" class="m-doc">loadModel</a>(</span><span class="m-doc-wrap">const nonstd::span&lt;uint8_t&gt;&amp; modelBuffer) <span class="m-label m-flat m-warning">final</span></span>
+            </dt>
+            <dd>Loads the TensorFlow Lite model from the specified buffer.</dd>
             <dt>
               <span class="m-doc-wrap-bumper">auto <a href="#a7151172d51da8c1e05239c3a3979c0ab" class="m-doc">applyDelegate</a>(</span><span class="m-doc-wrap">const <a href="namespaceedge.html#a0585b63a3b0b31103097f0cbae553e7f" class="m-doc">DELEGATE</a>&amp; delegate) -&gt; STATUS <span class="m-label m-flat m-warning">final</span></span>
             </dt>
@@ -153,6 +161,23 @@
                 <tr>
                   <td style="width: 1%">modelPath</td>
                   <td>The path to the TensorFlow Lite model file.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="a8fa3f843f74e4ed567405ee10b6d01b4"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">void edge::<wbr />tflite::<wbr />ModelImpl::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a8fa3f843f74e4ed567405ee10b6d01b4" class="m-doc-self">loadModel</a>(</span><span class="m-doc-wrap">const nonstd::span&lt;uint8_t&gt;&amp; modelBuffer) <span class="m-label m-warning">final</span></span></span>
+            </h3>
+            <p>Loads the TensorFlow Lite model from the specified buffer.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">modelBuffer</td>
+                  <td>The buffer containing the TensorFlow Lite model.</td>
                 </tr>
               </tbody>
             </table>

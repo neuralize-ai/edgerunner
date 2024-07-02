@@ -120,6 +120,11 @@
               <span class="m-doc-wrap-bumper">auto <a href="#a8a9fe9c14d2a05e7b8bb16cc2d002e19" class="m-doc">createModel</a>(</span><span class="m-doc-wrap">const std::filesystem::path&amp; modelPath) -&gt; std::unique_ptr&lt; Model &gt; -&gt; auto EDGERUNNER_EXPORT</span>
             </dt>
             <dd>Function to create a model from a given file path.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#a1595dbbc25d1461a00ab669ff762acdd" class="m-doc">createModel</a>(</span><span class="m-doc-wrap">const nonstd::span&lt;uint8_t&gt;&amp; modelBuffer,
+              const std::string&amp; modelExtension = &quot;tflite&quot;) -&gt; std::unique_ptr&lt; Model &gt; -&gt; auto EDGERUNNER_EXPORT</span>
+            </dt>
+            <dd>Function to create a model from a given buffer.</dd>
           </dl>
         </section>
         <section>
@@ -212,7 +217,37 @@
                 </tr>
               </tfoot>
             </table>
-<p>This function takes a file path to a model and creates a new <a href="classedge_1_1Model.html" class="m-doc">Model</a> object from it.</p><p>This is the intended way to instantiate a <a href="classedge_1_1Model.html" class="m-doc">Model</a> using the edgerunner library</p>
+<p>This function takes a file path to a model and creates a new <a href="classedge_1_1Model.html" class="m-doc">Model</a> object from it.</p><p><a href="namespaceedge.html#a8a9fe9c14d2a05e7b8bb16cc2d002e19" class="m-doc">createModel()</a> is the intended way to instantiate a <a href="classedge_1_1Model.html" class="m-doc">Model</a> using the edgerunner library</p>
+          </div></section>
+          <section class="m-doc-details" id="a1595dbbc25d1461a00ab669ff762acdd"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">auto EDGERUNNER_EXPORT edge::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a1595dbbc25d1461a00ab669ff762acdd" class="m-doc-self">createModel</a>(</span><span class="m-doc-wrap">const nonstd::span&lt;uint8_t&gt;&amp; modelBuffer,
+              const std::string&amp; modelExtension = &quot;tflite&quot;) -&gt; std::unique_ptr&lt; Model &gt;</span></span>
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="edgerunner_8hpp.html">&lt;edgerunner/edgerunner.hpp&gt;</a></div>
+            </h3>
+            <p>Function to create a model from a given buffer.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">modelBuffer</td>
+                  <td>The buffer of the model file</td>
+                </tr>
+                <tr>
+                  <td>modelExtension</td>
+                  <td></td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>Returns</th>
+                  <td>A unique pointer to the created <a href="classedge_1_1Model.html" class="m-doc">Model</a> object</td>
+                </tr>
+              </tfoot>
+            </table>
+<p>This function takes a buffer of a model and creates a new <a href="classedge_1_1Model.html" class="m-doc">Model</a> object from it.</p><p><a href="namespaceedge.html#a8a9fe9c14d2a05e7b8bb16cc2d002e19" class="m-doc">createModel()</a> is the intended way to instantiate a <a href="classedge_1_1Model.html" class="m-doc">Model</a> using the edgerunner library</p>
           </div></section>
         </section>
       </div>
