@@ -31,27 +31,36 @@ auto main() -> int {
             }
 
             const auto start = std::chrono::high_resolution_clock::now();
-            const auto predictions = imageClassifier.predict(numPredictions);
+            const auto [predictions, inferenceTime] =
+                imageClassifier.predict(numPredictions);
             const auto end = std::chrono::high_resolution_clock::now();
             const auto predictionTime =
                 std::chrono::duration_cast<std::chrono::milliseconds>(end
                                                                       - start)
                     .count();
 
-            fmt::print(fmt::fg(fmt::color::green),
+            fmt::print(stderr,
+                       fmt::fg(fmt::color::green),
                        "predictions for {}:\n",
                        imagePath.filename().string());
             for (const auto& prediction : predictions) {
-                fmt::print(fmt::fg(fmt::color::green),
+                fmt::print(stderr,
+                           fmt::fg(fmt::color::green),
                            "\t{} ({:.2f}%)\n",
                            prediction.first,
                            100.0F * prediction.second);
             }
-            fmt::print(fmt::fg(fmt::color::yellow),
+            fmt::print(stderr,
+                       fmt::fg(fmt::color::yellow),
                        "prediction time: {}ms\n",
                        predictionTime);
+            fmt::print(stderr,
+                       fmt::fg(fmt::color::yellow),
+                       "inference time: {}ms\n",
+                       inferenceTime);
         } catch (std::exception& ex) {
-            fmt::print(fmt::fg(fmt::color::red),
+            fmt::print(stderr,
+                       fmt::fg(fmt::color::red),
                        "{} example failed: {}\n",
                        imagePath.stem().string(),
                        ex.what());

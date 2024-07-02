@@ -2,20 +2,20 @@
 #include <filesystem>
 #include <memory>
 
-#include "edgerunner/tflite/model.hpp"
+#include "edgerunner/model.hpp"
 
+#include <nonstd/span.hpp>
 #include <tensorflow/lite/core/c/c_api_types.h>
 #include <tensorflow/lite/interpreter_builder.h>
 #include <tensorflow/lite/kernels/register.h>
 #include <tensorflow/lite/model_builder.h>
 
+#include "edgerunner/tflite/model.hpp"
 #include "edgerunner/tflite/tensor.hpp"
 
 #ifdef EDGERUNNER_GPU
 #    include <tensorflow/lite/delegates/gpu/delegate.h>
 #endif
-
-#include "edgerunner/model.hpp"
 
 namespace edge::tflite {
 

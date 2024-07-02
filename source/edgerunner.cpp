@@ -3,6 +3,8 @@
 
 #include "edgerunner/edgerunner.hpp"
 
+#include <nonstd/span.hpp>
+
 #include "edgerunner/model.hpp"
 #include "edgerunner/tflite/model.hpp"
 

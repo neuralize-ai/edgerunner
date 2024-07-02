@@ -1,5 +1,6 @@
 #pragma once
 
+#include <chrono>
 #include <cmath>
 #include <fstream>
 #include <limits>
@@ -22,7 +23,7 @@ class ImageClassifier {
     auto loadImage(const std::filesystem::path& imagePath) -> edge::STATUS;
 
     auto predict(size_t numPredictions = 3)
-        -> std::vector<std::pair<std::string, float>>;
+        -> std::pair<std::vector<std::pair<std::string, float>>, double>;
 
   private:
     static void toRGBFloat(cv::Mat& image);
@@ -96,7 +97,7 @@ inline auto ImageClassifier::loadImage(const std::filesystem::path& imagePath)
 }
 
 inline auto ImageClassifier::predict(const size_t numPredictions)
-    -> std::vector<std::pair<std::string, float>> {
+    -> std::pair<std::vector<std::pair<std::string, float>>, double> {
     auto input = m_model->getInput(0);
 
     const auto inputDimensions = input->getDimensions();
@@ -105,9 +106,14 @@ inline auto ImageClassifier::predict(const size_t numPredictions)
 
     preprocess(m_image, inputDimensions, inputBuffer);
 
+    const auto start = std::chrono::high_resolution_clock::now();
     if (m_model->execute() != edge::STATUS::SUCCESS) {
         return {};
     }
+    const auto end = std::chrono::high_resolution_clock::now();
+
+    const auto inferenceTime =
+        std::chrono::duration<double, std::milli>(end - start).count();
 
     auto output = m_model->getOutput(0)->getTensorAs<float>();
 
@@ -123,7 +129,7 @@ inline auto ImageClassifier::predict(const size_t numPredictions)
                                     probabilities[index]);
     }
 
-    return topPredictions;
+    return {topPredictions, inferenceTime};
 }
 
 inline void ImageClassifier::toRGBFloat(cv::Mat& image) {
@@ -284,7 +290,7 @@ inline void ImageClassifier::printPixel(const nonstd::span<float>& image,
                                         size_t hIndex,
                                         size_t wIndex) {
     const auto red =
-        *(image.cbegin() + hIndex * dimensions[1] * 3 + wIndex * 3);
+        *(image.cbegin() + hIndex * dimensions[2] * 3 + wIndex * 3);
     const auto green =
         *(image.cbegin() + hIndex * dimensions[2] * 3 + wIndex * 3 + 1);
     const auto blue =
