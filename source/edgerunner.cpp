@@ -1,5 +1,7 @@
+#include <cstdint>
 #include <filesystem>
 #include <memory>
+#include <string>
 
 #include "edgerunner/edgerunner.hpp"
 
