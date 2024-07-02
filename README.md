@@ -46,11 +46,26 @@ cross-platform on-device AI complexities. This will be achieved through a
 runtime-agnostic API, which can load and interact with arbitrary instances of
 on-device AI models with just a few lines of code.
 
-This repo is in its early stages of development (see [Features](#-features) and [Support](#-support)). The local inference space is quickly evolving and, as such, the goals of this project are subject to change.
+This repo is in its early stages of development (see [Features](#-features) and
+[Support](#-support)). The local inference space is quickly evolving and, as
+such, the goals of this project are subject to change.
 There is lots of work to be done in order to achieve our vision, and your
 [contributions](#-contributing) will be important to make this happen!
 
-Kotlin bindings for Android can be found at [edgerunner-android](https://github.com/neuralize-ai/edgerunner-android).
+   󰀲 Kotlin bindings for Android can be found at [edgerunner-android](https://github.com/neuralize-ai/edgerunner-android).
+
+### What makes Edgerunner unique?
+
+Good question! Indeed there are other cross-platform libraries such as
+[TFLite](link), and [ONNX](link), [ExecuTorch](link). Edgerunner will differentiate with:
+
+- Shared libraries for platform specific SDKs are managed internally.
+- Quicker and easier setup with sane defaults and no boilerplate code.
+- Compatibility with any model format (`.tflite`, `.onnx`, `.pte`, etc).
+- Easier configuration of delegates (`CPU`, `GPU`, `NPU`), applying desired
+hardware acceleration with a single API call.
+- No manual memory allocation required (model input and output tensors are
+pre-allocated and accessed leading to copy-free inference).
 
 ## 🎁 Features
 
