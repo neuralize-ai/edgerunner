@@ -14,20 +14,20 @@
 
 TEST_CASE("Tflite GPU runtime", "[tflite][gpu]") {
     const std::string modelPath = "models/tflite/mobilenet_v3_small.tflite";
+
     auto model = edge::createModel(modelPath);
-
     REQUIRE(model != nullptr);
-
     REQUIRE(std::string {"mobilenet_v3_small"} == model->name());
-
     REQUIRE(model->getDelegate() == edge::DELEGATE::CPU);
 
+    /* ensure CPU and GPU inference have the same inputs */
     auto cpuInputData = model->getInput(0)->getTensorAs<float>();
     for (auto& cpuInputDatum : cpuInputData) {
         cpuInputDatum = 0;
     }
 
-    model->execute();
+    auto executionStatus = model->execute();
+    CHECK(executionStatus == edge::STATUS::SUCCESS);
 
     const auto cpuOutput = model->getOutput(0)->getTensorAs<float>();
 
@@ -39,57 +39,44 @@ TEST_CASE("Tflite GPU runtime", "[tflite][gpu]") {
         cpuOutput.cbegin(), cpuOutput.cend(), std::back_inserter(cpuResult));
 
     const auto delegateStatus = model->applyDelegate(edge::DELEGATE::GPU);
-
     REQUIRE(delegateStatus == edge::STATUS::SUCCESS);
-
     REQUIRE(model->getDelegate() == edge::DELEGATE::GPU);
 
     const auto numInputs = model->getNumInputs();
-
     REQUIRE(numInputs == 1);
 
     const auto numOutputs = model->getNumOutputs();
-
     REQUIRE(numOutputs == 1);
 
     auto input = model->getInput(0);
-
     REQUIRE(input->getName() == "image_tensor");
-
     REQUIRE(input->getDimensions() == std::vector<size_t> {1, 224, 224, 3});
-
     REQUIRE(input->getType() == edge::TensorType::FLOAT32);
 
     auto inputData = input->getTensorAs<float>();
-
     REQUIRE(inputData.size() == input->getSize());
 
+    /* ensure CPU and GPU inference have the same inputs */
     for (auto& inputDatum : inputData) {
         inputDatum = 0;
     }
 
-    const auto executionStatus = model->execute();
-
+    executionStatus = model->execute();
     REQUIRE(executionStatus == edge::STATUS::SUCCESS);
-
-    auto output = model->getOutput(0);
-
-    REQUIRE(output->getName() == "output_0");
-
-    REQUIRE(output->getDimensions() == std::vector<size_t> {1, 1000});
-
-    REQUIRE(output->getType() == edge::TensorType::FLOAT32);
-
-    auto outputData = output->getTensorAs<float>();
-
-    REQUIRE(outputData.size() == output->getSize());
-
-    const auto mse = meanSquaredError(cpuResult, outputData);
-
-    CAPTURE(mse);
-    REQUIRE(mse < mseThreshold);
 
     BENCHMARK("execution") {
         return model->execute();
     };
+
+    auto output = model->getOutput(0);
+    REQUIRE(output->getName() == "output_0");
+    REQUIRE(output->getDimensions() == std::vector<size_t> {1, 1000});
+    REQUIRE(output->getType() == edge::TensorType::FLOAT32);
+
+    auto outputData = output->getTensorAs<float>();
+    REQUIRE(outputData.size() == output->getSize());
+
+    const auto mse = meanSquaredError(cpuResult, outputData);
+    CAPTURE(mse);
+    REQUIRE(mse < mseThreshold);
 }

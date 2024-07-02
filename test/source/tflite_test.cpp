@@ -1,5 +1,4 @@
 #include <cstddef>
-#include <limits>
 #include <string>
 #include <vector>
 
@@ -14,6 +13,7 @@
 
 TEST_CASE("Tflite default runtime (CPU)", "[tflite][cpu]") {
     const std::string modelPath = "models/tflite/mobilenet_v3_small.tflite";
+
     auto model = edge::createModel(modelPath);
     REQUIRE(model != nullptr);
     REQUIRE(std::string {"mobilenet_v3_small"} == model->name());
@@ -44,8 +44,8 @@ TEST_CASE("Tflite default runtime (CPU)", "[tflite][cpu]") {
     REQUIRE(output->getType() == edge::TensorType::FLOAT32);
     REQUIRE(output.get() == outputs[0].get());
 
-    auto outputData = output->getTensorAs<float>();
-    REQUIRE(outputData.size() == output->getSize());
+    auto outputBuffer = output->getTensorAs<float>();
+    REQUIRE(outputBuffer.size() == output->getSize());
 
     const auto executionStatus = model->execute();
     REQUIRE(executionStatus == edge::STATUS::SUCCESS);
@@ -55,8 +55,7 @@ TEST_CASE("Tflite default runtime (CPU)", "[tflite][cpu]") {
     };
 
     /* verify output buffer is persistent across execution */
-    const auto outputDataAfter = model->getOutput(0)->getTensorAs<float>();
-    const auto outputMse = meanSquaredError(outputData, outputDataAfter);
-    CAPTURE(outputMse);
-    REQUIRE(outputMse < std::numeric_limits<float>::epsilon());
+    const auto newOutputBuffer = model->getOutput(0)->getTensorAs<float>();
+    REQUIRE(outputBuffer.data() == newOutputBuffer.data());
+    REQUIRE(outputBuffer.size() == newOutputBuffer.size());
 }
