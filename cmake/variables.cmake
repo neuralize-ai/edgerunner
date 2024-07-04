@@ -41,3 +41,4 @@ if(NOT PROJECT_IS_TOP_LEVEL)
 endif()
 
 option(edgerunner_ENABLE_GPU "Enable GPU support" OFF)
+option(edgerunner_ENABLE_NPU "Enable NPU support" OFF)
