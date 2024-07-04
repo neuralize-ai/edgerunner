@@ -1,6 +1,7 @@
 from conan import ConanFile
 from conan.tools.cmake import CMakeToolchain, CMake, cmake_layout
-from conan.tools.files import load
+from conan.tools.files import load, copy
+import os
 
 
 class EdgerunnerRecipe(ConanFile):
@@ -86,6 +87,21 @@ class EdgerunnerRecipe(ConanFile):
         toolchain.variables["edgerunner_ENABLE_NPU"] = self.options.npu
 
         toolchain.generate()
+
+        if self.settings.os == "Android" and self.options.npu:
+            qnn = self.dependencies["qnn"]
+            copy(
+                self,
+                "*.so",
+                qnn.cpp_info.components["tfliteDelegate"].libdirs[0],
+                os.path.join(self.source_folder, "build", "runtimeLibs"),
+            )
+            copy(
+                self,
+                "*.so",
+                qnn.cpp_info.components["htp"].libdirs[0],
+                os.path.join(self.source_folder, "build", "runtimeLibs"),
+            )
 
     def build(self):
         cmake = CMake(self)
