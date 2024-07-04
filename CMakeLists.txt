@@ -75,6 +75,18 @@ target_link_libraries(edgerunner_edgerunner PUBLIC nonstd::span-lite)
 find_package(tensorflowlite REQUIRED)
 target_link_libraries(edgerunner_edgerunner PRIVATE tensorflow::tensorflowlite)
 
+if (ANDROID AND edgerunner_ENABLE_NPU)
+    find_package(qnn REQUIRED COMPONENTS tfliteDelegate)
+    target_link_libraries(edgerunner_edgerunner PUBLIC qnn::tfliteDelegate)
+
+    target_compile_definitions(
+        edgerunner_edgerunner
+        PUBLIC
+        EDGERUNNER_QNN
+    )
+
+endif()
+
 if(edgerunner_ENABLE_GPU)
     target_compile_definitions(
         edgerunner_edgerunner
