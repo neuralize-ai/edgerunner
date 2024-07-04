@@ -59,7 +59,13 @@ cmake --preset=rel
 cmake --build --preset=rel -t run-examples
 ```
 
-For GPU support, add `-o gpu=True` to the `conan install` command. If an existing build exists, you may need to run:
+For GPU support, add `-o gpu=True` to the `conan install` command.
+> [!NOTE]
+> The tensorflow-lite conan package disables GPU by default and as such these
+  steps will not work currently. I have patched the recipe locally to enable GPU
+  support and will make this available on Conan Center or another repository soon.
+
+If an existing build exists, you may need to run:
 
 ```bash
 cmake --preset=rel -Dedgerunner_ENABLE_GPU=ON
