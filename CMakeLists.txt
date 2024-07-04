@@ -73,7 +73,7 @@ find_package(span-lite REQUIRED)
 target_link_libraries(edgerunner_edgerunner PUBLIC nonstd::span-lite)
 
 find_package(tensorflowlite REQUIRED)
-target_link_libraries(edgerunner_edgerunner PUBLIC tensorflow::tensorflowlite)
+target_link_libraries(edgerunner_edgerunner PRIVATE tensorflow::tensorflowlite)
 
 if(edgerunner_ENABLE_GPU)
     target_compile_definitions(
