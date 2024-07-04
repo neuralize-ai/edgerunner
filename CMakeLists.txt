@@ -85,6 +85,7 @@ if (ANDROID AND edgerunner_ENABLE_NPU)
         EDGERUNNER_QNN
     )
 
+    file(COPY "${CMAKE_BINARY_DIR}/../runtimeLibs/" DESTINATION ${CMAKE_BINARY_DIR})
 endif()
 
 if(edgerunner_ENABLE_GPU)
