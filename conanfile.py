@@ -58,6 +58,9 @@ class EdgerunnerRecipe(ConanFile):
         if self.options.examples:
             self.requires("opencv/4.9.0")
 
+        if self.settings.os == "Android" and self.options.npu:
+            self.requires("qnn/2.22.0.240425")
+
     def build_requirements(self):
         self.test_requires("catch2/3.6.0")
 
