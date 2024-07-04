@@ -18,6 +18,10 @@
 #    include <tensorflow/lite/delegates/gpu/delegate.h>
 #endif
 
+#ifdef EDGERUNNER_QNN
+#    include <QNN/TFLiteDelegate/QnnTFLiteDelegate.h>
+#endif
+
 namespace edge::tflite {
 
 void ModelImpl::loadModel(const std::filesystem::path& modelPath) {
@@ -76,7 +80,27 @@ auto ModelImpl::applyDelegate(const DELEGATE& delegate) -> STATUS {
         } else {
             setDelegate(delegate);
         }
+#else
+        status = STATUS::FAIL;
+#endif
+    }
 
+    if (delegate == DELEGATE::NPU) {
+#ifdef EDGERUNNER_QNN
+        TfLiteQnnDelegateOptions options = TfLiteQnnDelegateOptionsDefault();
+
+        options.backend_type = kHtpBackend;
+        options.log_level = kLogOff;
+        options.htp_options.precision = kHtpFp16;
+        options.htp_options.performance_mode = kHtpBurst;
+
+        m_delegate = TfLiteQnnDelegateCreate(&options);
+
+        if (m_interpreter->ModifyGraphWithDelegate(m_delegate) != kTfLiteOk) {
+            status = STATUS::FAIL;
+        } else {
+            setDelegate(delegate);
+        }
 #else
         status = STATUS::FAIL;
 #endif
@@ -100,6 +124,12 @@ void ModelImpl::deleteDelegate() {
 #ifdef EDGERUNNER_GPU
         if (getDelegate() == DELEGATE::GPU) {
             TfLiteGpuDelegateV2Delete(m_delegate);
+        }
+#endif
+
+#ifdef EDGERUNNER_QNN
+        if (getDelegate() == DELEGATE::NPU) {
+            TfLiteQnnDelegateDelete(m_delegate);
         }
 #endif
     }
