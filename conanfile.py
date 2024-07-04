@@ -19,6 +19,7 @@ class EdgerunnerRecipe(ConanFile):
         "shared": [True, False],
         "fPIC": [True, False],
         "gpu": [True, False],
+        "npu": [True, False],
         "examples": [True, False],
     }
 
@@ -26,6 +27,7 @@ class EdgerunnerRecipe(ConanFile):
         "shared": False,
         "fPIC": True,
         "gpu": False,
+        "npu": False,
         "examples": False,
     }
 
@@ -78,6 +80,7 @@ class EdgerunnerRecipe(ConanFile):
 
         toolchain.variables["BUILD_EXAMPLES"] = self.options.examples
         toolchain.variables["edgerunner_ENABLE_GPU"] = self.options.gpu
+        toolchain.variables["edgerunner_ENABLE_NPU"] = self.options.npu
 
         toolchain.generate()
 
