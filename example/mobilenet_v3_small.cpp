@@ -35,9 +35,7 @@ auto main() -> int {
                 imageClassifier.predict(numPredictions);
             const auto end = std::chrono::high_resolution_clock::now();
             const auto predictionTime =
-                std::chrono::duration_cast<std::chrono::milliseconds>(end
-                                                                      - start)
-                    .count();
+                std::chrono::duration<double, std::milli>(end - start).count();
 
             fmt::print(stderr,
                        fmt::fg(fmt::color::green),
