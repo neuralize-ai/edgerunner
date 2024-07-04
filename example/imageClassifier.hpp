@@ -78,7 +78,9 @@ inline ImageClassifier::ImageClassifier(
     const std::filesystem::path& labelListPath)
     : m_model(edge::createModel(modelPath))
     , m_labelList(loadLabelList(labelListPath)) {
-#ifdef EDGERUNNER_GPU
+#ifdef EDGERUNNER_QNN
+    m_model->applyDelegate(edge::DELEGATE::NPU);
+#elif EDGERUNNER_GPU
     m_model->applyDelegate(edge::DELEGATE::GPU);
 #endif
 }
