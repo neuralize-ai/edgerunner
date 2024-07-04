@@ -73,9 +73,10 @@ auto ModelImpl::applyDelegate(const DELEGATE& delegate) -> STATUS {
 
         if (m_interpreter->ModifyGraphWithDelegate(m_delegate) != kTfLiteOk) {
             status = STATUS::FAIL;
+        } else {
+            setDelegate(delegate);
         }
 
-        setDelegate(delegate);
 #else
         status = STATUS::FAIL;
 #endif
