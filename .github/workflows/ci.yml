@@ -38,8 +38,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-      with:
-        lfs: true
 
     - name: Install LCov
       run: sudo apt-get update -q
@@ -86,8 +84,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-      with:
-        lfs: true
 
     - name: Install Python
       uses: actions/setup-python@v5
@@ -138,8 +134,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-      with:
-        lfs: true
 
     - name: Install static analyzers
       if: matrix.os == 'ubuntu-22.04'
