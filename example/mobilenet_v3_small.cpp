@@ -2,6 +2,7 @@
 #include <cstddef>
 #include <exception>
 #include <filesystem>
+#include <ratio>
 #include <vector>
 
 #include <fmt/color.h>

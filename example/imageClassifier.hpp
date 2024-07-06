@@ -22,7 +22,7 @@ class ImageClassifier {
 
     auto loadImage(const std::filesystem::path& imagePath) -> edge::STATUS;
 
-    auto setDelegate(const edge::DELEGATE delegate) -> edge::STATUS;
+    auto setDelegate(edge::DELEGATE delegate) -> edge::STATUS;
 
     auto predict(size_t numPredictions = 3)
         -> std::pair<std::vector<std::pair<std::string, float>>, double>;
