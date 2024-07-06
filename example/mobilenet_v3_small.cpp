@@ -17,6 +17,8 @@ auto main() -> int {
 
     ImageClassifier imageClassifier(modelPath, labelListPath);
 
+    imageClassifier.setDelegate(edge::DELEGATE::GPU);
+
     const size_t numPredictions = 5;
 
     const std::vector<std::filesystem::path> imagePaths = {
