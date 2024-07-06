@@ -77,7 +77,7 @@ To run an individual example, execute:
 cmake --build --preset=rel -t run_<example_name>
 ```
 
-where `example_name` is the example filename without the extension.
+where `example_name` is the example filename without the extension (eg. `mobilenet_v3_small`).
 
 ## Android
 
@@ -108,3 +108,4 @@ To run an individual example, execute:
 ```bash
 cmake --build --preset=rel -t run_<example_name>
 ```
+where `example_name` is the example filename without the extension (eg. `mobilenet_v3_small`).
