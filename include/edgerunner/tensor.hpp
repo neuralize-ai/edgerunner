@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include <cstdint>
 #include <string>
 #include <vector>
 
@@ -32,7 +33,7 @@ namespace edge {
  *
  * @note This enum class is used to specify the data type of a Tensor
  */
-enum class TensorType {
+enum class TensorType : uint8_t {
     UNSUPPORTED,
     NOTYPE,
     FLOAT32,

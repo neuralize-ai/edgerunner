@@ -21,7 +21,7 @@ namespace edge {
  * @brief Enum class representing different types of delegates for model
  * execution.
  */
-enum class DELEGATE {
+enum class DELEGATE : uint8_t {
     CPU, /**< CPU delegate */
     GPU, /**< GPU delegate */
     NPU /**< NPU delegate */
@@ -31,7 +31,7 @@ enum class DELEGATE {
  * @enum STATUS
  * @brief Enum class representing the status of an operation.
  */
-enum class STATUS {
+enum class STATUS : uint8_t {
     SUCCESS, /**< Operation was successful */
     FAIL /**< Operation failed */
 };
