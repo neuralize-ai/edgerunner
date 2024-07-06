@@ -77,6 +77,7 @@ class EdgerunnerRecipe(ConanFile):
             self.options["opencv"].with_webp = False
             self.options["opencv"].with_msmf = False
             self.options["opencv"].with_msmf_dxva = False
+            self.options["opencv"].with_wayland = False
             self.options["opencv"].with_opencl = True
 
     def generate(self):
