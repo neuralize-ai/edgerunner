@@ -110,4 +110,12 @@ To run an individual example, execute:
 ```bash
 cmake --build --preset=rel -t run_<example_name>
 ```
+
 where `example_name` is the example filename without the extension (eg. `mobilenet_v3_small`).
+
+There is support for executing on Qualcomm NPUs (more hardware support is
+upcoming). Since this involves using Qualcomm's pre-compiled shared libraries,
+I have created a Conan recipe that must be used
+[here](https://github.com/neuralize-ai/qnn-conan). Follow the instructions on
+that repository and the steps above with `-o with_npu=True` supplied to the
+`conan install` invocation.
