@@ -19,16 +19,16 @@ class EdgerunnerRecipe(ConanFile):
     options = {
         "shared": [True, False],
         "fPIC": [True, False],
-        "gpu": [True, False],
         "npu": [True, False],
+        "with_gpu": [True, False],
         "examples": [True, False],
     }
 
     default_options = {
         "shared": False,
         "fPIC": True,
-        "gpu": False,
         "npu": False,
+        "with_gpu": False,
         "examples": False,
     }
 
@@ -66,7 +66,7 @@ class EdgerunnerRecipe(ConanFile):
         self.test_requires("catch2/3.6.0")
 
     def configure(self):
-        self.options["tensorflow-lite"].with_gpu = self.options.gpu
+        self.options["tensorflow-lite"].with_gpu = self.options.with_gpu
 
         if self.options.examples:
             self.options["opencv"].with_quirc = False
@@ -83,8 +83,8 @@ class EdgerunnerRecipe(ConanFile):
         toolchain = CMakeToolchain(self)
 
         toolchain.variables["BUILD_EXAMPLES"] = self.options.examples
-        toolchain.variables["edgerunner_ENABLE_GPU"] = self.options.gpu
         toolchain.variables["edgerunner_ENABLE_NPU"] = self.options.npu
+        toolchain.variables["edgerunner_ENABLE_GPU"] = self.options.with_gpu
 
         toolchain.generate()
 
@@ -121,7 +121,7 @@ class EdgerunnerRecipe(ConanFile):
 
         defines = []
 
-        if self.options.gpu:
+        if self.options.with_gpu:
             defines.append("edgerunner_ENABLE_GPU")
 
         self.cpp_info.defines = defines
