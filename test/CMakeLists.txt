@@ -36,11 +36,8 @@ if(edgerunner_ENABLE_GPU)
 endif()
 
 add_executable(edgerunner_test ${TEST_SOURCES})
-target_link_libraries(
-    edgerunner_test PRIVATE
-    edgerunner::edgerunner
-    Catch2::Catch2WithMain
-)
+target_link_libraries(edgerunner_test PRIVATE edgerunner::edgerunner
+                                              Catch2::Catch2WithMain)
 target_compile_features(edgerunner_test PRIVATE cxx_std_17)
 
 catch_discover_tests(edgerunner_test)
