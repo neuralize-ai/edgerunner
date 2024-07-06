@@ -22,6 +22,8 @@ class ImageClassifier {
 
     auto loadImage(const std::filesystem::path& imagePath) -> edge::STATUS;
 
+    auto setDelegate(const edge::DELEGATE delegate) -> edge::STATUS;
+
     auto predict(size_t numPredictions = 3)
         -> std::pair<std::vector<std::pair<std::string, float>>, double>;
 
@@ -77,13 +79,7 @@ inline ImageClassifier::ImageClassifier(
     const std::filesystem::path& modelPath,
     const std::filesystem::path& labelListPath)
     : m_model(edge::createModel(modelPath))
-    , m_labelList(loadLabelList(labelListPath)) {
-#ifdef EDGERUNNER_QNN
-    m_model->applyDelegate(edge::DELEGATE::NPU);
-#elif EDGERUNNER_GPU
-    m_model->applyDelegate(edge::DELEGATE::GPU);
-#endif
-}
+    , m_labelList(loadLabelList(labelListPath)) {}
 
 inline auto ImageClassifier::loadImage(const std::filesystem::path& imagePath)
     -> edge::STATUS {
@@ -96,6 +92,11 @@ inline auto ImageClassifier::loadImage(const std::filesystem::path& imagePath)
     toRGBFloat(m_image);
 
     return edge::STATUS::SUCCESS;
+}
+
+inline auto ImageClassifier::setDelegate(const edge::DELEGATE delegate)
+    -> edge::STATUS {
+    return m_model->applyDelegate(delegate);
 }
 
 inline auto ImageClassifier::predict(const size_t numPredictions)
