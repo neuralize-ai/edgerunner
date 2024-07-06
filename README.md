@@ -76,7 +76,7 @@ pre-allocated and accessed leading to copy-free inference - simply `model.execut
 | Automatic framework detection       |   ✅   |
 | Quantized models                    |   ⏳   |
 | Choose optimal execution at runtime |   ⏳   |
-| Java bindings                       |   ⏳   |
+| Java bindings                       |   ✅   |
 | Objective-C bindings                |   ⏳   |
 
 Please request additional features through Github issues or on our [Discord](https://discord.gg/y9EzZEkwbR).
@@ -100,8 +100,8 @@ Please request additional features through Github issues or on our [Discord](htt
 |     | Apple | Qualcomm | MediaTek | Samsung | Intel | AMD | NVIDIA |
 |:---:|:-----:|:--------:|:--------:|:-------:|:-----:|:---:|:------:|
 | CPU |  ✅   |    ✅    |    ✅    |   ✅    |  ✅   | ✅  |   ⛔️   |
-| GPU |  ⏳   |    ⏳    |    ⏳    |   ⏳    |  ✅   | ✅  |   ⏳   |
-| NPU |  ⏳   |    ⏳    |    ⏳    |   ⛔️    |  ⏳   | ⏳  |   ⛔️   |
+| GPU |  ⏳   |    ✅    |    ✅    |   ✅    |  ✅   | ✅  |   ⏳   |
+| NPU |  ⏳   |    ✅    |    ⏳    |   ⛔️    |  ⏳   | ⏳  |   ⛔️   |
 
 ## 🛠 Building and installing
 
