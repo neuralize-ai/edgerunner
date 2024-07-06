@@ -1,14 +1,12 @@
 #include <string>
 
-#include <catch2/benchmark/catch_benchmark.hpp>
-#include <catch2/catch_message.hpp>
 #include <catch2/catch_test_macros.hpp>
 
 #include "edgerunner/edgerunner.hpp"
 #include "edgerunner/model.hpp"
 #include "utils.hpp"
 
-TEST_CASE("Tflite GPU runtime", "[tflite][gpu]") {
+TEST_CASE("Tflite delegate ", "[tflite][delegate]") {
     const std::string modelPath = "models/tflite/mobilenet_v3_small.tflite";
 
     auto model = edge::createModel(modelPath);
@@ -26,7 +24,10 @@ TEST_CASE("Tflite GPU runtime", "[tflite][gpu]") {
     REQUIRE(model->getDelegate() == edge::DELEGATE::CPU);
 #endif
 
-    delegateStatus = model->applyDelegate(edge::DELEGATE::GPU);
+    model->applyDelegate(edge::DELEGATE::CPU);
+    REQUIRE(model->getDelegate() == edge::DELEGATE::CPU);
+
+    delegateStatus = model->applyDelegate(edge::DELEGATE::NPU);
 
 #ifdef EDGERUNNER_QNN
     REQUIRE(delegateStatus == edge::STATUS::SUCCESS);
