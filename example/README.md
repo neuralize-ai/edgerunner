@@ -39,6 +39,14 @@ For MacOS, replace "Unix Makefiles" with "Xcode".
 > Examples require additional dependencies to the main library. As such, it is
 required to supply `-o examples=True` to the `conan install` command.
 
+In the examples below, for GPU support add `-o gpu=True` to the `conan install` command.
+> [!NOTE]
+> The tensorflow-lite conan package disables GPU by default and as such these
+  steps will not work currently. I have patched the recipe locally to enable GPU
+  support and will make this available on Conan Center or another repository
+  soon. In the mean time, my custom recipe can be be used as outlined
+  [here](https://github.com/neuralize-ai/tensorflow-lite-conan).
+
 ## Unix
 
 Run all examples using one of the following methods from the project root directory.
@@ -58,12 +66,6 @@ conan install . -b missing -o examples=True
 cmake --preset=rel
 cmake --build --preset=rel -t run-examples
 ```
-
-For GPU support, add `-o gpu=True` to the `conan install` command.
-> [!NOTE]
-> The tensorflow-lite conan package disables GPU by default and as such these
-  steps will not work currently. I have patched the recipe locally to enable GPU
-  support and will make this available on Conan Center or another repository soon.
 
 If an existing build exists, you may need to run:
 
