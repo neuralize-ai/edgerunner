@@ -19,16 +19,16 @@ class EdgerunnerRecipe(ConanFile):
     options = {
         "shared": [True, False],
         "fPIC": [True, False],
-        "npu": [True, False],
         "with_gpu": [True, False],
+        "with_npu": [True, False],
         "examples": [True, False],
     }
 
     default_options = {
         "shared": False,
         "fPIC": True,
-        "npu": False,
         "with_gpu": False,
+        "with_npu": False,
         "examples": False,
     }
 
@@ -59,7 +59,7 @@ class EdgerunnerRecipe(ConanFile):
         if self.options.examples:
             self.requires("opencv/4.9.0")
 
-        if self.settings.os == "Android" and self.options.npu:
+        if self.settings.os == "Android" and self.options.with_npu:
             self.requires("qnn/2.23.0.24.06.24")
 
     def build_requirements(self):
@@ -87,12 +87,12 @@ class EdgerunnerRecipe(ConanFile):
         toolchain = CMakeToolchain(self)
 
         toolchain.variables["BUILD_EXAMPLES"] = self.options.examples
-        toolchain.variables["edgerunner_ENABLE_NPU"] = self.options.npu
         toolchain.variables["edgerunner_ENABLE_GPU"] = self.options.with_gpu
+        toolchain.variables["edgerunner_ENABLE_NPU"] = self.options.with_npu
 
         toolchain.generate()
 
-        if self.settings.os == "Android" and self.options.npu:
+        if self.settings.os == "Android" and self.options.with_npu:
             qnn = self.dependencies["qnn"]
             copy(
                 self,
