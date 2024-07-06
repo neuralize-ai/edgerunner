@@ -2,11 +2,12 @@
 .idea/
 .vs/
 .vscode/
+.cache/
+.clangd/
 build/
 cmake-build-*/
 conan/
 prefix/
-.clangd
 CMakeLists.txt.user
 CMakeUserPresets.json
 compile_commands.json
