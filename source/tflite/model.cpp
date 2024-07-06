@@ -70,22 +70,22 @@ auto ModelImpl::applyDelegate(const DELEGATE& delegate) -> STATUS {
     deleteDelegate();
 
     STATUS status = STATUS::SUCCESS;
-
-    if (delegate == DELEGATE::GPU) {
+    if (delegate == DELEGATE::CPU) {
+        setDelegate(delegate);
+    } else if (delegate == DELEGATE::GPU) {
 #ifdef EDGERUNNER_GPU
         m_delegate = TfLiteGpuDelegateV2Create(nullptr);
 
         if (m_interpreter->ModifyGraphWithDelegate(m_delegate) != kTfLiteOk) {
             status = STATUS::FAIL;
+            setDelegate(DELEGATE::CPU);
         } else {
             setDelegate(delegate);
         }
 #else
         status = STATUS::FAIL;
 #endif
-    }
-
-    if (delegate == DELEGATE::NPU) {
+    } else if (delegate == DELEGATE::NPU) {
 #ifdef EDGERUNNER_QNN
         TfLiteQnnDelegateOptions options = TfLiteQnnDelegateOptionsDefault();
 
@@ -98,6 +98,7 @@ auto ModelImpl::applyDelegate(const DELEGATE& delegate) -> STATUS {
 
         if (m_interpreter->ModifyGraphWithDelegate(m_delegate) != kTfLiteOk) {
             status = STATUS::FAIL;
+            setDelegate(DELEGATE::CPU);
         } else {
             setDelegate(delegate);
         }
