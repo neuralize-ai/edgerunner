@@ -18,7 +18,11 @@ auto main() -> int {
 
     ImageClassifier imageClassifier(modelPath, labelListPath);
 
+#ifdef EDGERUNNER_QNN
+    imageClassifier.setDelegate(edge::DELEGATE::NPU);
+#elif EDGERUNNER_GPU
     imageClassifier.setDelegate(edge::DELEGATE::GPU);
+#endif
 
     const size_t numPredictions = 5;
 
