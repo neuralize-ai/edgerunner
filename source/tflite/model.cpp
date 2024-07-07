@@ -19,7 +19,7 @@
 #endif
 
 #ifdef EDGERUNNER_QNN
-#    include <QNN/TFLiteDelegate/QnnTFLiteDelegate.h>
+#    include <TFLiteDelegate/QnnTFLiteDelegate.h>
 #endif
 
 namespace edge::tflite {
