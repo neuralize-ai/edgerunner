@@ -97,7 +97,7 @@ class EdgerunnerRecipe(ConanFile):
             copy(
                 self,
                 "*.so",
-                qnn.cpp_info.components["tfliteDelegate"].libdirs[0],
+                qnn.cpp_info.components["tflite"].libdirs[0],
                 os.path.join(self.source_folder, "build", "runtimeLibs"),
             )
             copy(
@@ -118,8 +118,7 @@ class EdgerunnerRecipe(ConanFile):
 
     def package_info(self):
         self.cpp_info.set_property("cmake_file_name", "edgerunner")
-        self.cpp_info.set_property(
-            "cmake_target_name", "edgerunner::edgerunner")
+        self.cpp_info.set_property("cmake_target_name", "edgerunner::edgerunner")
 
         self.cpp_info.names["cmake_find_package"] = "edgerunner"
         self.cpp_info.names["cmake_find_package_multi"] = "edgerunner"
