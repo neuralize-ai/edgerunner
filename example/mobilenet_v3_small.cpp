@@ -14,7 +14,7 @@ auto main() -> int {
     const std::filesystem::path modelPath {
         "models/tflite/mobilenet_v3_small.tflite"};
     const std::filesystem::path labelListPath {
-        "models/tflite/imagenet_labels.txt"};
+        "models/common/imagenet_labels.txt"};
 
     ImageClassifier imageClassifier(modelPath, labelListPath);
 
