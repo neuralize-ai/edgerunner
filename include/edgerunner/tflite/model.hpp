@@ -55,15 +55,27 @@ class ModelImpl final : public Model {
 
     /**
      * @brief Loads the TensorFlow Lite model from the specified path.
+     *
+     * This function loads a TensorFlow Lite model from the specified file path.
+     * The model file should be in the TensorFlow Lite format.
+     *
      * @param modelPath The path to the TensorFlow Lite model file.
+     * @return STATUS Returns a status indicating whether the model was
+     * successfully loaded or not.
      */
-    void loadModel(const std::filesystem::path& modelPath) final;
+    auto loadModel(const std::filesystem::path& modelPath) -> STATUS final;
 
     /**
      * @brief Loads the TensorFlow Lite model from the specified buffer.
+     *
+     * This function loads a TensorFlow Lite model from the provided buffer. The
+     * buffer should contain the raw data of the TensorFlow Lite model.
+     *
      * @param modelBuffer The buffer containing the TensorFlow Lite model.
+     * @return STATUS Returns a status indicating whether the model was
+     * successfully loaded or not.
      */
-    void loadModel(const nonstd::span<uint8_t>& modelBuffer) final;
+    auto loadModel(const nonstd::span<uint8_t>& modelBuffer) -> STATUS final;
 
     /**
      * @brief Applies a delegate to the TensorFlow Lite interpreter.
