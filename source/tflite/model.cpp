@@ -24,13 +24,25 @@
 
 namespace edge::tflite {
 
-void ModelImpl::loadModel(const std::filesystem::path& modelPath) {
+auto ModelImpl::loadModel(const std::filesystem::path& modelPath) -> STATUS {
     m_modelBuffer = ::tflite::FlatBufferModel::BuildFromFile(modelPath.c_str());
+
+    if (m_modelBuffer == nullptr) {
+        return STATUS::FAIL;
+    }
+
+    return STATUS::SUCCESS;
 }
 
-void ModelImpl::loadModel(const nonstd::span<uint8_t>& modelBuffer) {
+auto ModelImpl::loadModel(const nonstd::span<uint8_t>& modelBuffer) -> STATUS {
     m_modelBuffer = ::tflite::FlatBufferModel::BuildFromBuffer(
         reinterpret_cast<char*>(modelBuffer.data()), modelBuffer.size());
+
+    if (m_modelBuffer == nullptr) {
+        return STATUS::FAIL;
+    }
+
+    return STATUS::SUCCESS;
 }
 
 void ModelImpl::createInterpreter() {
