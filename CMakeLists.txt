@@ -73,11 +73,13 @@ target_link_libraries(edgerunner_edgerunner PUBLIC nonstd::span-lite)
 find_package(tensorflowlite REQUIRED)
 target_link_libraries(edgerunner_edgerunner PRIVATE tensorflow::tensorflowlite)
 
-if(ANDROID AND edgerunner_ENABLE_NPU)
-    find_package(qnn REQUIRED COMPONENTS tfliteDelegate)
-    target_link_libraries(edgerunner_edgerunner PUBLIC qnn::tfliteDelegate)
-
-    target_compile_definitions(edgerunner_edgerunner PUBLIC EDGERUNNER_QNN)
+if(edgerunner_ENABLE_NPU)
+    find_package(qnn REQUIRED)
+    target_link_libraries(edgerunner_edgerunner PRIVATE qnn::qnn)
+    if(ANDROID)
+        target_link_libraries(edgerunner_edgerunner PRIVATE qnn::tfliteDelegate)
+        target_compile_definitions(edgerunner_edgerunner PRIVATE EDGERUNNER_QNN)
+    endif()
 
     file(COPY "${CMAKE_BINARY_DIR}/../runtimeLibs/"
          DESTINATION ${CMAKE_BINARY_DIR}
