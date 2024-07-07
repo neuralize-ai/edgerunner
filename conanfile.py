@@ -59,7 +59,7 @@ class EdgerunnerRecipe(ConanFile):
         if self.options.examples:
             self.requires("opencv/4.9.0")
 
-        if self.settings.os == "Android" and self.options.with_npu:
+        if self.options.with_npu:
             self.requires("qnn/2.23.0.24.06.24")
 
     def build_requirements(self):
@@ -92,7 +92,7 @@ class EdgerunnerRecipe(ConanFile):
 
         toolchain.generate()
 
-        if self.settings.os == "Android" and self.options.with_npu:
+        if self.options.with_npu:
             qnn = self.dependencies["qnn"]
             copy(
                 self,
@@ -118,7 +118,8 @@ class EdgerunnerRecipe(ConanFile):
 
     def package_info(self):
         self.cpp_info.set_property("cmake_file_name", "edgerunner")
-        self.cpp_info.set_property("cmake_target_name", "edgerunner::edgerunner")
+        self.cpp_info.set_property(
+            "cmake_target_name", "edgerunner::edgerunner")
 
         self.cpp_info.names["cmake_find_package"] = "edgerunner"
         self.cpp_info.names["cmake_find_package_multi"] = "edgerunner"
