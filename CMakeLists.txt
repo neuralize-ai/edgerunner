@@ -11,15 +11,18 @@ project(
     DESCRIPTION
         "Edgerunner is a cross-platform ML inference library for mobile devices"
     HOMEPAGE_URL "https://runlocal.ai"
-    LANGUAGES CXX)
+    LANGUAGES CXX
+)
 
 include(cmake/project-is-top-level.cmake)
 include(cmake/variables.cmake)
 
 # ---- Declare library ----
 
-add_library(edgerunner_edgerunner source/edgerunner.cpp source/tflite/model.cpp
-                                  source/tflite/tensor.cpp)
+add_library(
+    edgerunner_edgerunner source/edgerunner.cpp source/tflite/model.cpp
+                          source/tflite/tensor.cpp
+)
 add_library(edgerunner::edgerunner ALIAS edgerunner_edgerunner)
 
 include(GenerateExportHeader)
@@ -30,11 +33,13 @@ generate_export_header(
     EXPORT_FILE_NAME
     export/edgerunner/edgerunner_export.hpp
     CUSTOM_CONTENT_FROM_VARIABLE
-    pragma_suppress_c4251)
+    pragma_suppress_c4251
+)
 
 if(NOT BUILD_SHARED_LIBS)
-    target_compile_definitions(edgerunner_edgerunner
-                               PUBLIC EDGERUNNER_STATIC_DEFINE)
+    target_compile_definitions(
+        edgerunner_edgerunner PUBLIC EDGERUNNER_STATIC_DEFINE
+    )
 endif()
 
 set_target_properties(
@@ -44,15 +49,18 @@ set_target_properties(
                VERSION "${PROJECT_VERSION}"
                SOVERSION "${PROJECT_VERSION_MAJOR}"
                EXPORT_NAME edgerunner
-               OUTPUT_NAME edgerunner)
+               OUTPUT_NAME edgerunner
+)
 
 target_include_directories(
     edgerunner_edgerunner ${warning_guard}
-    PUBLIC "\$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>")
+    PUBLIC "\$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>"
+)
 
 target_include_directories(
     edgerunner_edgerunner SYSTEM
-    PUBLIC "\$<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/export>")
+    PUBLIC "\$<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/export>"
+)
 
 target_compile_features(edgerunner_edgerunner PUBLIC cxx_std_17)
 
@@ -72,7 +80,8 @@ if(ANDROID AND edgerunner_ENABLE_NPU)
     target_compile_definitions(edgerunner_edgerunner PUBLIC EDGERUNNER_QNN)
 
     file(COPY "${CMAKE_BINARY_DIR}/../runtimeLibs/"
-         DESTINATION ${CMAKE_BINARY_DIR})
+         DESTINATION ${CMAKE_BINARY_DIR}
+    )
 endif()
 
 if(edgerunner_ENABLE_GPU)
