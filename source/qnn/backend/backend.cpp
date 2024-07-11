@@ -7,6 +7,7 @@
 #include <fmt/core.h>
 
 #include "edgerunner/model.hpp"
+
 namespace edge::qnn::backend {
 
 using QnnInterfaceGetProvidersFnT =
@@ -72,6 +73,19 @@ auto Backend::loadBackend() -> STATUS {
     }
 
     return validateBackendId(backendId);
+}
+
+auto Backend::validateBackendId(const uint32_t backendId) -> STATUS {
+    switch (backendId) {
+        case QNN_BACKEND_ID_CPU:
+            return m_delegate == DELEGATE::CPU ? STATUS::SUCCESS : STATUS::FAIL;
+        case QNN_BACKEND_ID_GPU:
+            return m_delegate == DELEGATE::GPU ? STATUS::SUCCESS : STATUS::FAIL;
+        case QNN_BACKEND_ID_HTP:
+            return m_delegate == DELEGATE::NPU ? STATUS::SUCCESS : STATUS::FAIL;
+        default:
+            return STATUS::FAIL;
+    }
 }
 
 }  // namespace edge::qnn::backend
