@@ -3,10 +3,12 @@
 #include <CPU/QnnCpuCommon.h>
 #include <GPU/QnnGpuCommon.h>
 #include <HTP/QnnHtpCommon.h>
+#include <QnnContext.h>
 #include <dlfcn.h>
 #include <fmt/core.h>
 
 #include "edgerunner/model.hpp"
+#include "edgerunner/qnn/backend/config.h"
 
 namespace edge::qnn::backend {
 
@@ -75,7 +77,60 @@ auto Backend::loadBackend() -> STATUS {
     return validateBackendId(backendId);
 }
 
-auto Backend::validateBackendId(const uint32_t backendId) -> STATUS {
+auto Backend::loadSystemLibrary() -> STATUS {
+    void* systemLibraryHandle =
+        dlopen("libQnnSystem.so", RTLD_NOW | RTLD_LOCAL);
+    if (nullptr == systemLibraryHandle) {
+        fmt::print(stderr, "load system library failed\n");
+        return STATUS::FAIL;
+    }
+
+    QnnSystemInterfaceGetProvidersFnT getSystemInterfaceProviders {nullptr};
+    getSystemInterfaceProviders =
+        reinterpret_cast<QnnSystemInterfaceGetProvidersFnT>(
+            dlsym(systemLibraryHandle, "QnnSystemInterface_getProviders"));
+    if (nullptr == getSystemInterfaceProviders) {
+        fmt::print(stderr, "get system interface providers fn failed\n");
+        return STATUS::FAIL;
+    }
+
+    QnnSystemInterface_t** systemInterfaceProvidersPtr {nullptr};
+    uint32_t numProviders = 0;
+    if (QNN_SUCCESS
+        != getSystemInterfaceProviders(
+            const_cast<const QnnSystemInterface_t***>(
+                &systemInterfaceProvidersPtr),
+            &numProviders))
+    {
+        fmt::print(stderr, "get system interface providers failed\n");
+        return STATUS::FAIL;
+    }
+    if (nullptr == systemInterfaceProvidersPtr || 0 == numProviders) {
+        fmt::print(stderr, "get system interface providers failed 2\n");
+        return STATUS::FAIL;
+    }
+
+    nonstd::span<QnnSystemInterface_t*> systemInterfaceProviders {
+        systemInterfaceProvidersPtr, numProviders};
+
+    for (const auto& systemInterfaceProvider : systemInterfaceProviders) {
+        const auto systemApiVersion = systemInterfaceProvider->systemApiVersion;
+
+        if (QNN_SYSTEM_API_VERSION_MAJOR == systemApiVersion.major
+            && QNN_SYSTEM_API_VERSION_MINOR <= systemApiVersion.minor)
+        {
+            m_qnnSystemInterface =
+                systemInterfaceProvider->QNN_SYSTEM_INTERFACE_VER_NAME;
+            return STATUS::SUCCESS;
+        }
+    }
+
+    fmt::print(stderr, "system interface providers invalid\n");
+    return STATUS::FAIL;
+}
+
+
+auto Backend::validateBackendId(const uint32_t backendId) const -> STATUS {
     switch (backendId) {
         case QNN_BACKEND_ID_CPU:
             return m_delegate == DELEGATE::CPU ? STATUS::SUCCESS : STATUS::FAIL;
