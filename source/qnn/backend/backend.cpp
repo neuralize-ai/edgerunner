@@ -18,6 +18,16 @@ using QnnInterfaceGetProvidersFnT =
 using QnnSystemInterfaceGetProvidersFnT =
     Qnn_ErrorHandle_t (*)(const QnnSystemInterface_t***, uint32_t*);
 
+Backend::Backend(const DELEGATE delegate)
+    : m_delegate(delegate) {
+    loadBackend();
+
+    initializeBackend();
+
+    createDevice();
+
+    createContext();
+}
 auto Backend::loadBackend() -> STATUS {
     m_backendLibHandle =
         dlopen(m_backendLibrariesByDelegate.at(m_delegate).c_str(),
