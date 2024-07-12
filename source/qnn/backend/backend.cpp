@@ -129,6 +129,18 @@ auto Backend::loadSystemLibrary() -> STATUS {
     return STATUS::FAIL;
 }
 
+auto Backend::initializeBackend() -> STATUS {
+    const auto status = m_qnnInterface.backendCreate(
+        nullptr,
+        const_cast<const QnnBackend_Config_t**>(m_backendConfig),
+        &m_backendHandle);
+    if (QNN_BACKEND_NO_ERROR != status) {
+        fmt::print(stderr, "initialize backend failed\n");
+        return STATUS::FAIL;
+    }
+
+    return STATUS::SUCCESS;
+}
 
 auto Backend::validateBackendId(const uint32_t backendId) const -> STATUS {
     switch (backendId) {
