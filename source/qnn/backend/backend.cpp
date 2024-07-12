@@ -28,6 +28,25 @@ Backend::Backend(const DELEGATE delegate)
 
     createContext();
 }
+
+Backend::~Backend() {
+    if (m_backendLibHandle != nullptr) {
+        dlclose(m_backendLibHandle);
+    }
+
+    if (m_backendHandle != nullptr && m_qnnInterface.backendFree != nullptr) {
+        m_qnnInterface.backendFree(m_backendHandle);
+    }
+
+    if (m_deviceHandle != nullptr && m_qnnInterface.deviceFree != nullptr) {
+        m_qnnInterface.deviceFree(m_deviceHandle);
+    }
+
+    if (m_context != nullptr && m_qnnInterface.contextFree != nullptr) {
+        m_qnnInterface.contextFree(m_context, nullptr);
+    }
+}
+
 auto Backend::loadBackend() -> STATUS {
     m_backendLibHandle =
         dlopen(m_backendLibrariesByDelegate.at(m_delegate).c_str(),
