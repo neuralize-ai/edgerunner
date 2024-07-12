@@ -167,6 +167,20 @@ auto Backend::createDevice() -> STATUS {
     return STATUS::SUCCESS;
 }
 
+auto Backend::createContext() -> STATUS {
+    Config<QnnContext_Config_t, QnnContext_CustomConfig_t> contextConfig {
+        QNN_CONTEXT_CONFIG_INIT, {}};
+    const auto status = m_qnnInterface.contextCreate(
+        m_backendHandle, m_deviceHandle, contextConfig.getPtr(), &m_context);
+
+    if (QNN_CONTEXT_NO_ERROR != status) {
+        fmt::print(stderr, "create context failed\n");
+        return STATUS::FAIL;
+    }
+
+    return STATUS::SUCCESS;
+}
+
 auto Backend::validateBackendId(const uint32_t backendId) const -> STATUS {
     switch (backendId) {
         case QNN_BACKEND_ID_CPU:
