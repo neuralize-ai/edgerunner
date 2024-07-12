@@ -1,6 +1,5 @@
 
 #include <unordered_map>
-#include <vector>
 
 #include <HTP/QnnHtpDevice.h>
 #include <QnnCommon.h>
@@ -13,12 +12,21 @@ namespace edge::qnn::backend {
 
 class Backend {
   public:
-    explicit Backend(DELEGATE delegate)
-        : m_delegate(delegate) {}
+    explicit Backend(DELEGATE delegate);
 
+    Backend(const Backend&) = default;
+    Backend(Backend&&) = delete;
+    auto operator=(const Backend&) -> Backend& = delete;
+    auto operator=(Backend&&) -> Backend& = delete;
+
+    ~Backend();
+
+  private:
     auto loadBackend() -> STATUS;
 
     auto initializeBackend() -> STATUS;
+
+    auto loadSystemLibrary() -> STATUS;
 
     auto createDevice() -> STATUS;
 
@@ -26,12 +34,7 @@ class Backend {
 
     auto loadContextFromBinary() -> STATUS;
 
-  private:
-    auto loadSystemLibrary() -> STATUS;
-
-    auto getQnnInterfaceProvider() -> STATUS;
-
-    auto validateBackendId(uint32_t backendId) -> STATUS;
+    auto validateBackendId(uint32_t backendId) const -> STATUS;
 
     void* m_backendLibHandle {};
     void* m_systemLibHandle {};
@@ -41,7 +44,7 @@ class Backend {
 
     Qnn_DeviceHandle_t m_deviceHandle {};
 
-    std::vector<Qnn_ContextHandle_t> m_contexts;
+    Qnn_ContextHandle_t m_context {};
 
     QNN_INTERFACE_VER_TYPE m_qnnInterface = QNN_INTERFACE_VER_TYPE_INIT;
     QNN_SYSTEM_INTERFACE_VER_TYPE m_qnnSystemInterface =
