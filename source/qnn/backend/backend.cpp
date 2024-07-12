@@ -142,6 +142,31 @@ auto Backend::initializeBackend() -> STATUS {
     return STATUS::SUCCESS;
 }
 
+auto Backend::createDevice() -> STATUS {
+    const auto& propertyHasCapability = m_qnnInterface.propertyHasCapability;
+    if (nullptr != propertyHasCapability) {
+        auto status = propertyHasCapability(QNN_PROPERTY_GROUP_DEVICE);
+        if (QNN_PROPERTY_ERROR_UNKNOWN_KEY == status) {
+            fmt::print(stderr, "device property supported failed\n");
+            return STATUS::FAIL;
+        }
+    }
+
+    Config<QnnDevice_Config_t, QnnHtpDevice_CustomConfig_t> deviceConfig {
+        QNN_DEVICE_CONFIG_INIT, {}};
+
+    if (nullptr != m_qnnInterface.deviceCreate) {
+        auto qnnStatus = m_qnnInterface.deviceCreate(
+            nullptr, deviceConfig.getPtr(), &m_deviceHandle);
+        if (QNN_SUCCESS != qnnStatus) {
+            fmt::print(stderr, "create device failed\n");
+            return STATUS::FAIL;
+        }
+    }
+
+    return STATUS::SUCCESS;
+}
+
 auto Backend::validateBackendId(const uint32_t backendId) const -> STATUS {
     switch (backendId) {
         case QNN_BACKEND_ID_CPU:
