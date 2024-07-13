@@ -26,22 +26,13 @@ class ModelImpl final : public Model {
      * @brief Constructor for ModelImpl.
      * @param modelPath The path to the TensorFlow Lite model file.
      */
-    explicit ModelImpl(const std::filesystem::path& modelPath)
-        : Model(modelPath) {
-        setCreationStatus(loadModel(modelPath));
-        setCreationStatus(createInterpreter());
-        setCreationStatus(allocate());
-    }
+    explicit ModelImpl(const std::filesystem::path& modelPath);
 
     /**
      * @brief Constructor for ModelImpl.
      * @param modelPath The path to the TensorFlow Lite model file.
      */
-    explicit ModelImpl(const nonstd::span<uint8_t>& modelBuffer) {
-        setCreationStatus(loadModel(modelBuffer));
-        setCreationStatus(createInterpreter());
-        setCreationStatus(allocate());
-    }
+    explicit ModelImpl(const nonstd::span<uint8_t>& modelBuffer);
 
     ModelImpl(const ModelImpl&) = delete;
     ModelImpl(ModelImpl&&) = delete;

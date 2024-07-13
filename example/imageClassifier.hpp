@@ -76,7 +76,7 @@ class ImageClassifier {
 };
 
 inline ImageClassifier::ImageClassifier(
-    const std::filesystem::path& modelPath,
+    const std::filesystem::path& modelPath, /* NOLINT */
     const std::filesystem::path& labelListPath)
     : m_model(edge::createModel(modelPath))
     , m_labelList(loadLabelList(labelListPath)) {}
