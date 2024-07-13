@@ -1,7 +1,5 @@
 #include <vector>
 
-#include <fmt/core.h>
-
 namespace edge::qnn {
 
 template<typename ConfigType, typename CustomConfigType>
