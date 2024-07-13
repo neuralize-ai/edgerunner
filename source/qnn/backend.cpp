@@ -1,4 +1,7 @@
+#include <cstdarg>
+#include <cstdint>
 #include <cstdio>
+#include <string>
 
 #include "edgerunner/qnn/backend.h"
 
@@ -6,10 +9,17 @@
 #include <GPU/QnnGpuCommon.h>
 #include <HTP/QnnHtpCommon.h>
 #include <HTP/QnnHtpDevice.h>
+#include <QnnBackend.h>
 #include <QnnCommon.h>
 #include <QnnContext.h>
+#include <QnnDevice.h>
+#include <QnnInterface.h>
 #include <QnnLog.h>
+#include <QnnProperty.h>
+#include <System/QnnSystemCommon.h>
+#include <System/QnnSystemInterface.h>
 #include <dlfcn.h>
+#include <nonstd/span.hpp>
 
 #include "edgerunner/model.hpp"
 #include "edgerunner/qnn/config.h"
@@ -84,8 +94,8 @@ auto Backend::loadBackend() -> STATUS {
         return STATUS::FAIL;
     }
 
-    nonstd::span<QnnInterface_t*> interfaceProviders {interfaceProvidersPtr,
-                                                      numProviders};
+    const nonstd::span<QnnInterface_t*> interfaceProviders {
+        interfaceProvidersPtr, numProviders};
 
     uint32_t backendId = 0;
     for (const auto& interfaceProvider : interfaceProviders) {
@@ -134,7 +144,7 @@ auto Backend::loadSystemLibrary() -> STATUS {
         return STATUS::FAIL;
     }
 
-    nonstd::span<QnnSystemInterface_t*> systemInterfaceProviders {
+    const nonstd::span<QnnSystemInterface_t*> systemInterfaceProviders {
         systemInterfaceProvidersPtr, numProviders};
 
     for (const auto& systemInterfaceProvider : systemInterfaceProviders) {
@@ -152,7 +162,7 @@ auto Backend::loadSystemLibrary() -> STATUS {
     return STATUS::FAIL;
 }
 
-void Backend::logCallback(const char* fmt,
+void Backend::logCallback(const char* fmtStr,
                           QnnLog_Level_t level,
                           uint64_t timestamp,
                           va_list argp) {
@@ -179,9 +189,17 @@ void Backend::logCallback(const char* fmt,
             break;
     }
 
-    std::fprintf(stdout, "%8.1lums [%-7s] ", timestamp, levelStr.c_str());
-    std::vfprintf(stdout, fmt, argp);
-    std::fprintf(stdout, "\n");
+    if (std::fprintf(stdout, "%8.1lums [%-7s] ", timestamp, levelStr.c_str())
+        != 0)
+    {
+        return;
+    }
+    if (std::vfprintf(stdout, fmtStr, argp) != 0) {
+        return;
+    }
+    if (std::fprintf(stdout, "\n") != 0) {
+        return;
+    }
 }
 
 auto Backend::createLogger() -> STATUS {

@@ -1,6 +1,6 @@
 #include <numeric>
 
-constexpr float mseThreshold = 1.0;
+constexpr float MseThreshold = 1.0;
 
 template<typename C1, typename C2, typename T = typename C1::value_type>
 auto meanSquaredError(const C1& input1, const C2& input2) -> T {

@@ -4,16 +4,11 @@
 
 #include "edgerunner/model.hpp"
 
-#include <HTP/QnnHtpDevice.h>
 #include <HTP/QnnHtpGraph.h>
-#include <QnnCommon.h>
-#include <QnnContext.h>
 #include <QnnGraph.h>
 #include <QnnInterface.h>
 #include <QnnLog.h>
 #include <QnnTypes.h>
-#include <System/QnnSystemContext.h>
-#include <System/QnnSystemInterface.h>
 #include <dlfcn.h>
 #include <nonstd/span.hpp>
 
@@ -152,10 +147,7 @@ auto ModelImpl::finalizeGraphs() -> STATUS {
         return STATUS::FAIL;
     }
 
-    bool saveBinary = false;
-    if (saveBinary) {
-        /* TODO: save binary */
-    }
+    /* TODO: save binary */
 
     return STATUS::SUCCESS;
 }

@@ -7,6 +7,7 @@
 #include <QnnInterface.h>
 #include <QnnTypes.h>
 #include <System/QnnSystemInterface.h>
+#include <fmt/core.h>
 
 /* TODO: move STATUS to dedicated header */
 #include "edgerunner/model.hpp"
@@ -32,7 +33,7 @@ class Backend {
 
     auto getDelegate() { return m_delegate; }
 
-    static void logCallback(const char* fmt,
+    static void logCallback(const char* fmtStr,
                             QnnLog_Level_t level,
                             uint64_t timestamp,
                             va_list argp);
@@ -72,10 +73,10 @@ class Backend {
 
     DELEGATE m_delegate;
 
-    const std::unordered_map<DELEGATE, std::string>
-        m_backendLibrariesByDelegate {{DELEGATE::CPU, "libQnnCpu.so"},
-                                      {DELEGATE::GPU, "libQnnGpu.so"},
-                                      {DELEGATE::NPU, "libQnnHtp.so"}};
+    std::unordered_map<DELEGATE, std::string> m_backendLibrariesByDelegate {
+        {DELEGATE::CPU, "libQnnCpu.so"},
+        {DELEGATE::GPU, "libQnnGpu.so"},
+        {DELEGATE::NPU, "libQnnHtp.so"}};
 
     uint32_t m_deviceId {};
     QnnHtpDevice_Arch_t m_htpArch {};
