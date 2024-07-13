@@ -78,7 +78,14 @@ if(edgerunner_ENABLE_GPU)
 endif()
 
 if(edgerunner_ENABLE_NPU)
+    target_sources(
+        edgerunner_edgerunner
+        PRIVATE source/qnn/model.cpp source/qnn/tensor.cpp
+                source/qnn/backend.cpp
+    )
+
     find_package(qnn REQUIRED)
+
     if(ANDROID)
         target_link_libraries(edgerunner_edgerunner PRIVATE qnn::tflite)
         target_compile_definitions(edgerunner_edgerunner PUBLIC EDGERUNNER_QNN)
