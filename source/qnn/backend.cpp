@@ -1,3 +1,4 @@
+#include <array>
 #include <cstdarg>
 #include <cstdint>
 #include <cstdio>
@@ -75,8 +76,9 @@ auto Backend::loadBackend() -> STATUS {
         return STATUS::FAIL;
     }
 
-    auto getInterfaceProviders = reinterpret_cast<QnnInterfaceGetProvidersFnT>(
-        dlsym(m_backendLibHandle, "QnnInterface_getProviders"));
+    auto getInterfaceProviders =
+        reinterpret_cast<QnnInterfaceGetProvidersFnT> /* NOLINT */ (
+            dlsym(m_backendLibHandle, "QnnInterface_getProviders"));
 
     if (nullptr == getInterfaceProviders) {
         dlclose(m_backendLibHandle);
@@ -129,7 +131,7 @@ auto Backend::loadSystemLibrary() -> STATUS {
 
     QnnSystemInterfaceGetProvidersFnT getSystemInterfaceProviders {nullptr};
     getSystemInterfaceProviders =
-        reinterpret_cast<QnnSystemInterfaceGetProvidersFnT>(
+        reinterpret_cast<QnnSystemInterfaceGetProvidersFnT> /* NOLINT */ (
             dlsym(systemLibraryHandle, "QnnSystemInterface_getProviders"));
     if (nullptr == getSystemInterfaceProviders) {
         return STATUS::FAIL;
@@ -194,9 +196,11 @@ void Backend::logCallback(const char* fmtStr,
             break;
     }
 
+    /* NOLINTBEGIN */
     std::fprintf(stderr, "%8.1lums [%-7s] ", timestamp, levelStr.c_str());
     std::vfprintf(stderr, fmtStr, argp);
     std::fprintf(stderr, "\n");
+    /* NOLINTEND */
 }
 
 auto Backend::createLogger() -> STATUS {
@@ -264,61 +268,65 @@ auto Backend::setPowerConfig() -> STATUS {
         return STATUS::FAIL;
     }
 
+    QnnDevice_Infrastructure_t deviceInfrastructure = nullptr;
     if (QNN_SUCCESS
-        != m_qnnInterface.deviceGetInfrastructure(&m_deviceInfrastructure))
+        != m_qnnInterface.deviceGetInfrastructure(&deviceInfrastructure))
     {
         return STATUS::FAIL;
     }
 
-    auto* htpInfra =
-        static_cast<QnnHtpDevice_Infrastructure_t*>(m_deviceInfrastructure);
-    QnnHtpDevice_PerfInfrastructure_t perfInfra = htpInfra->perfInfra;
+    const auto* htpDeviceInfraStructure =
+        static_cast<QnnHtpDevice_Infrastructure_t*>(deviceInfrastructure);
+    m_devicePerfInfrastructure = htpDeviceInfraStructure->perfInfra;  // NOLINT
     ;
-    if (QNN_SUCCESS != perfInfra.createPowerConfigId(0, 0, &m_powerConfigId)) {
+    if (QNN_SUCCESS
+        != m_devicePerfInfrastructure.createPowerConfigId(
+            0, 0, &m_powerConfigId))
+    {
         return STATUS::FAIL;
     }
 
     QnnHtpPerfInfrastructure_PowerConfig_t powerConfig =
         QNN_HTP_PERF_INFRASTRUCTURE_POWER_CONFIG_INIT;
-    powerConfig.option = QNN_HTP_PERF_INFRASTRUCTURE_POWER_CONFIGOPTION_DCVS_V3;
-    powerConfig.dcvsV3Config.dcvsEnable = 0;
-    powerConfig.dcvsV3Config.setDcvsEnable = 1;
-    powerConfig.dcvsV3Config.contextId = m_powerConfigId;
 
-    powerConfig.dcvsV3Config.powerMode =
+    powerConfig.option = QNN_HTP_PERF_INFRASTRUCTURE_POWER_CONFIGOPTION_DCVS_V3;
+
+    auto& dcvsConfig = powerConfig.dcvsV3Config;  // NOLINT
+
+    dcvsConfig.dcvsEnable = 0;
+    dcvsConfig.setDcvsEnable = 1;
+    dcvsConfig.contextId = m_powerConfigId;
+
+    dcvsConfig.powerMode =
         QNN_HTP_PERF_INFRASTRUCTURE_POWERMODE_PERFORMANCE_MODE;
-    powerConfig.dcvsV3Config.setSleepLatency = 1;
-    powerConfig.dcvsV3Config.setBusParams = 1;
-    powerConfig.dcvsV3Config.setCoreParams = 1;
-    powerConfig.dcvsV3Config.sleepDisable = 1;
-    powerConfig.dcvsV3Config.setSleepDisable = 1;
+    dcvsConfig.setSleepLatency = 1;
+    dcvsConfig.setBusParams = 1;
+    dcvsConfig.setCoreParams = 1;
+    dcvsConfig.sleepDisable = 1;
+    dcvsConfig.setSleepDisable = 1;
 
     /* 10-65535 us */
     static constexpr uint32_t SleepLatency = 40;
-    powerConfig.dcvsV3Config.sleepLatency = SleepLatency;
+    dcvsConfig.sleepLatency = SleepLatency;
 
     // set Bus Clock Parameters (refer QnnHtpPerfInfrastructure.h)
-    powerConfig.dcvsV3Config.busVoltageCornerMin =
-        DCVS_VOLTAGE_VCORNER_MAX_VOLTAGE_CORNER;
-    powerConfig.dcvsV3Config.busVoltageCornerTarget =
-        DCVS_VOLTAGE_VCORNER_MAX_VOLTAGE_CORNER;
-    powerConfig.dcvsV3Config.busVoltageCornerMax =
-        DCVS_VOLTAGE_VCORNER_MAX_VOLTAGE_CORNER;
+    dcvsConfig.busVoltageCornerMin = DCVS_VOLTAGE_VCORNER_MAX_VOLTAGE_CORNER;
+    dcvsConfig.busVoltageCornerTarget = DCVS_VOLTAGE_VCORNER_MAX_VOLTAGE_CORNER;
+    dcvsConfig.busVoltageCornerMax = DCVS_VOLTAGE_VCORNER_MAX_VOLTAGE_CORNER;
 
     // set Core Clock Parameters (refer QnnHtpPerfInfrastructure.h)
-    powerConfig.dcvsV3Config.coreVoltageCornerMin =
+    dcvsConfig.coreVoltageCornerMin = DCVS_VOLTAGE_VCORNER_MAX_VOLTAGE_CORNER;
+    dcvsConfig.coreVoltageCornerTarget =
         DCVS_VOLTAGE_VCORNER_MAX_VOLTAGE_CORNER;
-    powerConfig.dcvsV3Config.coreVoltageCornerTarget =
-        DCVS_VOLTAGE_VCORNER_MAX_VOLTAGE_CORNER;
-    powerConfig.dcvsV3Config.coreVoltageCornerMax =
-        DCVS_VOLTAGE_VCORNER_MAX_VOLTAGE_CORNER;
+    dcvsConfig.coreVoltageCornerMax = DCVS_VOLTAGE_VCORNER_MAX_VOLTAGE_CORNER;
 
     // Set power config with different performance parameters
     std::array<const QnnHtpPerfInfrastructure_PowerConfig_t*, 2> powerConfigs =
         {&powerConfig, NULL};
 
     if (QNN_SUCCESS
-        != perfInfra.setPowerConfig(m_powerConfigId, powerConfigs.data()))
+        != m_devicePerfInfrastructure.setPowerConfig(m_powerConfigId,
+                                                     powerConfigs.data()))
     {
         return STATUS::FAIL;
     }
@@ -326,17 +334,10 @@ auto Backend::setPowerConfig() -> STATUS {
     return STATUS::SUCCESS;
 }
 
-auto Backend::destroyPowerConfig() -> STATUS {
-    Qnn_ErrorHandle_t devErr =
-        m_qnnInterface.deviceGetInfrastructure(&m_deviceInfrastructure);
-    if (devErr != QNN_SUCCESS) {
-        return STATUS::FAIL;
-    }
-    auto* htpInfra =
-        static_cast<QnnHtpDevice_Infrastructure_t*>(m_deviceInfrastructure);
-    const auto& perfInfra = htpInfra->perfInfra;
-
-    if (QNN_SUCCESS != perfInfra.destroyPowerConfigId(m_powerConfigId)) {
+auto Backend::destroyPowerConfig() const -> STATUS {
+    if (QNN_SUCCESS
+        != m_devicePerfInfrastructure.destroyPowerConfigId(m_powerConfigId))
+    {
         return STATUS::FAIL;
     }
     return STATUS::SUCCESS;
