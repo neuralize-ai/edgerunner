@@ -71,6 +71,22 @@ class ModelImpl final : public Model {
      */
     explicit ModelImpl(const std::filesystem::path& modelPath)
         : Model(modelPath) {
+        const auto modelExtension = modelPath.extension().string().substr(1);
+        m_loadCachedBinary = modelExtension == "bin";
+
+        m_backend = std::make_unique<Backend>(DELEGATE::NPU);
+
+        loadModel(modelPath);
+
+        if (!m_loadCachedBinary) {
+            composeGraphs();
+            setGraphConfig();
+            finalizeGraphs();
+        }
+
+        allocate();
+    }
+
     /**
      * @brief Constructor for ModelImpl.
      * @param modelPath The path to the QNN model file.
@@ -149,6 +165,7 @@ class ModelImpl final : public Model {
 
     void* m_libModelHandle {};
 
+    bool m_loadCachedBinary {};
 };
 
 }  // namespace edge::qnn
