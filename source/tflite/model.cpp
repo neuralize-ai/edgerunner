@@ -24,6 +24,19 @@
 
 namespace edge::tflite {
 
+ModelImpl::ModelImpl(const std::filesystem::path& modelPath)
+    : Model(modelPath) {
+    setCreationStatus(loadModel(modelPath));
+    setCreationStatus(createInterpreter());
+    setCreationStatus(allocate());
+}
+
+ModelImpl::ModelImpl(const nonstd::span<uint8_t>& modelBuffer) {
+    setCreationStatus(loadModel(modelBuffer));
+    setCreationStatus(createInterpreter());
+    setCreationStatus(allocate());
+}
+
 auto ModelImpl::loadModel(const std::filesystem::path& modelPath) -> STATUS {
     m_modelBuffer = ::tflite::FlatBufferModel::BuildFromFile(modelPath.c_str());
 
@@ -36,7 +49,8 @@ auto ModelImpl::loadModel(const std::filesystem::path& modelPath) -> STATUS {
 
 auto ModelImpl::loadModel(const nonstd::span<uint8_t>& modelBuffer) -> STATUS {
     m_modelBuffer = ::tflite::FlatBufferModel::BuildFromBuffer(
-        reinterpret_cast<char*>(modelBuffer.data()), modelBuffer.size());
+        reinterpret_cast<char*> /* NOLINT */ (modelBuffer.data()),
+        modelBuffer.size());
 
     if (m_modelBuffer == nullptr) {
         return STATUS::FAIL;
