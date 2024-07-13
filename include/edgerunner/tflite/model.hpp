@@ -96,16 +96,20 @@ class ModelImpl final : public Model {
      *
      * This function initializes a new interpreter object and sets up any
      * necessary resources.
+     *
+     * @return The status of the operation.
      */
-    void createInterpreter();
+    auto createInterpreter() -> STATUS;
 
     /**
      * Allocates memory for the interpreter.
      *
      * This function allocates memory for the interpreter, including input and
      * output tensors
+     *
+     * @return The status of the operation.
      */
-    void allocate();
+    auto allocate() -> STATUS;
 
     /**
      * Deletes the delegate object.
