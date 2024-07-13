@@ -8,6 +8,7 @@
 
 #include "edgerunner/tensor.hpp"
 
+#include <QnnCommon.h>
 #include <QnnTypes.h>
 #include <nonstd/span.hpp>
 
@@ -22,11 +23,30 @@ auto getTensorTypeVariant(Qnn_Tensor_t& tensor) -> TensorVariant {
     switch (tensor.version) {
 #ifdef QNN_TENSOR_V2_INIT
         case QNN_TENSOR_VERSION_2:
-            return std::ref(tensor.v2);  // NOLINT
+            return std::ref(tensor.v2 /* NOLINT */);
 #endif
         default:
-            return std::ref(tensor.v1);  // NOLINT
+            return std::ref(tensor.v1 /* NOLINT */);
     }
+}
+
+using TensorMemoryVariant =
+    std::variant<Qnn_MemHandle_t, std::reference_wrapper<Qnn_ClientBuffer_t>>;
+
+auto getTensorMemoryPtr(Qnn_Tensor_t& tensor) -> void* {
+    auto typedTensor = getTensorTypeVariant(tensor);
+    return std::visit(
+        [](auto&& typedTensor) {
+            switch (typedTensor.get().memType) {
+                case QNN_TENSORMEMTYPE_MEMHANDLE:
+                    return typedTensor.get().memHandle;  // NOLINT
+                case QNN_TENSORMEMTYPE_RAW:
+                    return typedTensor.get().clientBuf.data;  // NOLINT
+                default:
+                    return static_cast<void*>(nullptr);
+            }
+        },
+        typedTensor);
 }
 
 void setQnnTensorMemType(Qnn_Tensor_t& qnnTensor, Qnn_TensorMemType_t memType) {
@@ -39,7 +59,9 @@ void setQnnTensorClientBuf(Qnn_Tensor_t& qnnTensor,
                            Qnn_ClientBuffer_t& clientBuf) {
     auto tensor = getTensorTypeVariant(qnnTensor);
     std::visit(
-        [&clientBuf](auto&& tensor) { tensor.get().clientBuf = clientBuf; },
+        [&clientBuf](auto&& tensor) {
+            tensor.get().clientBuf /* NOLINT */ = clientBuf;
+        },
         tensor);
 }
 
@@ -128,20 +150,7 @@ auto TensorImpl::getDataPtr() -> void* {
         return nullptr;
     }
 
-    auto tensor = getTensorTypeVariant(*m_tensor);
-
-    return std::visit(
-        [](auto&& tensor) {
-            switch (tensor.get().memType) {
-                case QNN_TENSORMEMTYPE_RAW:
-                    return tensor.get().memHandle;
-                case QNN_TENSORMEMTYPE_MEMHANDLE:
-                    return tensor.get().clientBuf.data;
-                default:
-                    return static_cast<void*>(nullptr);
-            }
-        },
-        tensor);
+    return getTensorMemoryPtr(*m_tensor);
 }
 
 auto TensorImpl::getNumBytes() -> size_t {
