@@ -62,6 +62,25 @@ auto ModelImpl::composeGraphs() -> STATUS {
     return STATUS::SUCCESS;
 }
 
+auto ModelImpl::finalizeGraphs() -> STATUS {
+    auto& qnnInterface = m_backend->getInterface();
+    auto& graphInfo = (*m_graphInfo)[0];
+
+    const auto status =
+        qnnInterface.graphFinalize(graphInfo.graph, nullptr, nullptr);
+
+    if (QNN_GRAPH_NO_ERROR != status) {
+        return STATUS::FAIL;
+    }
+
+    bool saveBinary = false;
+    if (saveBinary) {
+        /* TODO: save binary */
+    }
+
+    return STATUS::SUCCESS;
+}
+
 auto ModelImpl::loadFromSharedLibrary(const std::filesystem::path& modelPath)
     -> STATUS {
     m_libModelHandle = dlopen(modelPath.string().data(), RTLD_NOW | RTLD_LOCAL);
