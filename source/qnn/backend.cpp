@@ -189,17 +189,9 @@ void Backend::logCallback(const char* fmtStr,
             break;
     }
 
-    if (std::fprintf(stdout, "%8.1lums [%-7s] ", timestamp, levelStr.c_str())
-        != 0)
-    {
-        return;
-    }
-    if (std::vfprintf(stdout, fmtStr, argp) != 0) {
-        return;
-    }
-    if (std::fprintf(stdout, "\n") != 0) {
-        return;
-    }
+    std::fprintf(stdout, "%8.1lums [%-7s] ", timestamp, levelStr.c_str());
+    std::vfprintf(stdout, fmtStr, argp);
+    std::fprintf(stdout, "\n");
 }
 
 auto Backend::createLogger() -> STATUS {
