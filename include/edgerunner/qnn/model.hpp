@@ -76,15 +76,15 @@ class ModelImpl final : public Model {
 
         m_backend = std::make_unique<Backend>(DELEGATE::NPU);
 
-        loadModel(modelPath);
+        setCreationStatus(loadModel(modelPath));
 
         if (!m_loadCachedBinary) {
-            composeGraphs();
-            setGraphConfig();
-            finalizeGraphs();
+            setCreationStatus(composeGraphs());
+            setCreationStatus(setGraphConfig());
+            setCreationStatus(finalizeGraphs());
         }
 
-        allocate();
+        setCreationStatus(allocate());
     }
 
     /**
@@ -92,7 +92,7 @@ class ModelImpl final : public Model {
      * @param modelPath The path to the QNN model file.
      */
     explicit ModelImpl(const nonstd::span<uint8_t>& modelBuffer) {
-        loadModel(modelBuffer);
+        setCreationStatus(loadModel(modelBuffer));
     }
 
     ModelImpl(const ModelImpl&) = delete;
