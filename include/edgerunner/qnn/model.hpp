@@ -6,10 +6,58 @@
 
 #pragma once
 
+#include <QnnInterface.h>
+#include <System/QnnSystemInterface.h>
+#include <dlfcn.h>
+
 #include "edgerunner/model.hpp"
 #include "edgerunner/qnn/backend.h"
 
 namespace edge::qnn {
+
+using ModelErrorT = enum ModelError {
+    MODEL_NO_ERROR = 0,
+    MODEL_TENSOR_ERROR = 1,
+    MODEL_PARAMS_ERROR = 2,
+    MODEL_NODES_ERROR = 3,
+    MODEL_GRAPH_ERROR = 4,
+    MODEL_CONTEXT_ERROR = 5,
+    MODEL_GENERATION_ERROR = 6,
+    MODEL_SETUP_ERROR = 7,
+    MODEL_INVALID_ARGUMENT_ERROR = 8,
+    MODEL_FILE_ERROR = 9,
+    MODEL_MEMORY_ALLOCATE_ERROR = 10,
+    // Value selected to ensure 32 bits.
+    MODEL_UNKNOWN_ERROR = 0x7FFFFFFF
+};
+
+using GraphInfoT = struct GraphInfo {
+    Qnn_GraphHandle_t graph;
+    char* graphName;
+    Qnn_Tensor_t* inputTensors;
+    uint32_t numInputTensors;
+    Qnn_Tensor_t* outputTensors;
+    uint32_t numOutputTensors;
+};
+
+using GraphConfigInfoT = struct GraphConfigInfo {
+    char* graphName;
+    const QnnGraph_Config_t** graphConfigs;
+};
+
+using ComposeGraphsFnHandleTypeT =
+    ModelErrorT (*)(Qnn_BackendHandle_t,
+                    QnnInterface_ImplementationV2_16_t,
+                    Qnn_ContextHandle_t,
+                    const GraphConfigInfoT**,
+                    const uint32_t,
+                    GraphInfoT***,
+                    uint32_t*,
+                    bool,
+                    QnnLog_Callback_t,
+                    QnnLog_Level_t);
+
+using FreeGraphInfoFnHandleTypeT = ModelErrorT (*)(GraphInfoT***, uint32_t);
 
 /**
  * @class ModelImpl
@@ -76,6 +124,9 @@ class ModelImpl final : public Model {
     std::filesystem::path m_modelPath;  ///< The path to the QNN model file
 
     std::unique_ptr<Backend> m_backend;
+
+    ComposeGraphsFnHandleTypeT m_composeGraphsFnHandle {};
+    FreeGraphInfoFnHandleTypeT m_freeGraphInfoFnHandle {};
 
 };
 
