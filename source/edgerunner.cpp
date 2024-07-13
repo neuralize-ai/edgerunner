@@ -17,27 +17,39 @@ auto createModel(const std::filesystem::path& modelPath)
     -> std::unique_ptr<Model> {
     const auto modelExtension = modelPath.extension().string().substr(1);
 
+    std::unique_ptr<Model> model;
+
     if (modelExtension == "tflite") {
-        return std::make_unique<tflite::ModelImpl>(modelPath);
+        model = std::make_unique<tflite::ModelImpl>(modelPath);
     }
     if (modelExtension == "so") {
-        return std::make_unique<qnn::ModelImpl>(modelPath);
+        model = std::make_unique<qnn::ModelImpl>(modelPath);
     }
 
-    /* unsupported */
+    if (model != nullptr && model->getCreationStatus() == STATUS::SUCCESS) {
+        return model;
+    }
+
+    /* unsupported or failed */
     return nullptr;
 }
 
 auto createModel(const nonstd::span<uint8_t>& modelBuffer,
                  const std::string& modelExtension) -> std::unique_ptr<Model> {
+    std::unique_ptr<Model> model;
+
     if (modelExtension == "tflite") {
-        return std::make_unique<tflite::ModelImpl>(modelBuffer);
+        model = std::make_unique<tflite::ModelImpl>(modelBuffer);
     }
     if (modelExtension == "so") {
-        return std::make_unique<qnn::ModelImpl>(modelBuffer);
+        model = std::make_unique<qnn::ModelImpl>(modelBuffer);
     }
 
-    /* unsupported */
+    if (model != nullptr && model->getCreationStatus() == STATUS::SUCCESS) {
+        return model;
+    }
+
+    /* unsupported or failed */
     return nullptr;
 }
 
