@@ -142,4 +142,37 @@ auto TensorImpl::getSize() const -> size_t {
         dimensions.cbegin(), dimensions.cend(), 1, std::multiplies<>()));
 }
 
+auto TensorImpl::getDataPtr() -> void* {
+    if (m_tensor == nullptr) {
+        return nullptr;
+    }
+
+    switch (m_tensor->version) {
+        case QNN_TENSOR_VERSION_1: {
+            auto tensor = m_tensor->v1;
+            switch (tensor.memType) {
+                case QNN_TENSORMEMTYPE_RAW:
+                    return tensor.memHandle;
+                case QNN_TENSORMEMTYPE_MEMHANDLE:
+                    return tensor.clientBuf.data;
+                default:
+                    return nullptr;
+            }
+        }
+        case QNN_TENSOR_VERSION_2: {
+            auto tensor = m_tensor->v2;
+            switch (tensor.memType) {
+                case QNN_TENSORMEMTYPE_RAW:
+                    return tensor.memHandle;
+                case QNN_TENSORMEMTYPE_MEMHANDLE:
+                    return tensor.clientBuf.data;
+                default:
+                    return nullptr;
+            }
+        }
+        default:
+            return nullptr;
+    }
+}
+
 }  // namespace edge::qnn
