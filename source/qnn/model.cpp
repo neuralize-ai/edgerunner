@@ -39,6 +39,39 @@ auto ModelImpl::applyDelegate(const DELEGATE& delegate) -> STATUS {
     return STATUS::SUCCESS;
 }
 
+auto ModelImpl::allocate() -> STATUS {
+    auto& inputs = getInputs();
+    auto& outputs = getOutputs();
+
+    inputs.clear();
+    outputs.clear();
+
+    auto& graphInfo = (*m_graphInfo)[0];
+
+    nonstd::span<Qnn_Tensor_t> inputTensorSpecs {graphInfo.inputTensors,
+                                                 graphInfo.numInputTensors};
+    nonstd::span<Qnn_Tensor_t> outputTensorSpecs {graphInfo.outputTensors,
+                                                  graphInfo.numOutputTensors};
+
+    if (inputTensorSpecs.data() == nullptr
+        || outputTensorSpecs.data() == nullptr)
+    {
+        return STATUS::FAIL;
+    }
+
+    inputs.reserve(inputTensorSpecs.size());
+    for (auto& inputTensorSpec : inputTensorSpecs) {
+        inputs.emplace_back(std::make_shared<TensorImpl>(&inputTensorSpec));
+    }
+
+    outputs.reserve(outputTensorSpecs.size());
+    for (auto& outputTensorSpec : outputTensorSpecs) {
+        outputs.emplace_back(std::make_shared<TensorImpl>(&outputTensorSpec));
+    }
+
+    return STATUS::SUCCESS;
+}
+
 auto ModelImpl::setGraphConfig() -> STATUS {
     auto& qnnInterface = m_backend->getInterface();
 

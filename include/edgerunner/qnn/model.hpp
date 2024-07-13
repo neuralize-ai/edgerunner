@@ -131,6 +131,8 @@ class ModelImpl final : public Model {
 
     auto finalizeGraphs() -> STATUS;
 
+    auto allocate() -> STATUS;
+
     std::filesystem::path m_modelPath;  ///< The path to the QNN model file
 
     std::unique_ptr<Backend> m_backend;
