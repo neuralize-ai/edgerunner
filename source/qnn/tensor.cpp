@@ -132,4 +132,14 @@ auto TensorImpl::getDimensions() const -> std::vector<size_t> {
     return dimensions;
 }
 
+auto TensorImpl::getSize() const -> size_t {
+    if (m_tensor == nullptr) {
+        return {};
+    }
+
+    const auto dimensions = getDimensions();
+    return static_cast<size_t>(std::accumulate(
+        dimensions.cbegin(), dimensions.cend(), 1, std::multiplies<>()));
+}
+
 }  // namespace edge::qnn
