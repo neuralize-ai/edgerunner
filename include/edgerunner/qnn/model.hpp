@@ -73,6 +73,10 @@ class ModelImpl final : public Model {
      */
     auto execute() -> STATUS final;
 
+    std::filesystem::path m_modelPath;  ///< The path to the QNN model file
+
+    std::unique_ptr<Backend> m_backend;
+
 };
 
 }  // namespace edge::qnn
