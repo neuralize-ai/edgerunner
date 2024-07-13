@@ -27,6 +27,11 @@ auto ModelImpl::loadModel(const std::filesystem::path& modelPath) -> STATUS {
     return loadFromSharedLibrary(modelPath);
 }
 
+auto ModelImpl::loadModel(const nonstd::span<uint8_t>& /*modelBuffer*/)
+    -> STATUS {
+    return STATUS::FAIL;
+}
+
 auto ModelImpl::loadFromSharedLibrary(const std::filesystem::path& modelPath)
     -> STATUS {
     m_libModelHandle = dlopen(modelPath.string().data(), RTLD_NOW | RTLD_LOCAL);
