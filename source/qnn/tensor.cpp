@@ -47,8 +47,10 @@ TensorImpl::TensorImpl(Qnn_Tensor_t* qnnTensor)
 
     const auto numBytes = getNumBytes();
 
-    clientBuffer.data = malloc(numBytes);
-    clientBuffer.dataSize = numBytes;
+    m_data.resize(numBytes);
+
+    clientBuffer.data = m_data.data();
+    clientBuffer.dataSize = static_cast<uint32_t>(numBytes);
 
     setQnnTensorClientBuf(*m_tensor, clientBuffer);
 }

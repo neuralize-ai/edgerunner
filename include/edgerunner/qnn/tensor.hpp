@@ -74,6 +74,10 @@ class EDGERUNNER_EXPORT TensorImpl final : public Tensor {
   private:
     EDGERUNNER_SUPPRESS_C4251
     Qnn_Tensor_t* m_tensor;  ///< The underlying QNN tensor
+
+    EDGERUNNER_SUPPRESS_C4251
+    std::vector<uint8_t>
+        m_data;  ///< The underlying data backing the QNN tensor
 };
 
 }  // namespace edge::qnn
