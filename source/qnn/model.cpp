@@ -94,13 +94,26 @@ auto ModelImpl::setGraphConfig() -> STATUS {
 
     /* TODO: determine desired precision */
     if (m_backend->getDelegate() == DELEGATE::NPU) {
-        auto& graphCustomConfig = graphConfigs.createCustomConfig();
-        graphCustomConfig.option = QNN_HTP_GRAPH_CONFIG_OPTION_PRECISION;
-        graphCustomConfig.precision = QNN_PRECISION_FLOAT16;
+        auto& precisionCustomConfig = graphConfigs.createCustomConfig();
+        precisionCustomConfig.option = QNN_HTP_GRAPH_CONFIG_OPTION_PRECISION;
+        precisionCustomConfig.precision = QNN_PRECISION_FLOAT16;
 
-        auto& graphConfig = graphConfigs.createConfig();
-        graphConfig.option = QNN_GRAPH_CONFIG_OPTION_CUSTOM;
-        graphConfig.customConfig = &graphCustomConfig;
+        auto& precisionConfig = graphConfigs.createConfig();
+        precisionConfig.option = QNN_GRAPH_CONFIG_OPTION_CUSTOM;
+        precisionConfig.customConfig = &precisionCustomConfig;
+
+        auto& optimizationCustomConfig = graphConfigs.createCustomConfig();
+        optimizationCustomConfig.option =
+            QNN_HTP_GRAPH_CONFIG_OPTION_OPTIMIZATION;
+        optimizationCustomConfig.optimizationOption.type =
+            QNN_HTP_GRAPH_OPTIMIZATION_TYPE_FINALIZE_OPTIMIZATION_FLAG;
+        static constexpr float GraphOptimizationLevel = 3.0F;
+        optimizationCustomConfig.optimizationOption.floatValue =
+            GraphOptimizationLevel;
+
+        auto& optimizationConfig = graphConfigs.createConfig();
+        optimizationConfig.option = QNN_GRAPH_CONFIG_OPTION_CUSTOM;
+        optimizationConfig.customConfig = &optimizationCustomConfig;
     }
 
     const auto status = qnnInterface.graphSetConfig((*m_graphInfo)[0].graph,
