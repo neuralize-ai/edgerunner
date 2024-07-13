@@ -39,6 +39,33 @@ auto ModelImpl::applyDelegate(const DELEGATE& delegate) -> STATUS {
     return STATUS::SUCCESS;
 }
 
+auto ModelImpl::setGraphConfig() -> STATUS {
+    auto& qnnInterface = m_backend->getInterface();
+
+    Config<QnnGraph_Config_t, QnnHtpGraph_CustomConfig_t> graphConfigs {
+        QNN_GRAPH_CONFIG_INIT, QNN_HTP_GRAPH_CUSTOM_CONFIG_INIT};
+
+    /* TODO: determine desired precision */
+    if (m_backend->getDelegate() == DELEGATE::NPU) {
+        auto& graphCustomConfig = graphConfigs.createCustomConfig();
+        graphCustomConfig.option = QNN_HTP_GRAPH_CONFIG_OPTION_PRECISION;
+        graphCustomConfig.precision = QNN_PRECISION_FLOAT16;
+
+        auto& graphConfig = graphConfigs.createConfig();
+        graphConfig.option = QNN_GRAPH_CONFIG_OPTION_CUSTOM;
+        graphConfig.customConfig = &graphCustomConfig;
+    }
+
+    const auto status = qnnInterface.graphSetConfig((*m_graphInfo)[0].graph,
+                                                    graphConfigs.getPtr());
+
+    if (QNN_GRAPH_NO_ERROR != status) {
+        return STATUS::FAIL;
+    }
+
+    return STATUS::SUCCESS;
+}
+
 auto ModelImpl::composeGraphs() -> STATUS {
     auto& qnnInterface = m_backend->getInterface();
     auto& qnnContext = m_backend->getContext();

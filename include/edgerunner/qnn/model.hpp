@@ -127,6 +127,8 @@ class ModelImpl final : public Model {
 
     auto composeGraphs() -> STATUS;
 
+    auto setGraphConfig() -> STATUS;
+
     auto finalizeGraphs() -> STATUS;
 
     std::filesystem::path m_modelPath;  ///< The path to the QNN model file
