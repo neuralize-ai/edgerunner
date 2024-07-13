@@ -32,6 +32,13 @@ auto ModelImpl::loadModel(const nonstd::span<uint8_t>& /*modelBuffer*/)
     return STATUS::FAIL;
 }
 
+auto ModelImpl::applyDelegate(const DELEGATE& delegate) -> STATUS {
+    if (delegate != DELEGATE::NPU) {
+        return STATUS::FAIL;
+    }
+    return STATUS::SUCCESS;
+}
+
 auto ModelImpl::loadFromSharedLibrary(const std::filesystem::path& modelPath)
     -> STATUS {
     m_libModelHandle = dlopen(modelPath.string().data(), RTLD_NOW | RTLD_LOCAL);
