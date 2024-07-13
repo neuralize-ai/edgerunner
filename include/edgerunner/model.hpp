@@ -178,13 +178,39 @@ class EDGERUNNER_EXPORT Model {
      */
     auto name() const -> const std::string& { return m_name; }
 
+    /**
+     * @brief Get the status of model creation.
+     *
+     * Verify that the model was created successfully
+     *
+     * @return The status of model cration
+     */
+    auto getCreationStatus() const -> STATUS { return m_creationStatus; }
+
   protected:
     /**
      * @brief Set the delegate for model execution.
      *
+     * This method is used by derivatives to allow users to query the currently
+     * set delegate
+     *
      * @param delegate The delegate to set
      */
     void setDelegate(const DELEGATE& delegate) { m_delegate = delegate; }
+
+    /**
+     * @brief Set the status of model creation.
+     *
+     * This method is used by derivatives to allow querying of model creation
+     * status
+     *
+     * @param status The status to set
+     */
+    void setCreationStatus(const STATUS& status) {
+        if (m_creationStatus == STATUS::SUCCESS) {
+            m_creationStatus = status;
+        }
+    }
 
   private:
     EDGERUNNER_SUPPRESS_C4251
@@ -201,6 +227,9 @@ class EDGERUNNER_EXPORT Model {
     EDGERUNNER_SUPPRESS_C4251
     DELEGATE m_delegate =
         DELEGATE::CPU; /**< Delegate used for model execution */
+
+    EDGERUNNER_SUPPRESS_C4251
+    STATUS m_creationStatus = STATUS::SUCCESS; /**< Status of model creation */
 };
 
 inline auto Model::getInput(size_t index) const -> std::shared_ptr<Tensor> {
