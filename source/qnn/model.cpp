@@ -18,6 +18,28 @@
 
 namespace edge::qnn {
 
+ModelImpl::ModelImpl(const std::filesystem::path& modelPath)
+    : Model(modelPath) {
+    const auto modelExtension = modelPath.extension().string().substr(1);
+    m_loadCachedBinary = modelExtension == "bin";
+
+    m_backend = std::make_unique<Backend>(DELEGATE::NPU);
+
+    setCreationStatus(loadModel(modelPath));
+
+    if (!m_loadCachedBinary) {
+        setCreationStatus(composeGraphs());
+        setCreationStatus(setGraphConfig());
+        setCreationStatus(finalizeGraphs());
+    }
+
+    setCreationStatus(allocate());
+}
+
+ModelImpl::ModelImpl(const nonstd::span<uint8_t>& modelBuffer) {
+    setCreationStatus(loadModel(modelBuffer));
+}
+
 auto ModelImpl::loadModel(const std::filesystem::path& modelPath) -> STATUS {
     return loadFromSharedLibrary(modelPath);
 }
