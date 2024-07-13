@@ -72,6 +72,25 @@ auto ModelImpl::allocate() -> STATUS {
     return STATUS::SUCCESS;
 }
 
+auto ModelImpl::execute() -> STATUS {
+    auto& qnnInterface = m_backend->getInterface();
+    auto& graphInfo = (*m_graphInfo)[0];
+
+    const auto executeStatus =
+        qnnInterface.graphExecute(graphInfo.graph,
+                                  graphInfo.inputTensors,
+                                  graphInfo.numInputTensors,
+                                  graphInfo.outputTensors,
+                                  graphInfo.numOutputTensors,
+                                  nullptr,
+                                  nullptr);
+    if (QNN_GRAPH_NO_ERROR != executeStatus) {
+        return STATUS::FAIL;
+    }
+
+    return STATUS::SUCCESS;
+}
+
 auto ModelImpl::setGraphConfig() -> STATUS {
     auto& qnnInterface = m_backend->getInterface();
 
