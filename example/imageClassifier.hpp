@@ -5,6 +5,7 @@
 #include <fstream>
 #include <limits>
 #include <numeric>
+#include <ratio>
 #include <string>
 
 #include <fmt/core.h>
@@ -19,7 +20,6 @@ class ImageClassifier {
   public:
     ImageClassifier(const std::filesystem::path& modelPath,
                     const std::filesystem::path& labelListPath);
-
     auto loadImage(const std::filesystem::path& imagePath) -> edge::STATUS;
 
     auto setDelegate(edge::DELEGATE delegate) -> edge::STATUS;

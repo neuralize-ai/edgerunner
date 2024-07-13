@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <cstddef>
+#include <iterator>
 #include <string>
 #include <vector>
 
@@ -22,9 +23,7 @@ TEST_CASE("Tflite GPU runtime", "[tflite][gpu]") {
 
     /* ensure CPU and GPU inference have the same inputs */
     auto cpuInputData = model->getInput(0)->getTensorAs<float>();
-    for (auto& cpuInputDatum : cpuInputData) {
-        cpuInputDatum = 0;
-    }
+    std::fill(cpuInputData.begin(), cpuInputData.end(), 0);
 
     auto executionStatus = model->execute();
     CHECK(executionStatus == edge::STATUS::SUCCESS);
@@ -57,9 +56,7 @@ TEST_CASE("Tflite GPU runtime", "[tflite][gpu]") {
     REQUIRE(inputData.size() == input->getSize());
 
     /* ensure CPU and GPU inference have the same inputs */
-    for (auto& inputDatum : inputData) {
-        inputDatum = 0;
-    }
+    std::fill(inputData.begin(), inputData.end(), 0);
 
     executionStatus = model->execute();
     REQUIRE(executionStatus == edge::STATUS::SUCCESS);
@@ -78,5 +75,5 @@ TEST_CASE("Tflite GPU runtime", "[tflite][gpu]") {
 
     const auto mse = meanSquaredError(cpuResult, outputData);
     CAPTURE(mse);
-    REQUIRE(mse < mseThreshold);
+    REQUIRE(mse < MseThreshold);
 }
