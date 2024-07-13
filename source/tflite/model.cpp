@@ -45,13 +45,21 @@ auto ModelImpl::loadModel(const nonstd::span<uint8_t>& modelBuffer) -> STATUS {
     return STATUS::SUCCESS;
 }
 
-void ModelImpl::createInterpreter() {
+auto ModelImpl::createInterpreter() -> STATUS {
     const ::tflite::ops::builtin::BuiltinOpResolver opResolver;
-    ::tflite::InterpreterBuilder(*m_modelBuffer, opResolver)(&m_interpreter);
+    if (::tflite::InterpreterBuilder(*m_modelBuffer, opResolver)(&m_interpreter)
+        != kTfLiteOk)
+    {
+        return STATUS::FAIL;
+    }
+
+    return STATUS::SUCCESS;
 }
 
-void ModelImpl::allocate() {
-    m_interpreter->AllocateTensors();
+auto ModelImpl::allocate() -> STATUS {
+    if (m_interpreter->AllocateTensors() != kTfLiteOk) {
+        return STATUS::FAIL;
+    }
 
     const auto numInputs = m_interpreter->inputs().size();
 
@@ -74,11 +82,16 @@ void ModelImpl::allocate() {
         outputs.emplace_back(
             std::make_shared<TensorImpl>(m_interpreter->output_tensor(i)));
     }
+
+    return STATUS::SUCCESS;
 }
 
 auto ModelImpl::applyDelegate(const DELEGATE& delegate) -> STATUS {
     /* undo any previous delegate */
-    createInterpreter();
+    if (createInterpreter() != STATUS::SUCCESS) {
+        return STATUS::FAIL;
+    }
+
     deleteDelegate();
 
     STATUS status = STATUS::SUCCESS;
@@ -140,11 +153,11 @@ void ModelImpl::deleteDelegate() {
         }
 #endif
 
-#ifdef EDGERUNNER_QNN
         if (getDelegate() == DELEGATE::NPU) {
+#ifdef EDGERUNNER_QNN
             TfLiteQnnDelegateDelete(m_delegate);
-        }
 #endif
+        }
     }
 }
 
