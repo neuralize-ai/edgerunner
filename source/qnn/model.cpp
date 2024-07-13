@@ -41,6 +41,16 @@ ModelImpl::ModelImpl(const nonstd::span<uint8_t>& modelBuffer) {
     setCreationStatus(loadModel(modelBuffer));
 }
 
+ModelImpl::~ModelImpl() {
+    if (m_graphsInfo != nullptr && m_freeGraphInfoFnHandle != nullptr) {
+        m_freeGraphInfoFnHandle(&m_graphsInfo, m_graphsCount);
+    }
+
+    if (m_libModelHandle != nullptr) {
+        dlclose(m_libModelHandle);
+    }
+}
+
 auto ModelImpl::loadModel(const std::filesystem::path& modelPath) -> STATUS {
     return loadFromSharedLibrary(modelPath);
 }
