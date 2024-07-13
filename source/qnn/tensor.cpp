@@ -68,4 +68,39 @@ auto TensorImpl::getName() const -> std::string {
     }
 }
 
+auto TensorImpl::getType() const -> TensorType {
+    if (m_tensor == nullptr) {
+        return TensorType::NOTYPE;
+    }
+
+    Qnn_DataType_t qnnDataType {};
+    switch (m_tensor->version) {
+        case QNN_TENSOR_VERSION_1:
+            qnnDataType = m_tensor->v1.dataType;
+            break;
+        case QNN_TENSOR_VERSION_2:
+            qnnDataType = m_tensor->v2.dataType;
+            break;
+        default:
+            return TensorType::NOTYPE;
+    }
+
+    switch (qnnDataType) {
+        case QNN_DATATYPE_FLOAT_32:
+            return TensorType::FLOAT32;
+        case QNN_DATATYPE_FLOAT_16:
+            return TensorType::FLOAT16;
+        case QNN_DATATYPE_INT_32:
+            return TensorType::INT32;
+        case QNN_DATATYPE_UINT_32:
+            return TensorType::UINT32;
+        case QNN_DATATYPE_INT_8:
+            return TensorType::INT8;
+        case QNN_DATATYPE_UINT_8:
+            return TensorType::UINT8;
+        default:
+            return TensorType::UNSUPPORTED;
+    }
+}
+
 }  // namespace edge::qnn
