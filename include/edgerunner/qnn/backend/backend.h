@@ -24,6 +24,14 @@ class Backend {
 
     ~Backend();
 
+    auto getHandle() -> auto& { return m_backendHandle; }
+
+    auto getContext() -> auto& { return m_context; }
+
+    auto getInterface() -> auto& { return m_qnnInterface; }
+
+    auto getDelegate() { return m_delegate; }
+
     static void logCallback(const char* fmt,
                             QnnLog_Level_t level,
                             uint64_t timestamp,
