@@ -82,15 +82,7 @@ class ModelImpl final : public Model {
     auto operator=(const ModelImpl&) -> ModelImpl& = delete;
     auto operator=(ModelImpl&&) -> ModelImpl& = delete;
 
-    ~ModelImpl() final {
-        if (m_graphsInfo != nullptr && m_freeGraphInfoFnHandle != nullptr) {
-            m_freeGraphInfoFnHandle(&m_graphsInfo, m_graphsCount);
-        }
-
-        if (m_libModelHandle != nullptr) {
-            dlclose(m_libModelHandle);
-        }
-    }
+    ~ModelImpl() final;
 
     /**
      * @brief Loads the QNN model from the specified path.
