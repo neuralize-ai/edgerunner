@@ -175,4 +175,39 @@ auto TensorImpl::getDataPtr() -> void* {
     }
 }
 
+auto TensorImpl::getNumBytes() -> size_t {
+    if (m_tensor == nullptr) {
+        return {};
+    }
+
+    size_t numBytes = 0;
+
+    const auto type = getType();
+
+    switch (type) {
+        case TensorType::FLOAT32:
+            numBytes = sizeof(float);
+            break;
+        case TensorType::FLOAT16:
+            numBytes = 2;
+            break;
+        case TensorType::INT32:
+            numBytes = sizeof(int32_t);
+            break;
+        case TensorType::UINT32:
+            numBytes = sizeof(uint32_t);
+            break;
+        case TensorType::INT8:
+            numBytes = sizeof(int8_t);
+            break;
+        case TensorType::UINT8:
+            numBytes = sizeof(uint8_t);
+            break;
+        default:
+            return {};
+    }
+
+    return numBytes * getSize();
+}
+
 }  // namespace edge::qnn
