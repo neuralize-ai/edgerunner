@@ -121,6 +121,10 @@ class ModelImpl final : public Model {
      */
     auto execute() -> STATUS final;
 
+  private:
+    auto loadFromSharedLibrary(const std::filesystem::path& modelPath)
+        -> STATUS;
+
     std::filesystem::path m_modelPath;  ///< The path to the QNN model file
 
     std::unique_ptr<Backend> m_backend;
@@ -134,6 +138,8 @@ class ModelImpl final : public Model {
 
     ComposeGraphsFnHandleTypeT m_composeGraphsFnHandle {};
     FreeGraphInfoFnHandleTypeT m_freeGraphInfoFnHandle {};
+
+    void* m_libModelHandle {};
 
 };
 
