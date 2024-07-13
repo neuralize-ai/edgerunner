@@ -12,8 +12,9 @@
 #include <dlfcn.h>
 
 #include "edgerunner/model.hpp"
+#include "edgerunner/qnn/config.h"
 
-namespace edge::qnn::backend {
+namespace edge::qnn {
 
 using QnnInterfaceGetProvidersFnT =
     Qnn_ErrorHandle_t (*)(const QnnInterface_t***, uint32_t*);
@@ -66,7 +67,6 @@ auto Backend::loadBackend() -> STATUS {
         dlsym(m_backendLibHandle, "QnnInterface_getProviders"));
 
     if (nullptr == getInterfaceProviders) {
-        fmt::print(stderr, "get interface providers fn failed\n");
         dlclose(m_backendLibHandle);
         return STATUS::FAIL;
     }
@@ -79,12 +79,10 @@ auto Backend::loadBackend() -> STATUS {
             const_cast<const QnnInterface_t***>(&interfaceProvidersPtr),
             &numProviders))
     {
-        fmt::print(stderr, "get interface providers failed\n");
         dlclose(m_backendLibHandle);
         return STATUS::FAIL;
     }
     if (nullptr == interfaceProvidersPtr || 0 == numProviders) {
-        fmt::print(stderr, "get interface providers failed 2\n");
         dlclose(m_backendLibHandle);
         return STATUS::FAIL;
     }
@@ -92,7 +90,7 @@ auto Backend::loadBackend() -> STATUS {
     nonstd::span<QnnInterface_t*> interfaceProviders {interfaceProvidersPtr,
                                                       numProviders};
 
-    uint32_t backendId;
+    uint32_t backendId = 0;
     for (const auto& interfaceProvider : interfaceProviders) {
         const auto& coreApiVersion =
             interfaceProvider->apiVersion.coreApiVersion;
@@ -102,7 +100,6 @@ auto Backend::loadBackend() -> STATUS {
             m_qnnInterface = interfaceProvider->QNN_INTERFACE_VER_NAME;
             backendId = interfaceProvider->backendId;
         } else {
-            fmt::print(stderr, "interface providers invalid\n");
             dlclose(m_backendLibHandle);
             return STATUS::FAIL;
         }
@@ -115,7 +112,6 @@ auto Backend::loadSystemLibrary() -> STATUS {
     void* systemLibraryHandle =
         dlopen("libQnnSystem.so", RTLD_NOW | RTLD_LOCAL);
     if (nullptr == systemLibraryHandle) {
-        fmt::print(stderr, "load system library failed\n");
         return STATUS::FAIL;
     }
 
@@ -124,7 +120,6 @@ auto Backend::loadSystemLibrary() -> STATUS {
         reinterpret_cast<QnnSystemInterfaceGetProvidersFnT>(
             dlsym(systemLibraryHandle, "QnnSystemInterface_getProviders"));
     if (nullptr == getSystemInterfaceProviders) {
-        fmt::print(stderr, "get system interface providers fn failed\n");
         return STATUS::FAIL;
     }
 
@@ -136,11 +131,9 @@ auto Backend::loadSystemLibrary() -> STATUS {
                 &systemInterfaceProvidersPtr),
             &numProviders))
     {
-        fmt::print(stderr, "get system interface providers failed\n");
         return STATUS::FAIL;
     }
     if (nullptr == systemInterfaceProvidersPtr || 0 == numProviders) {
-        fmt::print(stderr, "get system interface providers failed 2\n");
         return STATUS::FAIL;
     }
 
@@ -159,7 +152,6 @@ auto Backend::loadSystemLibrary() -> STATUS {
         }
     }
 
-    fmt::print(stderr, "system interface providers invalid\n");
     return STATUS::FAIL;
 }
 
@@ -212,7 +204,6 @@ auto Backend::initializeBackend() -> STATUS {
         const_cast<const QnnBackend_Config_t**>(m_backendConfig),
         &m_backendHandle);
     if (QNN_BACKEND_NO_ERROR != status) {
-        fmt::print(stderr, "initialize backend failed\n");
         return STATUS::FAIL;
     }
 
@@ -224,7 +215,6 @@ auto Backend::createDevice() -> STATUS {
     if (nullptr != propertyHasCapability) {
         auto status = propertyHasCapability(QNN_PROPERTY_GROUP_DEVICE);
         if (QNN_PROPERTY_ERROR_UNKNOWN_KEY == status) {
-            fmt::print(stderr, "device property supported failed\n");
             return STATUS::FAIL;
         }
     }
@@ -236,7 +226,6 @@ auto Backend::createDevice() -> STATUS {
         auto qnnStatus = m_qnnInterface.deviceCreate(
             nullptr, deviceConfig.getPtr(), &m_deviceHandle);
         if (QNN_SUCCESS != qnnStatus) {
-            fmt::print(stderr, "create device failed\n");
             return STATUS::FAIL;
         }
     }
@@ -245,13 +234,13 @@ auto Backend::createDevice() -> STATUS {
 }
 
 auto Backend::createContext() -> STATUS {
-    Config<QnnContext_Config_t, QnnContext_CustomConfig_t> contextConfig {
-        QNN_CONTEXT_CONFIG_INIT, {}};
+    Config<QnnContext_Config_t, void*> contextConfig {QNN_CONTEXT_CONFIG_INIT,
+                                                      {}};
+
     const auto status = m_qnnInterface.contextCreate(
         m_backendHandle, m_deviceHandle, contextConfig.getPtr(), &m_context);
 
     if (QNN_CONTEXT_NO_ERROR != status) {
-        fmt::print(stderr, "create context failed\n");
         return STATUS::FAIL;
     }
 
@@ -271,4 +260,4 @@ auto Backend::validateBackendId(const uint32_t backendId) const -> STATUS {
     }
 }
 
-}  // namespace edge::qnn::backend
+}  // namespace edge::qnn
