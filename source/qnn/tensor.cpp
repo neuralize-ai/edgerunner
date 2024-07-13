@@ -3,6 +3,7 @@
 #include <functional>
 #include <numeric>
 #include <string>
+#include <variant>
 #include <vector>
 
 #include "edgerunner/tensor.hpp"
@@ -14,31 +15,32 @@
 
 namespace edge::qnn {
 
-void setQnnTensorMemType(Qnn_Tensor_t& qnnTensor, Qnn_TensorMemType_t memType) {
-    if (QNN_TENSOR_VERSION_1 == qnnTensor.version) {
-        qnnTensor.v1.memType = memType;
-        return;
-    }
+using TensorVariant = std::variant<std::reference_wrapper<Qnn_TensorV1_t>,
+                                   std::reference_wrapper<Qnn_TensorV2_t>>;
 
+auto getTensorTypeVariant(Qnn_Tensor_t& tensor) -> TensorVariant {
+    switch (tensor.version) {
 #ifdef QNN_TENSOR_V2_INIT
-    if (QNN_TENSOR_VERSION_2 == qnnTensor.version) {
-        qnnTensor.v2.memType = memType;
-    }
+        case QNN_TENSOR_VERSION_2:
+            return std::ref(tensor.v2);  // NOLINT
 #endif
+        default:
+            return std::ref(tensor.v1);  // NOLINT
+    }
+}
+
+void setQnnTensorMemType(Qnn_Tensor_t& qnnTensor, Qnn_TensorMemType_t memType) {
+    auto tensor = getTensorTypeVariant(qnnTensor);
+    std::visit([memType](auto&& tensor) { tensor.get().memType = memType; },
+               tensor);
 }
 
 void setQnnTensorClientBuf(Qnn_Tensor_t& qnnTensor,
                            Qnn_ClientBuffer_t& clientBuf) {
-    if (QNN_TENSOR_VERSION_1 == qnnTensor.version) {
-        qnnTensor.v1.clientBuf = clientBuf;
-        return;
-    }
-
-#ifdef QNN_TENSOR_V2_INIT
-    if (QNN_TENSOR_VERSION_2 == qnnTensor.version) {
-        qnnTensor.v2.clientBuf = clientBuf;
-    }
-#endif
+    auto tensor = getTensorTypeVariant(qnnTensor);
+    std::visit(
+        [&clientBuf](auto&& tensor) { tensor.get().clientBuf = clientBuf; },
+        tensor);
 }
 
 TensorImpl::TensorImpl(Qnn_Tensor_t* qnnTensor)
@@ -63,14 +65,8 @@ auto TensorImpl::getName() const -> std::string {
         return "";
     }
 
-    switch (m_tensor->version) {
-        case QNN_TENSOR_VERSION_1:
-            return m_tensor->v1.name;
-        case QNN_TENSOR_VERSION_2:
-            return m_tensor->v2.name;
-        default:
-            return "";
-    }
+    auto tensor = getTensorTypeVariant(*m_tensor);
+    return std::visit([](auto&& tensor) { return tensor.get().name; }, tensor);
 }
 
 auto TensorImpl::getType() const -> TensorType {
@@ -78,17 +74,9 @@ auto TensorImpl::getType() const -> TensorType {
         return TensorType::NOTYPE;
     }
 
-    Qnn_DataType_t qnnDataType {};
-    switch (m_tensor->version) {
-        case QNN_TENSOR_VERSION_1:
-            qnnDataType = m_tensor->v1.dataType;
-            break;
-        case QNN_TENSOR_VERSION_2:
-            qnnDataType = m_tensor->v2.dataType;
-            break;
-        default:
-            return TensorType::NOTYPE;
-    }
+    auto tensor = getTensorTypeVariant(*m_tensor);
+    const auto qnnDataType =
+        std::visit([](auto&& tensor) { return tensor.get().dataType; }, tensor);
 
     switch (qnnDataType) {
         case QNN_DATATYPE_FLOAT_32:
@@ -113,20 +101,14 @@ auto TensorImpl::getDimensions() const -> std::vector<size_t> {
         return {};
     }
 
-    nonstd::span<uint32_t> qnnDimensions;
+    auto tensor = getTensorTypeVariant(*m_tensor);
 
-    switch (m_tensor->version) {
-        case QNN_TENSOR_VERSION_1:
-            qnnDimensions = nonstd::span<uint32_t> {m_tensor->v1.dimensions,
-                                                    m_tensor->v1.rank};
-            break;
-        case QNN_TENSOR_VERSION_2:
-            qnnDimensions = nonstd::span<uint32_t> {m_tensor->v2.dimensions,
-                                                    m_tensor->v2.rank};
-            break;
-        default:
-            return {};
-    }
+    const auto qnnDimensions = std::visit(
+        [](auto&& tensor) {
+            return nonstd::span<uint32_t> {tensor.get().dimensions,
+                                           tensor.get().rank};
+        },
+        tensor);
 
     return {qnnDimensions.cbegin(), qnnDimensions.cend()};
 }
@@ -146,32 +128,20 @@ auto TensorImpl::getDataPtr() -> void* {
         return nullptr;
     }
 
-    switch (m_tensor->version) {
-        case QNN_TENSOR_VERSION_1: {
-            auto tensor = m_tensor->v1;
-            switch (tensor.memType) {
+    auto tensor = getTensorTypeVariant(*m_tensor);
+
+    return std::visit(
+        [](auto&& tensor) {
+            switch (tensor.get().memType) {
                 case QNN_TENSORMEMTYPE_RAW:
-                    return tensor.memHandle;
+                    return tensor.get().memHandle;
                 case QNN_TENSORMEMTYPE_MEMHANDLE:
-                    return tensor.clientBuf.data;
+                    return tensor.get().clientBuf.data;
                 default:
-                    return nullptr;
+                    return static_cast<void*>(nullptr);
             }
-        }
-        case QNN_TENSOR_VERSION_2: {
-            auto tensor = m_tensor->v2;
-            switch (tensor.memType) {
-                case QNN_TENSORMEMTYPE_RAW:
-                    return tensor.memHandle;
-                case QNN_TENSORMEMTYPE_MEMHANDLE:
-                    return tensor.clientBuf.data;
-                default:
-                    return nullptr;
-            }
-        }
-        default:
-            return nullptr;
-    }
+        },
+        tensor);
 }
 
 auto TensorImpl::getNumBytes() -> size_t {
