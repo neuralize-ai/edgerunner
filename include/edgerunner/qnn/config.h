@@ -11,15 +11,7 @@ class Config {
 
     auto createConfig() -> auto& {
         m_configs.push_back(m_defaultConfig);
-
-        if (!m_configPtrs.empty() && m_configPtrs.back() == nullptr) {
-            m_configPtrs.pop_back();
-        }
-
-        auto& config = m_configs.back();
-
-        m_configPtrs.push_back(&config);
-        return config;
+        return m_configs.back();
     }
 
     auto createCustomConfig() -> auto& {
@@ -28,14 +20,12 @@ class Config {
     }
 
     auto getPtr() -> const ConfigType** {
-        if (m_configPtrs.empty()) {
-            return nullptr;
+        m_configPtrs.clear();
+        m_configPtrs.reserve(m_configs.size() + 1);
+        for (auto& config : m_configs) {
+            m_configPtrs.push_back(&config);
         }
-
-        if (m_configPtrs.back() != nullptr) {
-            m_configPtrs.push_back(nullptr);
-        }
-
+        m_configPtrs.push_back(nullptr);
         return m_configPtrs.data();
     }
 
