@@ -125,6 +125,10 @@ class ModelImpl final : public Model {
     auto loadFromSharedLibrary(const std::filesystem::path& modelPath)
         -> STATUS;
 
+    auto composeGraphs() -> STATUS;
+
+    auto finalizeGraphs() -> STATUS;
+
     std::filesystem::path m_modelPath;  ///< The path to the QNN model file
 
     std::unique_ptr<Backend> m_backend;
