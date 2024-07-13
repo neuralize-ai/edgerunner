@@ -80,8 +80,14 @@ endif()
 if(edgerunner_ENABLE_NPU)
     find_package(qnn REQUIRED)
     if(ANDROID)
-        target_compile_definitions(edgerunner_edgerunner PRIVATE EDGERUNNER_QNN)
         target_link_libraries(edgerunner_edgerunner PRIVATE qnn::tflite)
+        target_compile_definitions(edgerunner_edgerunner PUBLIC EDGERUNNER_QNN)
+
+        file(COPY "${CMAKE_BINARY_DIR}/../runtimeLibs/"
+             DESTINATION ${CMAKE_BINARY_DIR}
+        )
+    else()
+        target_link_libraries(edgerunner_edgerunner PRIVATE qnn::qnn)
     endif()
 endif()
 
