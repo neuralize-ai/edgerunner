@@ -53,4 +53,19 @@ TensorImpl::TensorImpl(Qnn_Tensor_t* qnnTensor)
     setQnnTensorClientBuf(*m_tensor, clientBuffer);
 }
 
+auto TensorImpl::getName() const -> std::string {
+    if (m_tensor == nullptr) {
+        return "";
+    }
+
+    switch (m_tensor->version) {
+        case QNN_TENSOR_VERSION_1:
+            return m_tensor->v1.name;
+        case QNN_TENSOR_VERSION_2:
+            return m_tensor->v2.name;
+        default:
+            return "";
+    }
+}
+
 }  // namespace edge::qnn
