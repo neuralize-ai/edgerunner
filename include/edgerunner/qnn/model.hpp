@@ -125,6 +125,13 @@ class ModelImpl final : public Model {
 
     std::unique_ptr<Backend> m_backend;
 
+    /* Graph */
+    Qnn_GraphHandle_t m_graph {};
+
+    GraphInfoT** m_graphInfo {};
+    uint32_t m_graphsCount {};
+    GraphConfigInfoT* m_graphConfigInfo {};
+
     ComposeGraphsFnHandleTypeT m_composeGraphsFnHandle {};
     FreeGraphInfoFnHandleTypeT m_freeGraphInfoFnHandle {};
 
