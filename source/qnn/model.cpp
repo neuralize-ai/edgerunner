@@ -39,6 +39,29 @@ auto ModelImpl::applyDelegate(const DELEGATE& delegate) -> STATUS {
     return STATUS::SUCCESS;
 }
 
+auto ModelImpl::composeGraphs() -> STATUS {
+    auto& qnnInterface = m_backend->getInterface();
+    auto& qnnContext = m_backend->getContext();
+    auto& qnnBackendHandle = m_backend->getHandle();
+
+    const auto status = m_composeGraphsFnHandle(qnnBackendHandle,
+                                                qnnInterface,
+                                                qnnContext,
+                                                nullptr,
+                                                0,
+                                                &m_graphInfo,
+                                                &m_graphsCount,
+                                                false,
+                                                nullptr,
+                                                QNN_LOG_LEVEL_ERROR);
+
+    if (ModelErrorT::MODEL_NO_ERROR != status) {
+        return STATUS::FAIL;
+    }
+
+    return STATUS::SUCCESS;
+}
+
 auto ModelImpl::loadFromSharedLibrary(const std::filesystem::path& modelPath)
     -> STATUS {
     m_libModelHandle = dlopen(modelPath.string().data(), RTLD_NOW | RTLD_LOCAL);
