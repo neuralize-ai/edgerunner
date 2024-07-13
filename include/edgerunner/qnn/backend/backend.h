@@ -5,11 +5,13 @@
 #include <HTP/QnnHtpDevice.h>
 #include <QnnCommon.h>
 #include <QnnInterface.h>
+#include <QnnTypes.h>
 #include <System/QnnSystemInterface.h>
 
+/* TODO: move STATUS to dedicated header */
 #include "edgerunner/model.hpp"
 
-namespace edge::qnn::backend {
+namespace edge::qnn {
 
 class Backend {
   public:
@@ -22,8 +24,15 @@ class Backend {
 
     ~Backend();
 
+    static void logCallback(const char* fmt,
+                            QnnLog_Level_t level,
+                            uint64_t timestamp,
+                            va_list argp);
+
   private:
     auto loadBackend() -> STATUS;
+
+    auto createLogger() -> STATUS;
 
     auto initializeBackend() -> STATUS;
 
@@ -47,6 +56,8 @@ class Backend {
 
     Qnn_ContextHandle_t m_context {};
 
+    Qnn_LogHandle_t m_logHandle {};
+
     QNN_INTERFACE_VER_TYPE m_qnnInterface = QNN_INTERFACE_VER_TYPE_INIT;
     QNN_SYSTEM_INTERFACE_VER_TYPE m_qnnSystemInterface =
         QNN_SYSTEM_INTERFACE_VER_TYPE_INIT;
@@ -62,4 +73,4 @@ class Backend {
     QnnHtpDevice_Arch_t m_htpArch {};
 };
 
-}  // namespace edge::qnn::backend
+}  // namespace edge::qnn

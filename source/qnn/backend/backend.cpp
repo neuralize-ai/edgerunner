@@ -1,14 +1,17 @@
-#include "edgerunner/qnn/backend/backend.h"
+#include <cstdio>
+
+#include "edgerunner/qnn/backend.h"
 
 #include <CPU/QnnCpuCommon.h>
 #include <GPU/QnnGpuCommon.h>
 #include <HTP/QnnHtpCommon.h>
+#include <HTP/QnnHtpDevice.h>
+#include <QnnCommon.h>
 #include <QnnContext.h>
+#include <QnnLog.h>
 #include <dlfcn.h>
-#include <fmt/core.h>
 
 #include "edgerunner/model.hpp"
-#include "edgerunner/qnn/backend/config.h"
 
 namespace edge::qnn::backend {
 
@@ -21,6 +24,8 @@ using QnnSystemInterfaceGetProvidersFnT =
 Backend::Backend(const DELEGATE delegate)
     : m_delegate(delegate) {
     loadBackend();
+
+    createLogger();
 
     initializeBackend();
 
@@ -156,6 +161,49 @@ auto Backend::loadSystemLibrary() -> STATUS {
 
     fmt::print(stderr, "system interface providers invalid\n");
     return STATUS::FAIL;
+}
+
+void Backend::logCallback(const char* fmt,
+                          QnnLog_Level_t level,
+                          uint64_t timestamp,
+                          va_list argp) {
+    std::string levelStr;
+
+    switch (level) {
+        case QNN_LOG_LEVEL_ERROR:
+            levelStr = "ERROR";
+            break;
+        case QNN_LOG_LEVEL_WARN:
+            levelStr = "WARNING";
+            break;
+        case QNN_LOG_LEVEL_INFO:
+            levelStr = "INFO";
+            break;
+        case QNN_LOG_LEVEL_DEBUG:
+            levelStr = "DEBUG";
+            break;
+        case QNN_LOG_LEVEL_VERBOSE:
+            levelStr = "VERBOSE";
+            break;
+        case QNN_LOG_LEVEL_MAX:
+            levelStr = "UNKNOWN";
+            break;
+    }
+
+    std::fprintf(stdout, "%8.1lums [%-7s] ", timestamp, levelStr.c_str());
+    std::vfprintf(stdout, fmt, argp);
+    std::fprintf(stdout, "\n");
+}
+
+auto Backend::createLogger() -> STATUS {
+    if (QNN_SUCCESS
+        != m_qnnInterface.logCreate(
+            logCallback, QNN_LOG_LEVEL_ERROR, &m_logHandle))
+    {
+        return STATUS::FAIL;
+    }
+
+    return STATUS::SUCCESS;
 }
 
 auto Backend::initializeBackend() -> STATUS {
