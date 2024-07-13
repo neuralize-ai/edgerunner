@@ -103,4 +103,33 @@ auto TensorImpl::getType() const -> TensorType {
     }
 }
 
+auto TensorImpl::getDimensions() const -> std::vector<size_t> {
+    if (m_tensor == nullptr) {
+        return {};
+    }
+
+    uint32_t qnnRank = 0;
+    uint32_t* qnnDimensions = nullptr;
+    switch (m_tensor->version) {
+        case QNN_TENSOR_VERSION_1:
+            qnnRank = m_tensor->v1.rank;
+            qnnDimensions = m_tensor->v1.dimensions;
+            break;
+        case QNN_TENSOR_VERSION_2:
+            qnnRank = m_tensor->v2.rank;
+            qnnDimensions = m_tensor->v2.dimensions;
+            break;
+        default:
+            return {};
+    }
+
+    std::vector<size_t> dimensions;
+    dimensions.reserve(static_cast<size_t>(qnnRank));
+    for (uint32_t i = 0; i < qnnRank; ++i) {
+        dimensions.push_back(static_cast<size_t>(qnnDimensions[i]));
+    }
+
+    return dimensions;
+}
+
 }  // namespace edge::qnn
