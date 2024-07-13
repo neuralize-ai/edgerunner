@@ -83,8 +83,8 @@ class ModelImpl final : public Model {
     auto operator=(ModelImpl&&) -> ModelImpl& = delete;
 
     ~ModelImpl() final {
-        if (m_graphInfo != nullptr && m_freeGraphInfoFnHandle != nullptr) {
-            m_freeGraphInfoFnHandle(&m_graphInfo, m_graphsCount);
+        if (m_graphsInfo != nullptr && m_freeGraphInfoFnHandle != nullptr) {
+            m_freeGraphInfoFnHandle(&m_graphsInfo, m_graphsCount);
         }
 
         if (m_libModelHandle != nullptr) {
@@ -146,9 +146,10 @@ class ModelImpl final : public Model {
     std::unique_ptr<Backend> m_backend;
 
     /* Graph */
-
-    GraphInfoT** m_graphInfo {};
+    GraphInfoT** m_graphsInfo {};
     uint32_t m_graphsCount {};
+
+    GraphInfoT* m_graphInfo {};
 
     ComposeGraphsFnHandleTypeT m_composeGraphsFnHandle {};
     FreeGraphInfoFnHandleTypeT m_freeGraphInfoFnHandle {};

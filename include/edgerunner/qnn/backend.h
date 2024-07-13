@@ -53,7 +53,7 @@ class Backend {
 
     auto setPowerConfig() -> STATUS;
 
-    auto destroyPowerConfig() -> STATUS;
+    auto destroyPowerConfig() const -> STATUS;
 
     auto loadContextFromBinary() -> STATUS;
 
@@ -73,7 +73,7 @@ class Backend {
 
     uint32_t m_powerConfigId {};
 
-    QnnDevice_Infrastructure_t m_deviceInfrastructure {};
+    QnnHtpDevice_PerfInfrastructure_t m_devicePerfInfrastructure {};
 
     QNN_INTERFACE_VER_TYPE m_qnnInterface = QNN_INTERFACE_VER_TYPE_INIT;
     QNN_SYSTEM_INTERFACE_VER_TYPE m_qnnSystemInterface =
