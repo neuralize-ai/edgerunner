@@ -118,11 +118,11 @@ auto TensorImpl::getDimensions() const -> std::vector<size_t> {
     switch (m_tensor->version) {
         case QNN_TENSOR_VERSION_1:
             qnnDimensions = nonstd::span<uint32_t> {m_tensor->v1.dimensions,
-                                                    m_tensor->v1.dimensions};
+                                                    m_tensor->v1.rank};
             break;
         case QNN_TENSOR_VERSION_2:
             qnnDimensions = nonstd::span<uint32_t> {m_tensor->v2.dimensions,
-                                                    m_tensor->v2.dimensions};
+                                                    m_tensor->v2.rank};
             break;
         default:
             return {};
