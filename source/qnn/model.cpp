@@ -64,12 +64,10 @@ auto ModelImpl::allocate() -> STATUS {
     inputs.clear();
     outputs.clear();
 
-    auto& graphInfo = (*m_graphInfo)[0];
-
-    nonstd::span<Qnn_Tensor_t> inputTensorSpecs {graphInfo.inputTensors,
-                                                 graphInfo.numInputTensors};
-    nonstd::span<Qnn_Tensor_t> outputTensorSpecs {graphInfo.outputTensors,
-                                                  graphInfo.numOutputTensors};
+    nonstd::span<Qnn_Tensor_t> inputTensorSpecs {m_graphInfo->inputTensors,
+                                                 m_graphInfo->numInputTensors};
+    nonstd::span<Qnn_Tensor_t> outputTensorSpecs {
+        m_graphInfo->outputTensors, m_graphInfo->numOutputTensors};
 
     if (inputTensorSpecs.data() == nullptr
         || outputTensorSpecs.data() == nullptr)
@@ -92,14 +90,13 @@ auto ModelImpl::allocate() -> STATUS {
 
 auto ModelImpl::execute() -> STATUS {
     auto& qnnInterface = m_backend->getInterface();
-    auto& graphInfo = (*m_graphInfo)[0];
 
     const auto executeStatus =
-        qnnInterface.graphExecute(graphInfo.graph,
-                                  graphInfo.inputTensors,
-                                  graphInfo.numInputTensors,
-                                  graphInfo.outputTensors,
-                                  graphInfo.numOutputTensors,
+        qnnInterface.graphExecute(m_graphInfo->graph,
+                                  m_graphInfo->inputTensors,
+                                  m_graphInfo->numInputTensors,
+                                  m_graphInfo->outputTensors,
+                                  m_graphInfo->numOutputTensors,
                                   nullptr,
                                   nullptr);
     if (QNN_GRAPH_NO_ERROR != executeStatus) {
@@ -119,28 +116,29 @@ auto ModelImpl::setGraphConfig() -> STATUS {
     if (m_backend->getDelegate() == DELEGATE::NPU) {
         auto& precisionCustomConfig = graphConfigs.createCustomConfig();
         precisionCustomConfig.option = QNN_HTP_GRAPH_CONFIG_OPTION_PRECISION;
-        precisionCustomConfig.precision = QNN_PRECISION_FLOAT16;
+        precisionCustomConfig.precision /* NOLINT */ = QNN_PRECISION_FLOAT16;
 
         auto& precisionConfig = graphConfigs.createConfig();
         precisionConfig.option = QNN_GRAPH_CONFIG_OPTION_CUSTOM;
-        precisionConfig.customConfig = &precisionCustomConfig;
+        precisionConfig.customConfig /* NOLINT */ = &precisionCustomConfig;
 
         auto& optimizationCustomConfig = graphConfigs.createCustomConfig();
         optimizationCustomConfig.option =
             QNN_HTP_GRAPH_CONFIG_OPTION_OPTIMIZATION;
-        optimizationCustomConfig.optimizationOption.type =
+        optimizationCustomConfig.optimizationOption /* NOLINT */.type =
             QNN_HTP_GRAPH_OPTIMIZATION_TYPE_FINALIZE_OPTIMIZATION_FLAG;
         static constexpr float GraphOptimizationLevel = 3.0F;
-        optimizationCustomConfig.optimizationOption.floatValue =
+        optimizationCustomConfig.optimizationOption /* NOLINT */.floatValue =
             GraphOptimizationLevel;
 
         auto& optimizationConfig = graphConfigs.createConfig();
         optimizationConfig.option = QNN_GRAPH_CONFIG_OPTION_CUSTOM;
-        optimizationConfig.customConfig = &optimizationCustomConfig;
+        optimizationConfig.customConfig /* NOLINT */ =
+            &optimizationCustomConfig;
     }
 
-    const auto status = qnnInterface.graphSetConfig((*m_graphInfo)[0].graph,
-                                                    graphConfigs.getPtr());
+    const auto status =
+        qnnInterface.graphSetConfig(m_graphInfo->graph, graphConfigs.getPtr());
 
     if (QNN_GRAPH_NO_ERROR != status) {
         return STATUS::FAIL;
@@ -159,7 +157,7 @@ auto ModelImpl::composeGraphs() -> STATUS {
                                                 qnnContext,
                                                 nullptr,
                                                 0,
-                                                &m_graphInfo,
+                                                &m_graphsInfo,
                                                 &m_graphsCount,
                                                 false,
                                                 nullptr,
@@ -169,15 +167,16 @@ auto ModelImpl::composeGraphs() -> STATUS {
         return STATUS::FAIL;
     }
 
+    m_graphInfo = m_graphsInfo[0];  // NOLINT
+
     return STATUS::SUCCESS;
 }
 
 auto ModelImpl::finalizeGraphs() -> STATUS {
     auto& qnnInterface = m_backend->getInterface();
-    auto& graphInfo = (*m_graphInfo)[0];
 
     const auto status =
-        qnnInterface.graphFinalize(graphInfo.graph, nullptr, nullptr);
+        qnnInterface.graphFinalize(m_graphInfo->graph, nullptr, nullptr);
 
     if (QNN_GRAPH_NO_ERROR != status) {
         return STATUS::FAIL;
@@ -196,14 +195,16 @@ auto ModelImpl::loadFromSharedLibrary(const std::filesystem::path& modelPath)
         return STATUS::FAIL;
     }
 
-    m_composeGraphsFnHandle = reinterpret_cast<ComposeGraphsFnHandleTypeT>(
-        dlsym(m_libModelHandle, "QnnModel_composeGraphs"));
+    m_composeGraphsFnHandle =
+        reinterpret_cast<ComposeGraphsFnHandleTypeT> /* NOLINT */ (
+            dlsym(m_libModelHandle, "QnnModel_composeGraphs"));
     if (nullptr == m_composeGraphsFnHandle) {
         return STATUS::FAIL;
     }
 
-    m_freeGraphInfoFnHandle = reinterpret_cast<FreeGraphInfoFnHandleTypeT>(
-        dlsym(m_libModelHandle, "QnnModel_freeGraphsInfo"));
+    m_freeGraphInfoFnHandle =
+        reinterpret_cast<FreeGraphInfoFnHandleTypeT> /* NOLINT */ (
+            dlsym(m_libModelHandle, "QnnModel_freeGraphsInfo"));
     if (nullptr == m_freeGraphInfoFnHandle) {
         return STATUS::FAIL;
     }
