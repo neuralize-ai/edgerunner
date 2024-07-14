@@ -8,8 +8,11 @@
 #include <nonstd/span.hpp>
 
 #include "edgerunner/model.hpp"
-#include "edgerunner/qnn/model.hpp"
 #include "edgerunner/tflite/model.hpp"
+
+#ifdef EDGERUNNER_QNN
+#    include "edgerunner/qnn/model.hpp"
+#endif
 
 namespace edge {
 
@@ -22,9 +25,12 @@ auto createModel(const std::filesystem::path& modelPath)
     if (modelExtension == "tflite") {
         model = std::make_unique<tflite::ModelImpl>(modelPath);
     }
+
+#ifdef EDGERUNNER_QNN
     if (modelExtension == "so") {
         model = std::make_unique<qnn::ModelImpl>(modelPath);
     }
+#endif
 
     if (model != nullptr && model->getCreationStatus() == STATUS::SUCCESS) {
         return model;
@@ -41,9 +47,12 @@ auto createModel(const nonstd::span<uint8_t>& modelBuffer,
     if (modelExtension == "tflite") {
         model = std::make_unique<tflite::ModelImpl>(modelBuffer);
     }
+
+#ifdef EDGERUNNER_QNN
     if (modelExtension == "so") {
         model = std::make_unique<qnn::ModelImpl>(modelBuffer);
     }
+#endif
 
     if (model != nullptr && model->getCreationStatus() == STATUS::SUCCESS) {
         return model;

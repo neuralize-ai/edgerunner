@@ -18,9 +18,9 @@ auto main() -> int {
 
     ImageClassifier imageClassifier(modelPath, labelListPath);
 
-#ifdef EDGERUNNER_QNN
+#if defined(EDGERUNNER_QNN)
     imageClassifier.setDelegate(edge::DELEGATE::NPU);
-#elif EDGERUNNER_GPU
+#elif defined(EDGERUNNER_GPU)
     imageClassifier.setDelegate(edge::DELEGATE::GPU);
 #endif
 
