@@ -122,15 +122,56 @@ class ModelImpl final : public Model {
     auto execute() -> STATUS final;
 
   private:
+    /**
+     * @brief Loads a QNN model from a shared library.
+     *
+     * This function loads a QNN model from a shared library located at the
+     * specified path.
+     *
+     * @param modelPath The path to the shared library containing the QNN model.
+     * @return STATUS The status of the operation (SUCCESS or ERROR).
+     */
     auto loadFromSharedLibrary(const std::filesystem::path& modelPath)
         -> STATUS;
 
+    /**
+     * @brief Composes the graphs for the loaded QNN model.
+     *
+     * This function composes the graphs for the loaded QNN model based on the
+     * model configuration.
+     *
+     * @return STATUS The status of the operation (SUCCESS or ERROR).
+     */
     auto composeGraphs() -> STATUS;
 
+    /**
+     * @brief Sets the configuration for the composed graphs.
+     *
+     * This function sets the configuration for the composed graphs, operation
+     * precision, graph optimization level.
+     *
+     * @return STATUS The status of the operation (SUCCESS or ERROR).
+     */
     auto setGraphConfig() -> STATUS;
 
+    /**
+     * @brief Finalizes the composed graphs.
+     *
+     * This function finalizes the composed graphs and prepares them for
+     * execution.
+     *
+     * @return STATUS The status of the operation (SUCCESS or ERROR).
+     */
     auto finalizeGraphs() -> STATUS;
 
+    /**
+     * @brief Allocates input and output tensors
+     *
+     * This function allocates input and output tensors. Should be used before
+     * executing.
+     *
+     * @return STATUS The status of the operation (SUCCESS or ERROR).
+     */
     auto allocate() -> STATUS;
 
     std::filesystem::path m_modelPath;  ///< The path to the QNN model file
