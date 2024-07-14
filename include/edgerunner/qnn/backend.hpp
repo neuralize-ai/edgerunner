@@ -1,3 +1,15 @@
+/**
+ * @file Backend.h
+ * @brief Definition of the Backend class for handling QNN backends.
+ *
+ * This class represents a backend for handling interfacing with QNN backend
+ * libraries. It provides functionality for loading the backend, creating a
+ * device, initializing the backend, and managing the context for QNN
+ * operations.
+ *
+ * The Backend class is currently restricted to NPU inference support.
+ */
+
 #pragma once
 
 #include <unordered_map>
@@ -14,8 +26,16 @@
 
 namespace edge::qnn {
 
+/**
+ * @class Backend
+ * @brief Class for handling QNN backends.
+ */
 class Backend {
   public:
+    /**
+     * @brief Constructor for the Backend class.
+     * @param delegate The delegate type for the backend (CPU, GPU, NPU).
+     */
     explicit Backend(DELEGATE delegate);
 
     Backend(const Backend&) = default;
@@ -23,16 +43,42 @@ class Backend {
     auto operator=(const Backend&) -> Backend& = delete;
     auto operator=(Backend&&) -> Backend& = delete;
 
+    /**
+     * @brief Destructor for the Backend class.
+     */
     ~Backend();
 
+    /**
+     * @brief Get the backend handle.
+     * @return Reference to the backend handle.
+     */
     auto getHandle() -> auto& { return m_backendHandle; }
 
+    /**
+     * @brief Get the context for the backend.
+     * @return Reference to the backend context.
+     */
     auto getContext() -> auto& { return m_context; }
 
+    /**
+     * @brief Get the QNN interface.
+     * @return Reference to the QNN interface.
+     */
     auto getInterface() -> auto& { return m_qnnInterface; }
 
+    /**
+     * @brief Get the delegate type for the backend.
+     * @return The delegate type.
+     */
     auto getDelegate() { return m_delegate; }
 
+    /**
+     * @brief Static callback function for logging.
+     * @param fmtStr The format string for the log message.
+     * @param level The log level.
+     * @param timestamp The timestamp of the log message.
+     * @param argp Additional arguments for the log message.
+     */
     static void logCallback(const char* fmtStr,
                             QnnLog_Level_t level,
                             uint64_t timestamp,
