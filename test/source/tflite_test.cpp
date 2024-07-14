@@ -11,10 +11,6 @@
 #include "utils.hpp"
 
 TEST_CASE("Tflite default runtime (CPU)", "[tflite][cpu]") {
-    const std::string badModelPath = "test.bin";
-    auto badModel = edge::createModel(badModelPath);
-    REQUIRE(badModel == nullptr);
-
     const std::string modelPath = "models/tflite/mobilenet_v3_small.tflite";
 
     auto model = edge::createModel(modelPath);

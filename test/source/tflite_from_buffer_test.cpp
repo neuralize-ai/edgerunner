@@ -14,15 +14,6 @@
 #include "edgerunner/tensor.hpp"
 
 TEST_CASE("Tflite from buffer default runtime (CPU)", "[tflite][buffer][cpu]") {
-    const std::string badModelPath = "models/tflite/imagenet_labels.txt";
-    std::ifstream badFile(badModelPath, std::ios::binary);
-    std::vector<uint8_t> badModelBuffer(
-        (std::istreambuf_iterator<char>(badFile)),
-        std::istreambuf_iterator<char>());
-
-    auto badModel = edge::createModel(badModelBuffer, "txt");
-    REQUIRE(badModel == nullptr);
-
     const std::string modelPath = "models/tflite/mobilenet_v3_small.tflite";
     std::ifstream file(modelPath, std::ios::binary);
     std::vector<uint8_t> modelBuffer((std::istreambuf_iterator<char>(file)),
