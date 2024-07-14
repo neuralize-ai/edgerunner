@@ -34,7 +34,7 @@ using TensorMemoryVariant =
     std::variant<Qnn_MemHandle_t, std::reference_wrapper<Qnn_ClientBuffer_t>>;
 
 auto getTensorMemoryPtr(Qnn_Tensor_t& tensor) -> void* {
-    auto typedTensor = getTensorTypeVariant(tensor);
+    auto tensorVariant = getTensorTypeVariant(tensor);
     return std::visit(
         [](auto&& typedTensor) {
             switch (typedTensor.get().memType) {
@@ -46,23 +46,23 @@ auto getTensorMemoryPtr(Qnn_Tensor_t& tensor) -> void* {
                     return static_cast<void*>(nullptr);
             }
         },
-        typedTensor);
+        tensorVariant);
 }
 
 void setQnnTensorMemType(Qnn_Tensor_t& qnnTensor, Qnn_TensorMemType_t memType) {
-    auto tensor = getTensorTypeVariant(qnnTensor);
+    auto tensorVariant = getTensorTypeVariant(qnnTensor);
     std::visit([memType](auto&& tensor) { tensor.get().memType = memType; },
-               tensor);
+               tensorVariant);
 }
 
 void setQnnTensorClientBuf(Qnn_Tensor_t& qnnTensor,
                            Qnn_ClientBuffer_t& clientBuf) {
-    auto tensor = getTensorTypeVariant(qnnTensor);
+    auto tensorVariant = getTensorTypeVariant(qnnTensor);
     std::visit(
         [&clientBuf](auto&& tensor) {
             tensor.get().clientBuf /* NOLINT */ = clientBuf;
         },
-        tensor);
+        tensorVariant);
 }
 
 TensorImpl::TensorImpl(Qnn_Tensor_t* qnnTensor)
@@ -87,8 +87,9 @@ auto TensorImpl::getName() const -> std::string {
         return "";
     }
 
-    auto tensor = getTensorTypeVariant(*m_tensor);
-    return std::visit([](auto&& tensor) { return tensor.get().name; }, tensor);
+    auto tensorVariant = getTensorTypeVariant(*m_tensor);
+    return std::visit([](auto&& tensor) { return tensor.get().name; },
+                      tensorVariant);
 }
 
 auto TensorImpl::getType() const -> TensorType {
@@ -96,9 +97,9 @@ auto TensorImpl::getType() const -> TensorType {
         return TensorType::NOTYPE;
     }
 
-    auto tensor = getTensorTypeVariant(*m_tensor);
-    const auto qnnDataType =
-        std::visit([](auto&& tensor) { return tensor.get().dataType; }, tensor);
+    auto tensorVariant = getTensorTypeVariant(*m_tensor);
+    const auto qnnDataType = std::visit(
+        [](auto&& tensor) { return tensor.get().dataType; }, tensorVariant);
 
     switch (qnnDataType) {
         case QNN_DATATYPE_FLOAT_32:
@@ -123,14 +124,14 @@ auto TensorImpl::getDimensions() const -> std::vector<size_t> {
         return {};
     }
 
-    auto tensor = getTensorTypeVariant(*m_tensor);
+    auto tensorVariant = getTensorTypeVariant(*m_tensor);
 
     const auto qnnDimensions = std::visit(
         [](auto&& tensor) {
             return nonstd::span<uint32_t> {tensor.get().dimensions,
                                            tensor.get().rank};
         },
-        tensor);
+        tensorVariant);
 
     return {qnnDimensions.cbegin(), qnnDimensions.cend()};
 }
