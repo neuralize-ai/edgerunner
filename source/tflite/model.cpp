@@ -61,8 +61,10 @@ auto ModelImpl::loadModel(const nonstd::span<uint8_t>& modelBuffer) -> STATUS {
 
 auto ModelImpl::createInterpreter() -> STATUS {
     const ::tflite::ops::builtin::BuiltinOpResolver opResolver;
-    if (::tflite::InterpreterBuilder(*m_modelBuffer, opResolver)(&m_interpreter)
-        != kTfLiteOk)
+    if (m_modelBuffer == nullptr
+        || ::tflite::InterpreterBuilder(*m_modelBuffer,
+                                        opResolver)(&m_interpreter)
+            != kTfLiteOk)
     {
         return STATUS::FAIL;
     }
@@ -71,7 +73,9 @@ auto ModelImpl::createInterpreter() -> STATUS {
 }
 
 auto ModelImpl::allocate() -> STATUS {
-    if (m_interpreter->AllocateTensors() != kTfLiteOk) {
+    if (m_interpreter == nullptr
+        || m_interpreter->AllocateTensors() != kTfLiteOk)
+    {
         return STATUS::FAIL;
     }
 
