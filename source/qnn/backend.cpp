@@ -4,7 +4,7 @@
 #include <cstdio>
 #include <string>
 
-#include "edgerunner/qnn/backend.h"
+#include "edgerunner/qnn/backend.hpp"
 
 #include <CPU/QnnCpuCommon.h>
 #include <GPU/QnnGpuCommon.h>
@@ -24,7 +24,7 @@
 #include <nonstd/span.hpp>
 
 #include "edgerunner/model.hpp"
-#include "edgerunner/qnn/config.h"
+#include "edgerunner/qnn/config.hpp"
 
 namespace edge::qnn {
 
