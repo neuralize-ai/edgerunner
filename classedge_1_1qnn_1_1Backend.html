@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>edge::qnn::Backend class | edgerunner</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,600i%7CSource+Code+Pro:400,400i,600" />
+  <link rel="stylesheet" href="m-dark+documentation.compiled.css" />
+  <link rel="icon" href="favicon-dark.png" type="image/png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#22272e" />
+</head>
+<body>
+<header><nav id="navigation">
+  <div class="m-container">
+    <div class="m-row">
+      <a href="index.html" id="m-navbar-brand" class="m-col-t-8 m-col-m-none m-left-m">edgerunner</a>
+      <div class="m-col-t-4 m-hide-m m-text-right m-nopadr">
+        <a href="#search" class="m-doc-search-icon" title="Search" onclick="return showSearch()"><svg style="height: 0.9rem;" viewBox="0 0 16 16">
+          <path id="m-doc-search-icon-path" d="m6 0c-3.31 0-6 2.69-6 6 0 3.31 2.69 6 6 6 1.49 0 2.85-0.541 3.89-1.44-0.0164 0.338 0.147 0.759 0.5 1.15l3.22 3.79c0.552 0.614 1.45 0.665 2 0.115 0.55-0.55 0.499-1.45-0.115-2l-3.79-3.22c-0.392-0.353-0.812-0.515-1.15-0.5 0.895-1.05 1.44-2.41 1.44-3.89 0-3.31-2.69-6-6-6zm0 1.56a4.44 4.44 0 0 1 4.44 4.44 4.44 4.44 0 0 1-4.44 4.44 4.44 4.44 0 0 1-4.44-4.44 4.44 4.44 0 0 1 4.44-4.44z"/>
+        </svg></a>
+        <a id="m-navbar-show" href="#navigation" title="Show navigation"></a>
+        <a id="m-navbar-hide" href="#" title="Hide navigation"></a>
+      </div>
+      <div id="m-navbar-collapse" class="m-col-t-12 m-show-m m-col-m-none m-right-m">
+        <div class="m-row">
+          <ol class="m-col-t-6 m-col-m-none">
+            <li>
+              <a href="pages.html">Pages</a>
+              <ol>
+                <li><a href="about.html">About</a></li>
+              </ol>
+            </li>
+            <li><a href="namespaces.html">Namespaces</a></li>
+          </ol>
+          <ol class="m-col-t-6 m-col-m-none" start="3">
+            <li><a href="annotated.html">Classes</a></li>
+            <li><a href="files.html">Files</a></li>
+            <li class="m-show-m"><a href="#search" class="m-doc-search-icon" title="Search" onclick="return showSearch()"><svg style="height: 0.9rem;" viewBox="0 0 16 16">
+              <use href="#m-doc-search-icon-path" />
+            </svg></a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav></header>
+<main><article>
+  <div class="m-container m-container-inflatable">
+    <div class="m-row">
+      <div class="m-col-l-10 m-push-l-1">
+        <h1>
+          <span class="m-breadcrumb"><a href="namespaceedge.html">edge</a>::<wbr/></span><span class="m-breadcrumb"><a href="namespaceedge_1_1qnn.html">qnn</a>::<wbr/></span>Backend <span class="m-thin">class</span>
+          <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="backend_8hpp.html">&lt;backend.hpp&gt;</a></div>
+        </h1>
+        <p>Class for handling QNN backends.</p>
+        <div class="m-block m-default">
+          <h3>Contents</h3>
+          <ul>
+            <li>
+              Reference
+              <ul>
+                <li><a href="#pub-static-methods">Public static functions</a></li>
+                <li><a href="#typeless-methods">Constructors, destructors, conversion operators</a></li>
+                <li><a href="#pub-methods">Public functions</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+        <section id="pub-static-methods">
+          <h2><a href="#pub-static-methods">Public static functions</a></h2>
+          <dl class="m-doc">
+            <dt>
+              <span class="m-doc-wrap-bumper">static void <a href="#a4ba1ab698e72a104193882eea03b39d2" class="m-doc">logCallback</a>(</span><span class="m-doc-wrap">const char* fmtStr,
+              QnnLog_Level_t level,
+              uint64_t timestamp,
+              va_list argp)</span>
+            </dt>
+            <dd>Static callback function for logging.</dd>
+          </dl>
+        </section>
+        <section id="typeless-methods">
+          <h2><a href="#typeless-methods">Constructors, destructors, conversion operators</a></h2>
+          <dl class="m-doc">
+            <dt>
+              <span class="m-doc-wrap-bumper"><a href="#ab4a567bd1249513ded62fd4c45eb0988" class="m-doc">Backend</a>(</span><span class="m-doc-wrap"><a href="namespaceedge.html#a2a339162b70a461c879db12d3832592d" class="m-doc">DELEGATE</a> delegate) <span class="m-label m-flat m-info">explicit</span> </span>
+            </dt>
+            <dd>Constructor for the <a href="classedge_1_1qnn_1_1Backend.html" class="m-doc">Backend</a> class.</dd>
+            <dt id="a38bf42b24fd8e6522949665bc3b5e71a">
+              <span class="m-doc-wrap-bumper"><a href="#a38bf42b24fd8e6522949665bc3b5e71a" class="m-doc-self">Backend</a>(</span><span class="m-doc-wrap">const <a href="classedge_1_1qnn_1_1Backend.html" class="m-doc">Backend</a>&amp;) <span class="m-label m-flat m-info">defaulted</span></span>
+            </dt>
+            <dd><span></span></dd>
+            <dt id="a031401f91c77c2c854a96519152c8f4e">
+              <span class="m-doc-wrap-bumper"><a href="#a031401f91c77c2c854a96519152c8f4e" class="m-doc-self">Backend</a>(</span><span class="m-doc-wrap"><a href="classedge_1_1qnn_1_1Backend.html" class="m-doc">Backend</a>&amp;&amp;) <span class="m-label m-flat m-danger">deleted</span></span>
+            </dt>
+            <dd><span></span></dd>
+            <dt id="a9bd28f43389fd1fabbb1df8d31b0204a">
+              <span class="m-doc-wrap-bumper"><a href="#a9bd28f43389fd1fabbb1df8d31b0204a" class="m-doc-self">~Backend</a>(</span><span class="m-doc-wrap">)</span>
+            </dt>
+            <dd>Destructor for the <a href="classedge_1_1qnn_1_1Backend.html" class="m-doc">Backend</a> class.</dd>
+          </dl>
+        </section>
+        <section id="pub-methods">
+          <h2><a href="#pub-methods">Public functions</a></h2>
+          <dl class="m-doc">
+            <dt id="a0656266dfe9cf1f05015078e7e9f004c">
+              <span class="m-doc-wrap-bumper">auto <a href="#a0656266dfe9cf1f05015078e7e9f004c" class="m-doc-self">operator=</a>(</span><span class="m-doc-wrap">const <a href="classedge_1_1qnn_1_1Backend.html" class="m-doc">Backend</a>&amp;) -&gt; Backend &amp; <span class="m-label m-flat m-danger">deleted</span></span>
+            </dt>
+            <dd><span></span></dd>
+            <dt id="a9f1deed118b8249e12643c36d61a9f4e">
+              <span class="m-doc-wrap-bumper">auto <a href="#a9f1deed118b8249e12643c36d61a9f4e" class="m-doc-self">operator=</a>(</span><span class="m-doc-wrap"><a href="classedge_1_1qnn_1_1Backend.html" class="m-doc">Backend</a>&amp;&amp;) -&gt; Backend &amp; <span class="m-label m-flat m-danger">deleted</span></span>
+            </dt>
+            <dd><span></span></dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#a07b009e9dc53ca6353074fc5598542b5" class="m-doc">getHandle</a>(</span><span class="m-doc-wrap">) -&gt; auto &amp;</span>
+            </dt>
+            <dd>Get the backend handle.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#a9217944c7e683bc10705cf19cde9de98" class="m-doc">getContext</a>(</span><span class="m-doc-wrap">) -&gt; auto &amp;</span>
+            </dt>
+            <dd>Get the context for the backend.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#aa29121a22caa102783ca8333c0cbbe0e" class="m-doc">getInterface</a>(</span><span class="m-doc-wrap">) -&gt; auto &amp;</span>
+            </dt>
+            <dd>Get the QNN interface.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#ae28d9f0b2137e8a0b48ea357a7d6b13a" class="m-doc">getDelegate</a>(</span><span class="m-doc-wrap">)</span>
+            </dt>
+            <dd>Get the delegate type for the backend.</dd>
+          </dl>
+        </section>
+        <section>
+          <h2>Function documentation</h2>
+          <section class="m-doc-details" id="a4ba1ab698e72a104193882eea03b39d2"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">static void edge::<wbr />qnn::<wbr />Backend::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a4ba1ab698e72a104193882eea03b39d2" class="m-doc-self">logCallback</a>(</span><span class="m-doc-wrap">const char* fmtStr,
+              QnnLog_Level_t level,
+              uint64_t timestamp,
+              va_list argp)</span></span>
+            </h3>
+            <p>Static callback function for logging.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">fmtStr</td>
+                  <td>The format string for the log message.</td>
+                </tr>
+                <tr>
+                  <td>level</td>
+                  <td>The log level.</td>
+                </tr>
+                <tr>
+                  <td>timestamp</td>
+                  <td>The timestamp of the log message.</td>
+                </tr>
+                <tr>
+                  <td>argp</td>
+                  <td>Additional arguments for the log message.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="ab4a567bd1249513ded62fd4c45eb0988"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper"> edge::<wbr />qnn::<wbr />Backend::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#ab4a567bd1249513ded62fd4c45eb0988" class="m-doc-self">Backend</a>(</span><span class="m-doc-wrap"><a href="namespaceedge.html#a2a339162b70a461c879db12d3832592d" class="m-doc">DELEGATE</a> delegate) <span class="m-label m-info">explicit</span> </span></span>
+            </h3>
+            <p>Constructor for the <a href="classedge_1_1qnn_1_1Backend.html" class="m-doc">Backend</a> class.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">delegate</td>
+                  <td>The delegate type for the backend (CPU, GPU, NPU).</td>
+                </tr>
+              </tbody>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="a07b009e9dc53ca6353074fc5598542b5"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">auto edge::<wbr />qnn::<wbr />Backend::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a07b009e9dc53ca6353074fc5598542b5" class="m-doc-self">getHandle</a>(</span><span class="m-doc-wrap">) -&gt; auto &amp;</span></span>
+            </h3>
+            <p>Get the backend handle.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <tfoot>
+                <tr>
+                  <th style="width: 1%">Returns</th>
+                  <td>Reference to the backend handle.</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="a9217944c7e683bc10705cf19cde9de98"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">auto edge::<wbr />qnn::<wbr />Backend::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a9217944c7e683bc10705cf19cde9de98" class="m-doc-self">getContext</a>(</span><span class="m-doc-wrap">) -&gt; auto &amp;</span></span>
+            </h3>
+            <p>Get the context for the backend.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <tfoot>
+                <tr>
+                  <th style="width: 1%">Returns</th>
+                  <td>Reference to the backend context.</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="aa29121a22caa102783ca8333c0cbbe0e"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">auto edge::<wbr />qnn::<wbr />Backend::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#aa29121a22caa102783ca8333c0cbbe0e" class="m-doc-self">getInterface</a>(</span><span class="m-doc-wrap">) -&gt; auto &amp;</span></span>
+            </h3>
+            <p>Get the QNN interface.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <tfoot>
+                <tr>
+                  <th style="width: 1%">Returns</th>
+                  <td>Reference to the QNN interface.</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="ae28d9f0b2137e8a0b48ea357a7d6b13a"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">auto edge::<wbr />qnn::<wbr />Backend::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#ae28d9f0b2137e8a0b48ea357a7d6b13a" class="m-doc-self">getDelegate</a>(</span><span class="m-doc-wrap">)</span></span>
+            </h3>
+            <p>Get the delegate type for the backend.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <tfoot>
+                <tr>
+                  <th style="width: 1%">Returns</th>
+                  <td>The delegate type.</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div></section>
+        </section>
+      </div>
+    </div>
+  </div>
+</article></main>
+<div class="m-doc-search" id="search">
+  <a href="#!" onclick="return hideSearch()"></a>
+  <div class="m-container">
+    <div class="m-row">
+      <div class="m-col-m-8 m-push-m-2">
+        <div class="m-doc-search-header m-text m-small">
+          <div><span class="m-label m-default">Tab</span> / <span class="m-label m-default">T</span> to search, <span class="m-label m-default">Esc</span> to close</div>
+          <div id="search-symbolcount">&hellip;</div>
+        </div>
+        <div class="m-doc-search-content">
+          <form>
+            <input type="search" name="q" id="search-input" placeholder="Loading &hellip;" disabled="disabled" autofocus="autofocus" autocomplete="off" spellcheck="false" />
+          </form>
+          <noscript class="m-text m-danger m-text-center">Unlike everything else in the docs, the search functionality <em>requires</em> JavaScript.</noscript>
+          <div id="search-help" class="m-text m-dim m-text-center">
+            <p class="m-noindent">Search for symbols, directories, files, pages or
+            modules. You can omit any prefix from the symbol or file path; adding a
+            <code>:</code> or <code>/</code> suffix lists all members of given symbol or
+            directory.</p>
+            <p class="m-noindent">Use <span class="m-label m-dim">&darr;</span>
+            / <span class="m-label m-dim">&uarr;</span> to navigate through the list,
+            <span class="m-label m-dim">Enter</span> to go.
+            <span class="m-label m-dim">Tab</span> autocompletes common prefix, you can
+            copy a link to the result using <span class="m-label m-dim">⌘</span>
+            <span class="m-label m-dim">L</span> while <span class="m-label m-dim">⌘</span>
+            <span class="m-label m-dim">M</span> produces a Markdown link.</p>
+          </div>
+          <div id="search-notfound" class="m-text m-warning m-text-center">Sorry, nothing was found.</div>
+          <ul id="search-results"></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="search-v1.js"></script>
+<script src="searchdata-v1.js" async="async"></script>
+<footer><nav>
+  <div class="m-container">
+    <div class="m-row">
+      <div class="m-col-l-10 m-push-l-1">
+        <p>edgerunner. Created with <a href="https://doxygen.org/">Doxygen</a> 1.9.1 and <a href="https://mcss.mosra.cz/">m.css</a>.</p>
+      </div>
+    </div>
+  </div>
+</nav></footer>
+</body>
+</html>

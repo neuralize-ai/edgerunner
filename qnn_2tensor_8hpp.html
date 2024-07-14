@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>edgerunner</title>
+  <title>edgerunner/qnn/tensor.hpp file | edgerunner</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,600i%7CSource+Code+Pro:400,400i,600" />
   <link rel="stylesheet" href="m-dark+documentation.compiled.css" />
   <link rel="icon" href="favicon-dark.png" type="image/png" />
@@ -33,7 +33,7 @@
             <li><a href="namespaces.html">Namespaces</a></li>
           </ol>
           <ol class="m-col-t-6 m-col-m-none" start="3">
-            <li><a href="annotated.html" id="m-navbar-current">Classes</a></li>
+            <li><a href="annotated.html">Classes</a></li>
             <li><a href="files.html">Files</a></li>
             <li class="m-show-m"><a href="#search" class="m-doc-search-icon" title="Search" onclick="return showSearch()"><svg style="height: 0.9rem;" viewBox="0 0 16 16">
               <use href="#m-doc-search-icon-path" />
@@ -48,48 +48,40 @@
   <div class="m-container m-container-inflatable">
     <div class="m-row">
       <div class="m-col-l-10 m-push-l-1">
-        <h1>Classes</h1>
-        <ul class="m-doc">
-          <li class="m-doc-collapsible">
-            <a href="#" onclick="return toggle(this)">namespace</a> <a href="namespaceedge.html" class="m-doc">edge</a> <span class="m-doc"><span></span></span>
-            <ul class="m-doc">
-              <li class="m-doc-collapsible collapsed">
-                <a href="#" onclick="return toggle(this)">namespace</a> <a href="namespaceedge_1_1qnn.html" class="m-doc">qnn</a> <span class="m-doc"><span></span></span>
-                <ul class="m-doc">
-                  <li>class <a href="classedge_1_1qnn_1_1Backend.html" class="m-doc">Backend</a> <span class="m-doc">Class for handling QNN backends.</span></li>
-                  <li>class <a href="classedge_1_1qnn_1_1Config.html" class="m-doc">Config</a> <span class="m-doc">A class template for managing QNN backend configurations.</span></li>
-                  <li>class <a href="classedge_1_1qnn_1_1ModelImpl.html" class="m-doc">ModelImpl</a> <span class="m-label m-flat m-warning">final</span> <span class="m-doc">Implementation of the <a href="classedge_1_1Model.html" class="m-doc">Model</a> interface for QNN models.</span></li>
-                  <li>class <a href="classedge_1_1qnn_1_1TensorImpl.html" class="m-doc">TensorImpl</a> <span class="m-label m-flat m-warning">final</span> <span class="m-doc">Concrete implementation of the <a href="classedge_1_1Tensor.html" class="m-doc">Tensor</a> interface for QNN.</span></li>
-                </ul>
-              </li>
-              <li class="m-doc-collapsible collapsed">
-                <a href="#" onclick="return toggle(this)">namespace</a> <a href="namespaceedge_1_1tflite.html" class="m-doc">tflite</a> <span class="m-doc"><span></span></span>
-                <ul class="m-doc">
-                  <li>class <a href="classedge_1_1tflite_1_1ModelImpl.html" class="m-doc">ModelImpl</a> <span class="m-label m-flat m-warning">final</span> <span class="m-doc">Implementation of the <a href="classedge_1_1Model.html" class="m-doc">Model</a> interface for TensorFlow Lite models.</span></li>
-                  <li>class <a href="classedge_1_1tflite_1_1TensorImpl.html" class="m-doc">TensorImpl</a> <span class="m-label m-flat m-warning">final</span> <span class="m-doc">Concrete implementation of the <a href="classedge_1_1Tensor.html" class="m-doc">Tensor</a> interface for TensorFlow Lite.</span></li>
-                </ul>
-              </li>
-              <li>class <a href="classedge_1_1Model.html" class="m-doc">Model</a> <span class="m-doc">A base class for machine learning models.</span></li>
-              <li>class <a href="classedge_1_1Tensor.html" class="m-doc">Tensor</a> <span class="m-doc">A base class for representing a tensor object.</span></li>
-            </ul>
-          </li>
-        </ul>
-        <script>
-        function toggle(e) {
-            e.parentElement.className = e.parentElement.className == 'm-doc-collapsible' ?
-                'm-doc-expansible' : 'm-doc-collapsible';
-            return false;
-        }
-        /* Collapse all nodes marked as such. Doing it via JS instead of
-           directly in markup so disabling it doesn't harm usability. The list
-           is somehow regenerated on every iteration and shrinks as I change
-           the classes. It's not documented anywhere and I'm not sure if this
-           is the same across browsers, so I am going backwards in that list to
-           be sure. */
-        var collapsed = document.getElementsByClassName("collapsed");
-        for(var i = collapsed.length - 1; i >= 0; --i)
-            collapsed[i].className = 'm-doc-expansible';
-        </script>
+        <h1>
+          <span class="m-breadcrumb"><a href="dir_4c24cb39bd3d6a0054003ecdb249bece.html">edgerunner</a>/</span><span class="m-breadcrumb"><a href="dir_1fe442b5991f001c6284ed61ba46be6c.html">qnn</a>/</span>tensor.hpp <span class="m-thin">file</span>
+        </h1>
+        <p>Definition of the TensorImpl class, a concrete implementation of the Tensor interface.</p>
+        <div class="m-block m-default">
+          <h3>Contents</h3>
+          <ul>
+            <li>
+              Reference
+              <ul>
+                <li><a href="#namespaces">Namespaces</a></li>
+                <li><a href="#nested-classes">Classes</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+        <section id="namespaces">
+          <h2><a href="#namespaces">Namespaces</a></h2>
+          <dl class="m-doc">
+            <dt>namespace <a href="namespaceedge.html" class="m-doc">edge</a></dt>
+            <dd><span></span></dd>
+            <dt>namespace <a href="namespaceedge_1_1qnn.html" class="m-doc">edge::qnn</a></dt>
+            <dd><span></span></dd>
+          </dl>
+        </section>
+        <section id="nested-classes">
+          <h2><a href="#nested-classes">Classes</a></h2>
+          <dl class="m-doc">
+            <dt>
+              class <a href="classedge_1_1qnn_1_1TensorImpl.html" class="m-doc">edge::qnn::TensorImpl</a>
+            </dt>
+            <dd>Concrete implementation of the <a href="classedge_1_1Tensor.html" class="m-doc">Tensor</a> interface for QNN.</dd>
+          </dl>
+        </section>
       </div>
     </div>
   </div>

@@ -72,6 +72,10 @@
           <h2><a href="#derived-classes">Derived classes</a></h2>
           <dl class="m-doc">
             <dt>
+              class <a href="classedge_1_1qnn_1_1ModelImpl.html" class="m-doc">ModelImpl</a> <span class="m-label m-flat m-warning">final</span>
+            </dt>
+            <dd>Implementation of the <a href="classedge_1_1Model.html" class="m-doc">Model</a> interface for QNN models.</dd>
+            <dt>
               class <a href="classedge_1_1tflite_1_1ModelImpl.html" class="m-doc">ModelImpl</a> <span class="m-label m-flat m-warning">final</span>
             </dt>
             <dd>Implementation of the <a href="classedge_1_1Model.html" class="m-doc">Model</a> interface for TensorFlow Lite models.</dd>
@@ -114,11 +118,11 @@
             </dt>
             <dd><span></span></dd>
             <dt>
-              <span class="m-doc-wrap-bumper">void <a href="#aa9ecce1575e29844aa490955fc195578" class="m-doc">loadModel</a>(</span><span class="m-doc-wrap">const std::filesystem::path&amp; modelPath) <span class="m-label m-flat m-warning">pure virtual</span></span>
+              <span class="m-doc-wrap-bumper">auto <a href="#ac74303e40d8aee036b32db21241611e9" class="m-doc">loadModel</a>(</span><span class="m-doc-wrap">const std::filesystem::path&amp; modelPath) -&gt; STATUS <span class="m-label m-flat m-warning">pure virtual</span></span>
             </dt>
             <dd>Pure virtual function to load a model from a file path.</dd>
             <dt>
-              <span class="m-doc-wrap-bumper">void <a href="#a29be2bfce7e6be674b68f50c96b87d7f" class="m-doc">loadModel</a>(</span><span class="m-doc-wrap">const nonstd::span&lt;uint8_t&gt;&amp; modelBuffer) <span class="m-label m-flat m-warning">pure virtual</span></span>
+              <span class="m-doc-wrap-bumper">auto <a href="#a3f96abf58487dd01bb6dd2a6f278876a" class="m-doc">loadModel</a>(</span><span class="m-doc-wrap">const nonstd::span&lt;uint8_t&gt;&amp; modelBuffer) -&gt; STATUS <span class="m-label m-flat m-warning">pure virtual</span></span>
             </dt>
             <dd>Pure virtual function to load a model from a file buffer.</dd>
             <dt>
@@ -161,6 +165,10 @@
               <span class="m-doc-wrap-bumper">auto <a href="#a3b1def4b4c43531eb2b09d75d7e814dc" class="m-doc">name</a>(</span><span class="m-doc-wrap">) const -&gt; const std::string &amp;</span>
             </dt>
             <dd>Get the name of the model.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#a2a78a15d2354411e1c613b762ee5c660" class="m-doc">getCreationStatus</a>(</span><span class="m-doc-wrap">) const -&gt; STATUS</span>
+            </dt>
+            <dd>Get the status of model creation.</dd>
           </dl>
         </section>
         <section id="pro-methods">
@@ -170,6 +178,10 @@
               <span class="m-doc-wrap-bumper">void <a href="#ab4148431cd28c1cbd839f6b981bef700" class="m-doc">setDelegate</a>(</span><span class="m-doc-wrap">const <a href="namespaceedge.html#a2a339162b70a461c879db12d3832592d" class="m-doc">DELEGATE</a>&amp; delegate)</span>
             </dt>
             <dd>Set the delegate for model execution.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">void <a href="#a72470f3781e6fbbfe160961ad68e265d" class="m-doc">setCreationStatus</a>(</span><span class="m-doc-wrap">const <a href="namespaceedge.html#adbc82abb7981e8ce0228aa51fdd879a3" class="m-doc">STATUS</a>&amp; status)</span>
+            </dt>
+            <dd>Set the status of model creation.</dd>
           </dl>
         </section>
         <section>
@@ -192,9 +204,9 @@
             </table>
 <p>This constructor initializes a <a href="classedge_1_1Model.html" class="m-doc">Model</a> object with the given model path.</p>
           </div></section>
-          <section class="m-doc-details" id="aa9ecce1575e29844aa490955fc195578"><div>
+          <section class="m-doc-details" id="ac74303e40d8aee036b32db21241611e9"><div>
             <h3>
-              <span class="m-doc-wrap-bumper">void edge::<wbr />Model::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#aa9ecce1575e29844aa490955fc195578" class="m-doc-self">loadModel</a>(</span><span class="m-doc-wrap">const std::filesystem::path&amp; modelPath) <span class="m-label m-warning">pure virtual</span></span></span>
+              <span class="m-doc-wrap-bumper">auto edge::<wbr />Model::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#ac74303e40d8aee036b32db21241611e9" class="m-doc-self">loadModel</a>(</span><span class="m-doc-wrap">const std::filesystem::path&amp; modelPath) -&gt; STATUS <span class="m-label m-warning">pure virtual</span></span></span>
             </h3>
             <p>Pure virtual function to load a model from a file path.</p>
             <table class="m-table m-fullwidth m-flat">
@@ -207,11 +219,18 @@
                   <td>The path to the model file</td>
                 </tr>
               </tbody>
+              <tfoot>
+                <tr>
+                  <th>Returns</th>
+                  <td>STATUS The status of the model loading operation</td>
+                </tr>
+              </tfoot>
             </table>
+<p>This function is a pure virtual function that must be implemented by any derived classes. It is used to load a model from a file path.</p>
           </div></section>
-          <section class="m-doc-details" id="a29be2bfce7e6be674b68f50c96b87d7f"><div>
+          <section class="m-doc-details" id="a3f96abf58487dd01bb6dd2a6f278876a"><div>
             <h3>
-              <span class="m-doc-wrap-bumper">void edge::<wbr />Model::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a29be2bfce7e6be674b68f50c96b87d7f" class="m-doc-self">loadModel</a>(</span><span class="m-doc-wrap">const nonstd::span&lt;uint8_t&gt;&amp; modelBuffer) <span class="m-label m-warning">pure virtual</span></span></span>
+              <span class="m-doc-wrap-bumper">auto edge::<wbr />Model::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a3f96abf58487dd01bb6dd2a6f278876a" class="m-doc-self">loadModel</a>(</span><span class="m-doc-wrap">const nonstd::span&lt;uint8_t&gt;&amp; modelBuffer) -&gt; STATUS <span class="m-label m-warning">pure virtual</span></span></span>
             </h3>
             <p>Pure virtual function to load a model from a file buffer.</p>
             <table class="m-table m-fullwidth m-flat">
@@ -224,7 +243,14 @@
                   <td>The buffer containing the model</td>
                 </tr>
               </tbody>
+              <tfoot>
+                <tr>
+                  <th>Returns</th>
+                  <td>STATUS The status of the model loading operation</td>
+                </tr>
+              </tfoot>
             </table>
+<p>This function is a pure virtual function that must be implemented by any derived classes. It is used to load a model from a file buffer.</p>
           </div></section>
           <section class="m-doc-details" id="aff3a1084a488b7a8c685e86de9989d53"><div>
             <h3>
@@ -395,6 +421,21 @@
               </tfoot>
             </table>
           </div></section>
+          <section class="m-doc-details" id="a2a78a15d2354411e1c613b762ee5c660"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">auto edge::<wbr />Model::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a2a78a15d2354411e1c613b762ee5c660" class="m-doc-self">getCreationStatus</a>(</span><span class="m-doc-wrap">) const -&gt; STATUS</span></span>
+            </h3>
+            <p>Get the status of model creation.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <tfoot>
+                <tr>
+                  <th style="width: 1%">Returns</th>
+                  <td>The status of model creation</td>
+                </tr>
+              </tfoot>
+            </table>
+<p>Verify that the model was created successfully</p>
+          </div></section>
           <section class="m-doc-details" id="ab4148431cd28c1cbd839f6b981bef700"><div>
             <h3>
               <span class="m-doc-wrap-bumper">void edge::<wbr />Model::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#ab4148431cd28c1cbd839f6b981bef700" class="m-doc-self">setDelegate</a>(</span><span class="m-doc-wrap">const <a href="namespaceedge.html#a2a339162b70a461c879db12d3832592d" class="m-doc">DELEGATE</a>&amp; delegate) <span class="m-label m-warning">protected</span></span></span>
@@ -411,6 +452,25 @@
                 </tr>
               </tbody>
             </table>
+<p>This method is used by derivatives to allow users to query the currently set delegate</p>
+          </div></section>
+          <section class="m-doc-details" id="a72470f3781e6fbbfe160961ad68e265d"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">void edge::<wbr />Model::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a72470f3781e6fbbfe160961ad68e265d" class="m-doc-self">setCreationStatus</a>(</span><span class="m-doc-wrap">const <a href="namespaceedge.html#adbc82abb7981e8ce0228aa51fdd879a3" class="m-doc">STATUS</a>&amp; status) <span class="m-label m-warning">protected</span></span></span>
+            </h3>
+            <p>Set the status of model creation.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">status</td>
+                  <td>The status to set</td>
+                </tr>
+              </tbody>
+            </table>
+<p>This method is used by derivatives to allow querying of model creation status</p>
           </div></section>
         </section>
       </div>
