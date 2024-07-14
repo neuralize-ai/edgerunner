@@ -93,7 +93,7 @@ Please request additional features through Github issues or on our [Discord](htt
 
 | TFLite | CoreML | Onnx | QNN | OpenVino | Ryzen AI | NeuroPilot |
 |:------:|:------:|:----:|:---:|:--------:|:--------:|:----------:|
-|   ✅   |   ⏳   |  ⏳  | ⏳  |    ⏳    |    ⏳    |     ⏳     |
+|   ✅   |   ⏳   |  ⏳  | ✅  |    ⏳    |    ⏳    |     ⏳     |
 
 ### Chip Vendor
 
