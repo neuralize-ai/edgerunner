@@ -27,16 +27,19 @@ endif()
 
 # ---- Tests ----
 
-set(TEST_SOURCES source/tflite_test.cpp source/tflite_from_buffer_test.cpp
-                 source/tflite_delegate_test.cpp)
+set(TEST_SOURCES
+    source/tflite_test.cpp source/tflite_from_buffer_test.cpp
+    source/tflite_bad_model_test.cpp source/tflite_delegate_test.cpp
+)
 
 if(edgerunner_ENABLE_GPU)
     list(APPEND TEST_SOURCES source/tflite_gpu_test.cpp)
 endif()
 
 add_executable(edgerunner_test ${TEST_SOURCES})
-target_link_libraries(edgerunner_test PRIVATE edgerunner::edgerunner
-                                              Catch2::Catch2WithMain)
+target_link_libraries(
+    edgerunner_test PRIVATE edgerunner::edgerunner Catch2::Catch2WithMain
+)
 target_compile_features(edgerunner_test PRIVATE cxx_std_17)
 
 catch_discover_tests(edgerunner_test)
