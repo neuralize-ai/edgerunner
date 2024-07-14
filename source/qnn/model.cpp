@@ -12,8 +12,8 @@
 #include <dlfcn.h>
 #include <nonstd/span.hpp>
 
-#include "edgerunner/qnn/backend.h"
-#include "edgerunner/qnn/config.h"
+#include "edgerunner/qnn/backend.hpp"
+#include "edgerunner/qnn/config.hpp"
 #include "edgerunner/qnn/model.hpp"
 #include "edgerunner/qnn/tensor.hpp"
 

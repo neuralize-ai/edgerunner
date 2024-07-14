@@ -11,7 +11,7 @@
 #include <dlfcn.h>
 
 #include "edgerunner/model.hpp"
-#include "edgerunner/qnn/backend.h"
+#include "edgerunner/qnn/backend.hpp"
 
 namespace edge::qnn {
 
