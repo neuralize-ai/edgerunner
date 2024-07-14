@@ -183,7 +183,7 @@ class EDGERUNNER_EXPORT Model {
      *
      * Verify that the model was created successfully
      *
-     * @return The status of model cration
+     * @return The status of model creation
      */
     auto getCreationStatus() const -> STATUS { return m_creationStatus; }
 
