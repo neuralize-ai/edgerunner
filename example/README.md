@@ -45,7 +45,10 @@ In the examples below, for GPU support add `-o gpu=True` to the `conan install` 
   steps will not work currently. I have patched the recipe locally to enable GPU
   support and will make this available on Conan Center or another repository
   soon. In the mean time, my custom recipe can be be used as outlined
-  [here](https://github.com/neuralize-ai/tensorflow-lite-conan).
+  [here](https://github.com/neuralize-ai/tensorflow-lite-conan). If you have
+  previously `conan install`ed, remove the existing TFLite package(s) using
+  `conan remove "tensorflow-lite"`. Make sure to create the TFLite package
+  version that is required in [conanfile](/conanfile.py).
 
 ## Unix
 
@@ -70,7 +73,7 @@ cmake --build --preset=rel -t run-examples
 If an existing build exists, you may need to run:
 
 ```bash
-cmake --preset=rel -Dedgerunner_ENABLE_GPU=ON
+cmake --preset=rel -DBUILD_EXAMPLES=ON
 ```
 
 To run an individual example, execute:
@@ -118,4 +121,5 @@ upcoming). Since this involves using Qualcomm's pre-compiled shared libraries,
 I have created a Conan recipe that must be used
 [here](https://github.com/neuralize-ai/qnn-conan). Follow the instructions on
 that repository and the steps above with `-o with_npu=True` supplied to the
-`conan install` invocation.
+`conan install` invocation. Make sure to create the package version required
+in [conanfile](/conanfile.py).
