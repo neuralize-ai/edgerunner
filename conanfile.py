@@ -92,21 +92,6 @@ class EdgerunnerRecipe(ConanFile):
 
         toolchain.generate()
 
-        if self.options.with_npu:
-            qnn = self.dependencies["qnn"]
-            copy(
-                self,
-                "*.so",
-                qnn.cpp_info.components["tflite"].libdirs[0],
-                os.path.join(self.source_folder, "build", "runtimeLibs"),
-            )
-            copy(
-                self,
-                "*.so",
-                qnn.cpp_info.components["htp"].libdirs[0],
-                os.path.join(self.source_folder, "build", "runtimeLibs"),
-            )
-
     def build(self):
         cmake = CMake(self)
         cmake.configure()
