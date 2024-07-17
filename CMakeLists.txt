@@ -90,10 +90,6 @@ if(edgerunner_ENABLE_NPU)
     if(ANDROID)
         target_link_libraries(edgerunner_edgerunner PRIVATE qnn::tflite)
         target_compile_definitions(edgerunner_edgerunner PUBLIC EDGERUNNER_QNN)
-
-        file(COPY "${CMAKE_BINARY_DIR}/../runtimeLibs/"
-             DESTINATION ${CMAKE_BINARY_DIR}
-        )
     endif()
 endif()
 
