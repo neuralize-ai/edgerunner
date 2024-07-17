@@ -7,7 +7,7 @@
 </h1>
 
 <h4 align="center">
-    Universal AI inference library for mobile devices.
+    Simplified AI runtime integration for mobile app development
 </h4>
 
 <div align="center">
@@ -26,60 +26,25 @@
 ## 💡 Introduction
 
 The purpose of Edgerunner is to facilitate easy integration of
-arbitrary AI models for consumer mobile devices
-(smartphones, laptops, tablets, wearables, etc.).
+common AI model formats and inference runtimes
+([TFLite](https://ai.google.dev/edge/lite), [ONNX](https://github.com/onnx/onnx),
+[QNN](https://www.qualcomm.com/developer/software/qualcomm-ai-engine-direct-sdk),
+etc.) for
+consumer mobile devices (smartphones, laptops, tablets, wearables, etc.).
 
-On-device inference tooling is fragmented. To run AI models
-efficiently on end-user devices, developers require a deep understanding of
-chip/device platforms (Apple, Qualcomm, MediaTek, etc.) and on-device AI
-frameworks (
-[TFLite](https://ai.google.dev/edge/lite),
-[CoreML](https://developer.apple.com/documentation/coreml),
-[QNN](https://www.qualcomm.com/developer/software/neural-processing-sdk-for-ai),
-etc.).
-Developers also need to maintain separate ML stacks for iOS and
-Android (which subdivides by chip platform).
+Edgerunner removes the complexities of deploying an off-the-shelf model into
+your app, with NPU acceleration, regardless of the model format or target devices.
+Platform-specific NPU SDKs are managed for you and can be leveraged with a
+device-agnostic API. Edgerunner exposes a boilerplate-free API with sane defaults.
 
-Edgerunner aims to consolidate on-device AI frameworks, abstracting
-cross-platform complexities. This will be achieved through a
-runtime-agnostic API, which can load and interact with arbitrary instances of
-on-device AI models with just a few lines of code.
+Kotlin bindings to create AI applications in Android with Edgerunner can
+be found at
+[edgerunner-android](https://github.com/neuralize-ai/edgerunner-android). We are
+also creating specific use cases built upon Edgerunner (Llama, Stable
+diffusion, etc.) which will come with their own Android bindings.
 
-This repo is in its early stages of development (see [Features](#-features) and
-[Support](#-support)). There is lots of work to be done in order to achieve this
-vision, and your [contributions](#-contributing) will be important to make this happen!
-
- Kotlin bindings for Android can be found at [edgerunner-android](https://github.com/neuralize-ai/edgerunner-android).
-
-### What makes Edgerunner unique?
-
-Good question! Indeed there are other cross-platform libraries such as
-[TFLite](https://ai.google.dev/edge/lite), [ONNX](https://github.com/onnx/onnx),
-and [ExecuTorch](https://github.com/pytorch/executorch). Edgerunner will
-differentiate with:
-
-- Shared libraries for platform specific SDKs are managed internally.
-- Quicker and easier setup with sane defaults and no boilerplate code.
-- Compatibility with any model format (`.tflite`, `.onnx`, `.pte`, etc).
-- Easier configuration of delegates (`CPU`, `GPU`, `NPU`), applying desired
-hardware acceleration with a single API call.
-- No manual memory allocation required (model input and output tensors are
-pre-allocated and accessed leading to copy-free inference - simply `model.execute()`).
-
-## 🎁 Features
-
-|           Feature                   | Status |
-| ------------------------------------|:------:|
-| Runtime-agnostic API                |   ✅   |
-| Model loading                       |   ✅   |
-| Model execution                     |   ✅   |
-| Automatic framework detection       |   ✅   |
-| Quantized models                    |   ⏳   |
-| Choose optimal execution at runtime |   ⏳   |
-| Java bindings                       |   ✅   |
-| Objective-C bindings                |   ⏳   |
-
-Please request additional features through Github issues or on our [Discord](https://discord.gg/y9EzZEkwbR).
+Please request additional features or desired use cases through Github issues or
+on our [Discord](https://discord.gg/y9EzZEkwbR).
 
 ## 🔌 Support
 
