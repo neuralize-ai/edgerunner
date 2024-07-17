@@ -50,23 +50,15 @@ on our [Discord](https://discord.gg/y9EzZEkwbR).
 
 ### OS
 
-| Linux | MacOS | Windows | Android | iOS |
-|:-----:|:-----:|:-------:|:-------:|:---:|
-|  ✅   |  ✅   |   ⏳    |   ✅    | ⏳  |
+|  Android |  iOS  | Linux |  MacOS  | Windows |
+|:--------:|:-----:|:-----:|:-------:|:-------:|
+|    ✅    |   ⏳  |   ✅  |    ⏳   |   ⏳    |
 
-### Runtime Framework
+### NPU
 
-| TFLite | CoreML | Onnx | QNN | OpenVino | Ryzen AI | NeuroPilot |
-|:------:|:------:|:----:|:---:|:--------:|:--------:|:----------:|
-|   ✅   |   ⏳   |  ⏳  | ✅  |    ⏳    |    ⏳    |     ⏳     |
-
-### Chip Vendor
-
-|     | Apple | Qualcomm | MediaTek | Samsung | Intel | AMD | NVIDIA |
-|:---:|:-----:|:--------:|:--------:|:-------:|:-----:|:---:|:------:|
-| CPU |  ✅   |    ✅    |    ✅    |   ✅    |  ✅   | ✅  |   ⛔️   |
-| GPU |  ⏳   |    ✅    |    ✅    |   ✅    |  ✅   | ✅  |   ⏳   |
-| NPU |  ⏳   |    ✅    |    ⏳    |   ⛔️    |  ⏳   | ⏳  |   ⛔️   |
+| Apple  | Qualcomm | MediaTek | Samsung | Intel | AMD |
+|:------:|:--------:|:--------:|:-------:|:-----:|:---:|
+|   ⏳   |    ✅    |    ⏳    |   ⏳    |  ⏳   | ⏳  |
 
 ## 🛠 Building and installing
 
