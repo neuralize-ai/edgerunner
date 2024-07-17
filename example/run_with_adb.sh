@@ -66,6 +66,6 @@ adb push --sync "${BUILD_DIR}" "${APP_BUILD_DIR}"
 adb push --sync "${MODELS_DIR}" "${APP_EXAMPLE_DIR}"
 adb push --sync "${IMAGES_DIR}" "${APP_EXAMPLE_DIR}"
 
-adb shell "cd ${APP_EXAMPLE_DIR} && LD_LIBRARY_PATH=.. ADSP_LIBRARY_PATH=.. ./${EXAMPLE}"
+adb shell "cd ${APP_EXAMPLE_DIR} && LD_LIBRARY_PATH=. ADSP_LIBRARY_PATH=. ./${EXAMPLE}"
 
 adb shell "rm -rf ${APP_ROOT_DIR}"
