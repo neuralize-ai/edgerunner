@@ -126,7 +126,7 @@ class EdgerunnerRecipe(ConanFile):
         defines = []
 
         if self.options.with_gpu:
-            defines.append("edgerunner_ENABLE_GPU")
+            defines.append("EDGERUNNER_GPU")
 
         self.cpp_info.defines = defines
         self.cpp_info.libs = ["edgerunner"]
