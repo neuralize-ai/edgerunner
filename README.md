@@ -66,7 +66,31 @@ Edgerunner is in an early development stage. Refer to the [HACKING](/HACKING.md)
 
 ## 🕹 Usage
 
-See [examples](example/README.md) for basic usage instructions.
+Edgerunner is designed around the following usage pattern;
+
+```cpp
+#include <edgerunner/edgerunner.hpp>
+#include <edgerunner/model.hpp>
+
+auto model = edge::createModel("/path/to/model");
+
+model.applyDelegate(DELEGATE::NPU);
+
+auto input = model.getInput(0).getTensorAs<float>();
+
+/* overwrite input data */
+
+model.execute();
+
+auto output = model.getInput(0).getTensorAs<float>();
+
+/* interpret output data */
+```
+
+See [examples](example/README.md) for more detailed usage.
+
+See [model.hpp](/include/edgerunner/model.hpp) and
+[tensor.hpp](/include/edgerunner/tensor.hpp) for complete API.
 
 ## 🏆 Contributing
 
