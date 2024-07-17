@@ -103,7 +103,8 @@ class EdgerunnerRecipe(ConanFile):
 
     def package_info(self):
         self.cpp_info.set_property("cmake_file_name", "edgerunner")
-        self.cpp_info.set_property("cmake_target_name", "edgerunner::edgerunner")
+        self.cpp_info.set_property(
+            "cmake_target_name", "edgerunner::edgerunner")
 
         self.cpp_info.names["cmake_find_package"] = "edgerunner"
         self.cpp_info.names["cmake_find_package_multi"] = "edgerunner"
@@ -112,6 +113,9 @@ class EdgerunnerRecipe(ConanFile):
 
         if self.options.with_gpu:
             defines.append("EDGERUNNER_GPU")
+
+        if self.options.with_npu:
+            defines.append("EDGERUNNER_QNN")
 
         self.cpp_info.defines = defines
         self.cpp_info.libs = ["edgerunner"]
