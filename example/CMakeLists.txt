@@ -30,19 +30,28 @@ function(add_example NAME)
             "run_${NAME}"
             COMMAND "${CMAKE_SOURCE_DIR}/example/run_with_adb.sh" -b
                     "${CMAKE_BINARY_DIR}" -e "${NAME}"
-            VERBATIM)
+            VERBATIM
+        )
     else()
         add_custom_target(
             "run_${NAME}"
             COMMAND "${NAME}"
-            VERBATIM)
+            VERBATIM
+        )
     endif()
     add_dependencies("run_${NAME}" "${NAME}")
     add_dependencies(run-examples "run_${NAME}")
 endfunction()
 
 # NOTE: for Android, adb push fails on symlinks, push directly manually instead
-if(NOT ANDROID)
+if(ANDROID)
+    # file(COPY "${CMAKE_BINARY_DIR}/../runtimeLibs/" DESTINATION
+    # ${CMAKE_CURRENT_BINARY_DIR} )
+    foreach(dir ${CONAN_RUNTIME_LIB_DIRS})
+        file(GLOB_RECURSE shared_libs "${dir}/*.so")
+        file(COPY ${shared_libs} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+    endforeach()
+else()
     set(MODELS_DIR "${CMAKE_SOURCE_DIR}/models")
     set(MODELS_DEST_DIR "${CMAKE_CURRENT_BINARY_DIR}/models")
     set(IMAGES_DIR "${CMAKE_SOURCE_DIR}/images")
@@ -51,10 +60,12 @@ if(NOT ANDROID)
         execute_process(COMMAND ln -sfn ${MODELS_DIR} ${MODELS_DEST_DIR})
         execute_process(COMMAND ln -sfn ${IMAGES_DIR} ${IMAGES_DEST_DIR})
     elseif(WIN32)
-        execute_process(COMMAND cmd.exe /c mklink ${MODELS_DEST_DIR}
-                                ${MODELS_DIR})
-        execute_process(COMMAND cmd.exe /c mklink ${IMAGES_DEST_DIR}
-                                ${IMAGES_DIR})
+        execute_process(
+            COMMAND cmd.exe /c mklink ${MODELS_DEST_DIR} ${MODELS_DIR}
+        )
+        execute_process(
+            COMMAND cmd.exe /c mklink ${IMAGES_DEST_DIR} ${IMAGES_DIR}
+        )
     endif()
 endif()
 
