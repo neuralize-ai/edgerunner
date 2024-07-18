@@ -233,7 +233,7 @@ inline void ImageClassifier::preprocess(cv::Mat& image,
     const std::vector<size_t> cropDimensions = {dimensions[1], dimensions[2]};
     centerCrop(image, cropDimensions);
 
-    normalize(image);
+    // normalize(image);
 
     writeImageToInputBuffer(image, modelInput);
 }
