@@ -3,6 +3,17 @@
 Here are some instructions to help you build and test this project as a
 developer and potential contributor.
 
+Edgerunner is designed to support (cross-)compiling for many architectures and
+operating systems, including most dependencies. In order to take as much of the
+burden as possible away from end users, there is some complex logic to the build
+process. This document is a good starting point to get up and running with CPU
+support. The steps must be followed carefully, but once properly configured
+allows for quick development iteration.
+
+The [examples document](/example/README.md) outlines steps to add GPU
+and NPU support, but should be attempted after successfully running the tests
+as described below.
+
 ## Developer mode
 
 Build system targets that are only useful for developers of this project are

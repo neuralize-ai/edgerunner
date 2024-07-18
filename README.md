@@ -62,7 +62,8 @@ on our [Discord](https://discord.gg/y9EzZEkwbR).
 
 ## 🛠 Building and installing
 
-Edgerunner is in an early development stage. Refer to the [HACKING](/HACKING.md) document to get setup.
+Edgerunner is in its early development stages. Refer to the
+[HACKING](/HACKING.md) document to get setup.
 
 ## 🕹 Usage
 
