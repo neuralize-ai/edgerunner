@@ -67,6 +67,12 @@ class Backend {
     auto getInterface() -> auto& { return m_qnnInterface; }
 
     /**
+     * @brief Get the QNN system interface.
+     * @return Reference to the QNN system interface.
+     */
+    auto getSystemInterface() -> auto& { return m_qnnSystemInterface; }
+
+    /**
      * @brief Get the delegate type for the backend.
      * @return The delegate type.
      */
