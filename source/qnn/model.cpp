@@ -1,6 +1,7 @@
 #include <cstdint>
 #include <filesystem>
 #include <memory>
+#include <vector>
 
 #include "edgerunner/model.hpp"
 
@@ -16,6 +17,7 @@
 #include "edgerunner/qnn/config.hpp"
 #include "edgerunner/qnn/model.hpp"
 #include "edgerunner/qnn/tensor.hpp"
+#include "edgerunner/tensor.hpp"
 
 namespace edge::qnn {
 

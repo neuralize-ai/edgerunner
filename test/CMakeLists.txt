@@ -29,7 +29,8 @@ endif()
 
 set(TEST_SOURCES
     source/tflite_test.cpp source/tflite_from_buffer_test.cpp
-    source/tflite_bad_model_test.cpp source/tflite_delegate_test.cpp
+    source/tflite_quantized_test.cpp source/tflite_bad_model_test.cpp
+    source/tflite_delegate_test.cpp
 )
 
 if(edgerunner_ENABLE_GPU)
