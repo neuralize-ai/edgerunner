@@ -30,6 +30,7 @@ ModelImpl::ModelImpl(const std::filesystem::path& modelPath)
 
     if (!m_loadCachedBinary) {
         setCreationStatus(composeGraphs());
+        setPrecision(detectPrecision());
         setCreationStatus(setGraphConfig());
         setCreationStatus(finalizeGraphs());
     }
@@ -65,6 +66,27 @@ auto ModelImpl::applyDelegate(const DELEGATE& delegate) -> STATUS {
         return STATUS::FAIL;
     }
     return STATUS::SUCCESS;
+}
+
+auto ModelImpl::detectPrecision() -> TensorType {
+    nonstd::span<Qnn_Tensor_t> inputTensorSpecs {m_graphInfo->inputTensors,
+                                                 m_graphInfo->numInputTensors};
+
+    std::vector<TensorImpl> inputs;
+    inputs.reserve(inputTensorSpecs.size());
+    for (auto& inputTensorSpec : inputTensorSpecs) {
+        inputs.emplace_back(&inputTensorSpec, false);
+    }
+
+    for (auto& input : inputs) {
+        const auto type = input.getType();
+
+        if (type == TensorType::FLOAT16 || type == TensorType::FLOAT32) {
+            return TensorType::FLOAT16;
+        }
+    }
+
+    return TensorType::UINT8;
 }
 
 auto ModelImpl::allocate() -> STATUS {
