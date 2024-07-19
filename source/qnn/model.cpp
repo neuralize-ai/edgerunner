@@ -221,7 +221,11 @@ auto ModelImpl::finalizeGraphs() -> STATUS {
         return STATUS::FAIL;
     }
 
-    /* TODO: save binary */
+    saveContextBinary(name() + ".bin");
+
+    return STATUS::SUCCESS;
+}
+
 auto ModelImpl::saveContextBinary(const std::filesystem::path& binaryPath)
     -> STATUS {
     auto& qnnInterface = m_backend->getInterface();
