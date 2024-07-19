@@ -110,6 +110,14 @@ class ModelImpl final : public Model {
      */
     void deleteDelegate();
 
+    /**
+     * Detects graph operation precision
+     *
+     * This function queries the graph to detect what precision the graph should
+     * be executed in. This is required in particular for QNN delegate
+     */
+    auto detectPrecision() -> TensorType;
+
     std::filesystem::path
         m_modelPath;  ///< The path to the TensorFlow Lite model file
 
