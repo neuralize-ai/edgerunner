@@ -36,12 +36,14 @@ namespace edge {
 enum class TensorType : uint8_t {
     UNSUPPORTED,
     NOTYPE,
-    FLOAT32,
     FLOAT16,
-    INT32,
-    UINT32,
+    FLOAT32,
     INT8,
+    INT16,
+    INT32,
     UINT8,
+    UINT16,
+    UINT32,
 };
 
 /**

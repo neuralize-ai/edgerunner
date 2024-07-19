@@ -102,18 +102,34 @@ auto TensorImpl::getType() const -> TensorType {
         [](auto&& tensor) { return tensor.get().dataType; }, tensorVariant);
 
     switch (qnnDataType) {
-        case QNN_DATATYPE_FLOAT_32:
-            return TensorType::FLOAT32;
         case QNN_DATATYPE_FLOAT_16:
             return TensorType::FLOAT16;
-        case QNN_DATATYPE_INT_32:
-            return TensorType::INT32;
-        case QNN_DATATYPE_UINT_32:
-            return TensorType::UINT32;
+        case QNN_DATATYPE_FLOAT_32:
+            return TensorType::FLOAT32;
         case QNN_DATATYPE_INT_8:
             return TensorType::INT8;
+        case QNN_DATATYPE_INT_16:
+            return TensorType::INT16;
+        case QNN_DATATYPE_INT_32:
+            return TensorType::INT32;
         case QNN_DATATYPE_UINT_8:
             return TensorType::UINT8;
+        case QNN_DATATYPE_UINT_16:
+            return TensorType::UINT16;
+        case QNN_DATATYPE_UINT_32:
+            return TensorType::UINT32;
+        case QNN_DATATYPE_SFIXED_POINT_8:
+            return TensorType::INT8;
+        case QNN_DATATYPE_SFIXED_POINT_16:
+            return TensorType::INT16;
+        case QNN_DATATYPE_SFIXED_POINT_32:
+            return TensorType::INT32;
+        case QNN_DATATYPE_UFIXED_POINT_8:
+            return TensorType::UINT8;
+        case QNN_DATATYPE_UFIXED_POINT_16:
+            return TensorType::UINT16;
+        case QNN_DATATYPE_UFIXED_POINT_32:
+            return TensorType::UINT32;
         default:
             return TensorType::UNSUPPORTED;
     }

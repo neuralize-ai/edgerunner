@@ -25,23 +25,22 @@ auto TensorImpl::getType() const -> TensorType {
     }
 
     switch (m_tensor->type) {
-        case kTfLiteFloat32:
-            return TensorType::FLOAT32;
-
         case kTfLiteFloat16:
             return TensorType::FLOAT16;
-
-        case kTfLiteInt32:
-            return TensorType::INT32;
-
-        case kTfLiteUInt32:
-            return TensorType::UINT32;
-
+        case kTfLiteFloat32:
+            return TensorType::FLOAT32;
         case kTfLiteInt8:
             return TensorType::INT8;
-
+        case kTfLiteInt16:
+            return TensorType::INT16;
+        case kTfLiteInt32:
+            return TensorType::INT32;
         case kTfLiteUInt8:
             return TensorType::UINT8;
+        case kTfLiteUInt16:
+            return TensorType::UINT16;
+        case kTfLiteUInt32:
+            return TensorType::UINT32;
 
         default:
             return TensorType::UNSUPPORTED;
