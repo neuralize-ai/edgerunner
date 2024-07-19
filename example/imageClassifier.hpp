@@ -15,6 +15,7 @@
 
 #include "edgerunner/edgerunner.hpp"
 #include "edgerunner/model.hpp"
+#include "edgerunner/tensor.hpp"
 
 class ImageClassifier {
   public:
@@ -28,7 +29,7 @@ class ImageClassifier {
         -> std::pair<std::vector<std::pair<std::string, float>>, double>;
 
   private:
-    static void toRGBFloat(cv::Mat& image);
+    void convertImage(cv::Mat& image);
 
     static void resize(cv::Mat& image, size_t size);
 
@@ -36,26 +37,32 @@ class ImageClassifier {
 
     static void normalize(cv::Mat& image);
 
-    static void writeImageToInputBuffer(const cv::Mat& inputImage,
-                                        nonstd::span<float>& output);
+    template<typename T>
+    void writeImageToInputBuffer(const cv::Mat& inputImage,
+                                 nonstd::span<T>& output);
 
-    static void preprocess(cv::Mat& image,
-                           const std::vector<size_t>& dimensions,
-                           nonstd::span<float>& modelInput);
+    template<typename T>
+    void preprocess(cv::Mat& image,
+                    const std::vector<size_t>& dimensions,
+                    nonstd::span<T>& modelInput);
 
-    static auto softmax(const nonstd::span<float>& input) -> std::vector<float>;
+    template<typename T>
+    static auto softmax(const nonstd::span<T>& elements) -> std::vector<float>;
 
-    static auto topKIndices(const nonstd::span<float>& elements,
+    template<typename T>
+    static auto topKIndices(const nonstd::span<T>& elements,
                             size_t numPredictions) -> std::vector<size_t>;
 
     static auto loadLabelList(const std::filesystem::path& labelListPath)
         -> std::vector<std::string>;
 
-    static void printPixel(const nonstd::span<float>& image,
+    template<typename T>
+    static void printPixel(const nonstd::span<T>& image,
                            const std::vector<size_t>& dimensions,
                            size_t hIndex,
                            size_t wIndex);
 
+    template<typename T>
     static void printPixel(const cv::Mat& image, size_t hIndex, size_t wIndex);
 
     template<typename T>
@@ -73,13 +80,19 @@ class ImageClassifier {
     std::vector<std::string> m_labelList;
 
     cv::Mat m_image;
+
+    bool m_quantized {false};
 };
 
 inline ImageClassifier::ImageClassifier(
     const std::filesystem::path& modelPath, /* NOLINT */
     const std::filesystem::path& labelListPath)
     : m_model(edge::createModel(modelPath))
-    , m_labelList(loadLabelList(labelListPath)) {}
+    , m_labelList(loadLabelList(labelListPath)) {
+    if (m_model != nullptr) {
+        m_quantized = (m_model->getPrecision() == edge::TensorType::UINT8);
+    }
+}
 
 inline auto ImageClassifier::loadImage(const std::filesystem::path& imagePath)
     -> edge::STATUS {
@@ -89,7 +102,7 @@ inline auto ImageClassifier::loadImage(const std::filesystem::path& imagePath)
         return edge::STATUS::FAIL;
     }
 
-    toRGBFloat(m_image);
+    convertImage(m_image);
 
     return edge::STATUS::SUCCESS;
 }
@@ -105,9 +118,13 @@ inline auto ImageClassifier::predict(const size_t numPredictions)
 
     const auto inputDimensions = input->getDimensions();
 
-    auto inputBuffer = input->getTensorAs<float>();
-
-    preprocess(m_image, inputDimensions, inputBuffer);
+    if (m_quantized) {
+        auto inputBuffer = input->getTensorAs<uint8_t>();
+        preprocess(m_image, inputDimensions, inputBuffer);
+    } else {
+        auto inputBuffer = input->getTensorAs<float>();
+        preprocess(m_image, inputDimensions, inputBuffer);
+    }
 
     const auto start = std::chrono::high_resolution_clock::now();
     if (m_model->execute() != edge::STATUS::SUCCESS) {
@@ -118,11 +135,18 @@ inline auto ImageClassifier::predict(const size_t numPredictions)
     const auto inferenceTime =
         std::chrono::duration<double, std::milli>(end - start).count();
 
-    auto output = m_model->getOutput(0)->getTensorAs<float>();
+    std::vector<float> probabilities;
+    std::vector<size_t> topIndices;
 
-    const auto probabilities = softmax(output);
-
-    const auto topIndices = topKIndices(output, numPredictions);
+    if (m_quantized) {
+        auto output = m_model->getOutput(0)->getTensorAs<uint8_t>();
+        probabilities = softmax(output);
+        topIndices = topKIndices(output, numPredictions);
+    } else {
+        auto output = m_model->getOutput(0)->getTensorAs<float>();
+        probabilities = softmax(output);
+        topIndices = topKIndices(output, numPredictions);
+    }
 
     std::vector<std::pair<std::string, float>> topPredictions;
     topPredictions.reserve(topIndices.size());
@@ -135,10 +159,16 @@ inline auto ImageClassifier::predict(const size_t numPredictions)
     return {topPredictions, inferenceTime};
 }
 
-inline void ImageClassifier::toRGBFloat(cv::Mat& image) {
-    // Convert the image to float and scale it to [0, 1] range
+inline void ImageClassifier::convertImage(cv::Mat& image) {
     cv::cvtColor(image, image, cv::COLOR_BGR2RGB);
-    image.convertTo(image, CV_32FC3, 1.0 / std::numeric_limits<uint8_t>::max());
+
+    if (m_quantized) {
+        image.convertTo(image, CV_8UC3);
+    } else {
+        // Convert the image to float and scale it to [0, 1] range
+        image.convertTo(
+            image, CV_32FC3, 1.0 / std::numeric_limits<uint8_t>::max());
+    }
 }
 
 inline void ImageClassifier::resize(cv::Mat& image, const size_t size) {
@@ -203,8 +233,9 @@ inline void ImageClassifier::normalize(cv::Mat& image) {
     cv::divide(image, std, image);
 }
 
-inline void ImageClassifier::writeImageToInputBuffer(
-    const cv::Mat& inputImage, nonstd::span<float>& output) {
+template<typename T>
+inline void ImageClassifier::writeImageToInputBuffer(const cv::Mat& inputImage,
+                                                     nonstd::span<T>& output) {
     const auto height = static_cast<size_t>(inputImage.rows);
     const auto width = static_cast<size_t>(inputImage.cols);
 
@@ -215,18 +246,29 @@ inline void ImageClassifier::writeImageToInputBuffer(
         const auto hOffset = i * rowSize;
         for (size_t j = 0; j < width; ++j) {
             const auto wOffset = hOffset + j * numChannels;
-            const auto& pixel = inputImage.at<cv::Vec3f>(static_cast<int>(i),
-                                                         static_cast<int>(j));
-            output[wOffset] = pixel[0];
-            output[wOffset + 1] = pixel[1];
-            output[wOffset + 2] = pixel[2];
+            if constexpr (std::is_same_v<T, uint8_t>) {
+                const auto& pixel = inputImage.at<cv::Vec3b>(
+                    static_cast<int>(i), static_cast<int>(j));
+
+                output[wOffset] = pixel[0];
+                output[wOffset + 1] = pixel[1];
+                output[wOffset + 2] = pixel[2];
+            } else {
+                const auto& pixel = inputImage.at<cv::Vec3f>(
+                    static_cast<int>(i), static_cast<int>(j));
+
+                output[wOffset] = pixel[0];
+                output[wOffset + 1] = pixel[1];
+                output[wOffset + 2] = pixel[2];
+            }
         }
     }
 }
 
+template<typename T>
 inline void ImageClassifier::preprocess(cv::Mat& image,
                                         const std::vector<size_t>& dimensions,
-                                        nonstd::span<float>& modelInput) {
+                                        nonstd::span<T>& modelInput) {
     const auto resizedSize = nextPowerOfTwo(dimensions[1]);
     resize(image, resizedSize);
 
@@ -238,15 +280,17 @@ inline void ImageClassifier::preprocess(cv::Mat& image,
     writeImageToInputBuffer(image, modelInput);
 }
 
-inline auto ImageClassifier::softmax(const nonstd::span<float>& input)
+template<typename T>
+inline auto ImageClassifier::softmax(const nonstd::span<T>& elements)
     -> std::vector<float> {
-    const float maxInput = *std::max_element(input.cbegin(), input.cend());
+    const float maxInput =
+        *std::max_element(elements.cbegin(), elements.cend());
 
     std::vector<float> softmaxValues;
-    softmaxValues.reserve(input.size());
+    softmaxValues.reserve(elements.size());
 
-    std::transform(input.cbegin(),
-                   input.cend(),
+    std::transform(elements.cbegin(),
+                   elements.cend(),
                    std::back_inserter(softmaxValues),
                    [maxInput](auto val) { return std::exp(val - maxInput); });
 
@@ -260,7 +304,8 @@ inline auto ImageClassifier::softmax(const nonstd::span<float>& input)
     return softmaxValues;
 }
 
-inline auto ImageClassifier::topKIndices(const nonstd::span<float>& elements,
+template<typename T>
+inline auto ImageClassifier::topKIndices(const nonstd::span<T>& elements,
                                          const size_t numPredictions)
     -> std::vector<size_t> {
     std::vector<size_t> indices(elements.size());
@@ -277,18 +322,8 @@ inline auto ImageClassifier::topKIndices(const nonstd::span<float>& elements,
     return indices;
 }
 
-inline auto ImageClassifier::loadLabelList(
-    const std::filesystem::path& labelListPath) -> std::vector<std::string> {
-    std::vector<std::string> labels;
-    std::ifstream file(labelListPath);
-    std::string line;
-    while (std::getline(file, line)) {
-        labels.push_back(line);
-    }
-    return labels;
-}
-
-inline void ImageClassifier::printPixel(const nonstd::span<float>& image,
+template<typename T>
+inline void ImageClassifier::printPixel(const nonstd::span<T>& image,
                                         const std::vector<size_t>& dimensions,
                                         size_t hIndex,
                                         size_t wIndex) {
@@ -308,6 +343,7 @@ inline void ImageClassifier::printPixel(const nonstd::span<float>& image,
                blue);
 }
 
+template<typename T>
 inline void ImageClassifier::printPixel(const cv::Mat& image,
                                         size_t hIndex,
                                         size_t wIndex) {
