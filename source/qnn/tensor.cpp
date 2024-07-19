@@ -65,8 +65,12 @@ void setQnnTensorClientBuf(Qnn_Tensor_t& qnnTensor,
         tensorVariant);
 }
 
-TensorImpl::TensorImpl(Qnn_Tensor_t* qnnTensor)
+TensorImpl::TensorImpl(Qnn_Tensor_t* qnnTensor, const bool allocate)
     : m_tensor(qnnTensor) {
+    if (!allocate) {
+        return;
+    }
+
     /* TODO: use memhandle */
     setQnnTensorMemType(*m_tensor, QNN_TENSORMEMTYPE_RAW);
 
