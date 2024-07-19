@@ -1,5 +1,6 @@
 #include <cstdint>
 #include <filesystem>
+#include <fstream>
 #include <memory>
 #include <vector>
 
@@ -221,6 +222,43 @@ auto ModelImpl::finalizeGraphs() -> STATUS {
     }
 
     /* TODO: save binary */
+auto ModelImpl::saveContextBinary(const std::filesystem::path& binaryPath)
+    -> STATUS {
+    auto& qnnInterface = m_backend->getInterface();
+    auto& context = m_backend->getContext();
+
+    if (nullptr == qnnInterface.contextGetBinarySize
+        || nullptr == qnnInterface.contextGetBinary)
+    {
+        return STATUS::FAIL;
+    }
+    uint64_t requiredBufferSize {0};
+    if (QNN_CONTEXT_NO_ERROR
+        != qnnInterface.contextGetBinarySize(context, &requiredBufferSize))
+    {
+        return STATUS::FAIL;
+    }
+
+    std::vector<uint8_t> buffer(requiredBufferSize);
+
+    uint64_t writtenBufferSize {0};
+    if (QNN_CONTEXT_NO_ERROR
+        != qnnInterface.contextGetBinary(
+            context,
+            reinterpret_cast<void*> /* NOLINT */ (buffer.data()),
+            requiredBufferSize,
+            &writtenBufferSize))
+    {
+        return STATUS::FAIL;
+    }
+
+    if (requiredBufferSize < writtenBufferSize) {
+        return STATUS::FAIL;
+    }
+
+    std::ofstream file(binaryPath, std::ofstream::binary);
+    file.write(reinterpret_cast<const char*> /* NOLINT */ (buffer.data()),
+               static_cast<std::streamsize>(buffer.size()));
 
     return STATUS::SUCCESS;
 }

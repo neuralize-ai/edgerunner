@@ -165,6 +165,19 @@ class ModelImpl final : public Model {
     auto finalizeGraphs() -> STATUS;
 
     /**
+     * Saves the current context to a binary file.
+     *
+     * This function saves the current context to a binary file specified by the
+     * input binaryPath.
+     *
+     * @param binaryPath The path to the binary file where the context will be
+     * saved.
+     * @return STATUS Returns a STATUS enum indicating the success or failure of
+     * the operation.
+     */
+    auto saveContextBinary(const std::filesystem::path& binaryPath) -> STATUS;
+
+    /**
      * @brief Allocates input and output tensors
      *
      * This function allocates input and output tensors. Should be used before
