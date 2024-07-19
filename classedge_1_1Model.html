@@ -169,6 +169,10 @@
               <span class="m-doc-wrap-bumper">auto <a href="#a2a78a15d2354411e1c613b762ee5c660" class="m-doc">getCreationStatus</a>(</span><span class="m-doc-wrap">) const -&gt; STATUS</span>
             </dt>
             <dd>Get the status of model creation.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#a95b1d52fd30acc8017605ef0fd29f9f9" class="m-doc">getPrecision</a>(</span><span class="m-doc-wrap">) const -&gt; TensorType</span>
+            </dt>
+            <dd>Get the precision used for model execution.</dd>
           </dl>
         </section>
         <section id="pro-methods">
@@ -178,6 +182,10 @@
               <span class="m-doc-wrap-bumper">void <a href="#ab4148431cd28c1cbd839f6b981bef700" class="m-doc">setDelegate</a>(</span><span class="m-doc-wrap">const <a href="namespaceedge.html#a2a339162b70a461c879db12d3832592d" class="m-doc">DELEGATE</a>&amp; delegate)</span>
             </dt>
             <dd>Set the delegate for model execution.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">void <a href="#a4d58bbffeb8d0044109dad15c48bd7a1" class="m-doc">setPrecision</a>(</span><span class="m-doc-wrap">const <a href="namespaceedge.html#a35bf76c8f50658546b6dc23d80b9798c" class="m-doc">TensorType</a>&amp; precision)</span>
+            </dt>
+            <dd>Set the precision for model execution.</dd>
             <dt>
               <span class="m-doc-wrap-bumper">void <a href="#a72470f3781e6fbbfe160961ad68e265d" class="m-doc">setCreationStatus</a>(</span><span class="m-doc-wrap">const <a href="namespaceedge.html#adbc82abb7981e8ce0228aa51fdd879a3" class="m-doc">STATUS</a>&amp; status)</span>
             </dt>
@@ -436,6 +444,20 @@
             </table>
 <p>Verify that the model was created successfully</p>
           </div></section>
+          <section class="m-doc-details" id="a95b1d52fd30acc8017605ef0fd29f9f9"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">auto edge::<wbr />Model::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a95b1d52fd30acc8017605ef0fd29f9f9" class="m-doc-self">getPrecision</a>(</span><span class="m-doc-wrap">) const -&gt; TensorType</span></span>
+            </h3>
+            <p>Get the precision used for model execution.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <tfoot>
+                <tr>
+                  <th style="width: 1%">Returns</th>
+                  <td>The pricsion used model execution</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div></section>
           <section class="m-doc-details" id="ab4148431cd28c1cbd839f6b981bef700"><div>
             <h3>
               <span class="m-doc-wrap-bumper">void edge::<wbr />Model::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#ab4148431cd28c1cbd839f6b981bef700" class="m-doc-self">setDelegate</a>(</span><span class="m-doc-wrap">const <a href="namespaceedge.html#a2a339162b70a461c879db12d3832592d" class="m-doc">DELEGATE</a>&amp; delegate) <span class="m-label m-warning">protected</span></span></span>
@@ -453,6 +475,13 @@
               </tbody>
             </table>
 <p>This method is used by derivatives to allow users to query the currently set delegate</p>
+          </div></section>
+          <section class="m-doc-details" id="a4d58bbffeb8d0044109dad15c48bd7a1"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">void edge::<wbr />Model::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a4d58bbffeb8d0044109dad15c48bd7a1" class="m-doc-self">setPrecision</a>(</span><span class="m-doc-wrap">const <a href="namespaceedge.html#a35bf76c8f50658546b6dc23d80b9798c" class="m-doc">TensorType</a>&amp; precision) <span class="m-label m-warning">protected</span></span></span>
+            </h3>
+            <p>Set the precision for model execution.</p>
+<p>This method is used by derivatives to allow users to query the execution precision</p>
           </div></section>
           <section class="m-doc-details" id="a72470f3781e6fbbfe160961ad68e265d"><div>
             <h3>

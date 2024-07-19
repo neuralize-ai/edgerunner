@@ -80,7 +80,8 @@
           <h2><a href="#typeless-methods">Constructors, destructors, conversion operators</a></h2>
           <dl class="m-doc">
             <dt>
-              <span class="m-doc-wrap-bumper"><a href="#a28d79aa5ea92d126fc8aea0baca66311" class="m-doc">TensorImpl</a>(</span><span class="m-doc-wrap">Qnn_Tensor_t* qnnTensor = nullptr) <span class="m-label m-flat m-info">explicit</span> </span>
+              <span class="m-doc-wrap-bumper"><a href="#a66e73fe2c83a0884dab507aed9755a37" class="m-doc">TensorImpl</a>(</span><span class="m-doc-wrap">Qnn_Tensor_t* qnnTensor = nullptr,
+              bool allocate = true) <span class="m-label m-flat m-info">explicit</span> </span>
             </dt>
             <dd>Constructor for <a href="classedge_1_1qnn_1_1TensorImpl.html" class="m-doc">TensorImpl</a>.</dd>
             <dt id="a6605f21dc5bb51834534c45b93a6433a">
@@ -141,9 +142,10 @@
         </section>
         <section>
           <h2>Function documentation</h2>
-          <section class="m-doc-details" id="a28d79aa5ea92d126fc8aea0baca66311"><div>
+          <section class="m-doc-details" id="a66e73fe2c83a0884dab507aed9755a37"><div>
             <h3>
-              <span class="m-doc-wrap-bumper"> edge::<wbr />qnn::<wbr />TensorImpl::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a28d79aa5ea92d126fc8aea0baca66311" class="m-doc-self">TensorImpl</a>(</span><span class="m-doc-wrap">Qnn_Tensor_t* qnnTensor = nullptr) <span class="m-label m-info">explicit</span> </span></span>
+              <span class="m-doc-wrap-bumper"> edge::<wbr />qnn::<wbr />TensorImpl::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a66e73fe2c83a0884dab507aed9755a37" class="m-doc-self">TensorImpl</a>(</span><span class="m-doc-wrap">Qnn_Tensor_t* qnnTensor = nullptr,
+              bool allocate = true) <span class="m-label m-info">explicit</span> </span></span>
             </h3>
             <p>Constructor for <a href="classedge_1_1qnn_1_1TensorImpl.html" class="m-doc">TensorImpl</a>.</p>
             <table class="m-table m-fullwidth m-flat">
@@ -154,6 +156,10 @@
                 <tr>
                   <td style="width: 1%">qnnTensor</td>
                   <td>Pointer to the QnnTensor object.</td>
+                </tr>
+                <tr>
+                  <td>allocate</td>
+                  <td>Whether to allocate underlying memory for the <a href="classedge_1_1Tensor.html" class="m-doc">Tensor</a>.</td>
                 </tr>
               </tbody>
             </table>
