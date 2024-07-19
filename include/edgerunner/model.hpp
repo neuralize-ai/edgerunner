@@ -187,6 +187,13 @@ class EDGERUNNER_EXPORT Model {
      */
     auto getCreationStatus() const -> STATUS { return m_creationStatus; }
 
+    /**
+     * @brief Get the precision used for model execution.
+     *
+     * @return The pricsion used model execution
+     */
+    auto getPrecision() const -> TensorType { return m_precision; }
+
   protected:
     /**
      * @brief Set the delegate for model execution.
@@ -197,6 +204,16 @@ class EDGERUNNER_EXPORT Model {
      * @param delegate The delegate to set
      */
     void setDelegate(const DELEGATE& delegate) { m_delegate = delegate; }
+
+    /**
+     * @brief Set the precision for model execution.
+     *
+     * This method is used by derivatives to allow users to query the execution
+     * precision
+     *
+     * @param delegate The delegate to set
+     */
+    void setPrecision(const TensorType& precision) { m_precision = precision; }
 
     /**
      * @brief Set the status of model creation.
@@ -227,6 +244,10 @@ class EDGERUNNER_EXPORT Model {
     EDGERUNNER_SUPPRESS_C4251
     DELEGATE m_delegate =
         DELEGATE::CPU; /**< Delegate used for model execution */
+
+    EDGERUNNER_SUPPRESS_C4251
+    TensorType m_precision =
+        TensorType::FLOAT16; /**< Precision used for model execution */
 
     EDGERUNNER_SUPPRESS_C4251
     STATUS m_creationStatus = STATUS::SUCCESS; /**< Status of model creation */
