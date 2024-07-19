@@ -50,6 +50,9 @@ In the examples below, for GPU support add `-o gpu=True` to the `conan install` 
   `conan remove "tensorflow-lite"`. Make sure to create the TFLite package
   version that is required in [conanfile](/conanfile.py).
 
+GPU support requires a functioning OpenCL installation. Refer to your OS
+documentation for the steps for setting this up correctly for your GPU vendor.
+
 ## Unix
 
 Run all examples using one of the following methods from the project root directory.
