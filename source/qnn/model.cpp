@@ -144,15 +144,19 @@ auto ModelImpl::setGraphConfig() -> STATUS {
     Config<QnnGraph_Config_t, QnnHtpGraph_CustomConfig_t> graphConfigs {
         QNN_GRAPH_CONFIG_INIT, QNN_HTP_GRAPH_CUSTOM_CONFIG_INIT};
 
-    /* TODO: determine desired precision */
     if (m_backend->getDelegate() == DELEGATE::NPU) {
-        auto& precisionCustomConfig = graphConfigs.createCustomConfig();
-        precisionCustomConfig.option = QNN_HTP_GRAPH_CONFIG_OPTION_PRECISION;
-        precisionCustomConfig.precision /* NOLINT */ = QNN_PRECISION_FLOAT16;
+        if (getPrecision() == TensorType::FLOAT16) {
+            auto& precisionCustomConfig = graphConfigs.createCustomConfig();
+            precisionCustomConfig.option =
+                QNN_HTP_GRAPH_CONFIG_OPTION_PRECISION;
 
-        auto& precisionConfig = graphConfigs.createConfig();
-        precisionConfig.option = QNN_GRAPH_CONFIG_OPTION_CUSTOM;
-        precisionConfig.customConfig /* NOLINT */ = &precisionCustomConfig;
+            precisionCustomConfig.precision /* NOLINT */ =
+                QNN_PRECISION_FLOAT16;
+
+            auto& precisionConfig = graphConfigs.createConfig();
+            precisionConfig.option = QNN_GRAPH_CONFIG_OPTION_CUSTOM;
+            precisionConfig.customConfig /* NOLINT */ = &precisionCustomConfig;
+        }
 
         auto& optimizationCustomConfig = graphConfigs.createCustomConfig();
         optimizationCustomConfig.option =
