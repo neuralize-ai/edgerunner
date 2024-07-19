@@ -24,8 +24,10 @@ class EDGERUNNER_EXPORT TensorImpl final : public Tensor {
     /**
      * @brief Constructor for TensorImpl.
      * @param qnnTensor Pointer to the QnnTensor object.
+     * @param allocate Whether to allocate underlying memory for the Tensor.
      */
-    explicit TensorImpl(Qnn_Tensor_t* qnnTensor = nullptr);
+    explicit TensorImpl(Qnn_Tensor_t* qnnTensor = nullptr,
+                        bool allocate = true);
 
     TensorImpl(const TensorImpl& other) = default;
     TensorImpl(TensorImpl&&) = default;
@@ -72,6 +74,11 @@ class EDGERUNNER_EXPORT TensorImpl final : public Tensor {
     auto getNumBytes() -> size_t final;
 
   private:
+    /**
+     * @brief Allocate underlying memory for the Tensor
+     */
+    void allocate();
+
     EDGERUNNER_SUPPRESS_C4251
     Qnn_Tensor_t* m_tensor;  ///< The underlying QNN tensor
 
