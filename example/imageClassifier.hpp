@@ -29,7 +29,7 @@ class ImageClassifier {
         -> std::pair<std::vector<std::pair<std::string, float>>, double>;
 
   private:
-    void convertImage(cv::Mat& image);
+    void convertImage(cv::Mat& image) const;
 
     static void resize(cv::Mat& image, size_t size);
 
@@ -159,7 +159,7 @@ inline auto ImageClassifier::predict(const size_t numPredictions)
     return {topPredictions, inferenceTime};
 }
 
-inline void ImageClassifier::convertImage(cv::Mat& image) {
+inline void ImageClassifier::convertImage(cv::Mat& image) const {
     cv::cvtColor(image, image, cv::COLOR_BGR2RGB);
 
     if (m_quantized) {
@@ -320,6 +320,17 @@ inline auto ImageClassifier::topKIndices(const nonstd::span<T>& elements,
         });
     indices.resize(numPredictions);
     return indices;
+}
+
+inline auto ImageClassifier::loadLabelList(
+    const std::filesystem::path& labelListPath) -> std::vector<std::string> {
+    std::vector<std::string> labels;
+    std::ifstream file(labelListPath);
+    std::string line;
+    while (std::getline(file, line)) {
+        labels.push_back(line);
+    }
+    return labels;
 }
 
 template<typename T>

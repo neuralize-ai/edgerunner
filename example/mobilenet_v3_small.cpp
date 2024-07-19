@@ -18,6 +18,7 @@ auto main() -> int {
 
     ImageClassifier imageClassifier(modelPath, labelListPath);
 
+    /* use the best delegate available based on the build configuration */
 #if defined(EDGERUNNER_QNN)
     imageClassifier.setDelegate(edge::DELEGATE::NPU);
 #elif defined(EDGERUNNER_GPU)
