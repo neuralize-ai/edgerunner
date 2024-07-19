@@ -11,6 +11,7 @@
 #include <tensorflow/lite/kernels/register.h>
 #include <tensorflow/lite/model_builder.h>
 
+#include "edgerunner/tensor.hpp"
 #include "edgerunner/tflite/model.hpp"
 #include "edgerunner/tflite/tensor.hpp"
 
@@ -29,12 +30,14 @@ ModelImpl::ModelImpl(const std::filesystem::path& modelPath)
     setCreationStatus(loadModel(modelPath));
     setCreationStatus(createInterpreter());
     setCreationStatus(allocate());
+    setPrecision(detectPrecision());
 }
 
 ModelImpl::ModelImpl(const nonstd::span<uint8_t>& modelBuffer) {
     setCreationStatus(loadModel(modelBuffer));
     setCreationStatus(createInterpreter());
     setCreationStatus(allocate());
+    setPrecision(detectPrecision());
 }
 
 auto ModelImpl::loadModel(const std::filesystem::path& modelPath) -> STATUS {
@@ -104,12 +107,28 @@ auto ModelImpl::allocate() -> STATUS {
     return STATUS::SUCCESS;
 }
 
+auto ModelImpl::detectPrecision() -> TensorType {
+    auto& inputs = getInputs();
+
+    /* NOTE: mostly for QNN delegate, if an inputs are float, use fp16 precision
+     */
+    for (auto& input : inputs) {
+        const auto type = input->getType();
+        if (type == TensorType::FLOAT16 || type == TensorType::FLOAT32) {
+            return TensorType::FLOAT16;
+        }
+    }
+
+    return TensorType::UINT8;
+}
+
 auto ModelImpl::applyDelegate(const DELEGATE& delegate) -> STATUS {
     /* undo any previous delegate */
     if (createInterpreter() != STATUS::SUCCESS) {
         return STATUS::FAIL;
     }
 
+    /* cannot apply delegate on top of existing delegate */
     deleteDelegate();
 
     STATUS status = STATUS::SUCCESS;
@@ -134,7 +153,9 @@ auto ModelImpl::applyDelegate(const DELEGATE& delegate) -> STATUS {
 
         options.backend_type = kHtpBackend;
         options.log_level = kLogOff;
-        options.htp_options.precision = kHtpFp16;
+        if (getPrecision() == TensorType::FLOAT16) {
+            options.htp_options.precision = kHtpFp16;
+        }
         options.htp_options.performance_mode = kHtpBurst;
 
         m_delegate = TfLiteQnnDelegateCreate(&options);
