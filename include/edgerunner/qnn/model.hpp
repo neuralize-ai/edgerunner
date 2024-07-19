@@ -174,6 +174,14 @@ class ModelImpl final : public Model {
      */
     auto allocate() -> STATUS;
 
+    /**
+     * Detects graph operation precision
+     *
+     * This function queries the graph to detect what precision the graph should
+     * be executed in. This is required in particular for QNN delegate
+     */
+    auto detectPrecision() -> TensorType;
+
     std::filesystem::path m_modelPath;  ///< The path to the QNN model file
 
     std::unique_ptr<Backend> m_backend;
