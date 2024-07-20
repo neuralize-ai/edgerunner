@@ -18,6 +18,7 @@
 #include "edgerunner/qnn/config.hpp"
 #include "edgerunner/qnn/model.hpp"
 #include "edgerunner/qnn/tensor.hpp"
+#include "edgerunner/qnn/tensorOps.hpp"
 #include "edgerunner/tensor.hpp"
 
 namespace edge::qnn {
@@ -59,9 +60,8 @@ auto ModelImpl::loadModel(const std::filesystem::path& modelPath) -> STATUS {
     return loadFromSharedLibrary(modelPath);
 }
 
-auto ModelImpl::loadModel(const nonstd::span<uint8_t>& /*modelBuffer*/)
-    -> STATUS {
-    return STATUS::FAIL;
+auto ModelImpl::loadModel(const nonstd::span<uint8_t>& modelBuffer) -> STATUS {
+    return loadFromContextBinary(modelBuffer);
 }
 
 auto ModelImpl::applyDelegate(const DELEGATE& delegate) -> STATUS {
@@ -288,6 +288,287 @@ auto ModelImpl::loadFromSharedLibrary(const std::filesystem::path& modelPath)
     if (nullptr == m_freeGraphInfoFnHandle) {
         return STATUS::FAIL;
     }
+
+    return STATUS::SUCCESS;
+}
+
+auto deepCopyQnnTensorInfo(Qnn_Tensor_t& dst, const Qnn_Tensor_t& src) -> bool {
+    dst.version = src.version;
+    const char* tensorName = getQnnTensorName(src);
+    if (tensorName == nullptr) {
+        setQnnTensorName(dst, nullptr);
+    } else {
+        setQnnTensorName(dst, strndup(tensorName, strlen(tensorName)));
+    }
+    setQnnTensorId(dst, getQnnTensorId(src));
+    setQnnTensorType(dst, getQnnTensorType(src));
+    setQnnTensorDataFormat(dst, getQnnTensorDataFormat(src));
+    setQnnTensorDataType(dst, getQnnTensorDataType(src));
+    Qnn_QuantizeParams_t qParams = QNN_QUANTIZE_PARAMS_INIT;
+    qParams.encodingDefinition =
+        getQnnTensorQuantParams(src).encodingDefinition;
+    qParams.quantizationEncoding = QNN_QUANTIZATION_ENCODING_UNDEFINED;
+    if (getQnnTensorQuantParams(src).quantizationEncoding
+        == QNN_QUANTIZATION_ENCODING_SCALE_OFFSET)
+    {
+        qParams.quantizationEncoding =
+            getQnnTensorQuantParams(src).quantizationEncoding;
+        qParams.scaleOffsetEncoding /* NOLINT */ =
+            getQnnTensorQuantParams(src).scaleOffsetEncoding /* NOLINT */;
+    } else if (getQnnTensorQuantParams(src).quantizationEncoding
+               == QNN_QUANTIZATION_ENCODING_AXIS_SCALE_OFFSET)
+    {
+        qParams.quantizationEncoding =
+            getQnnTensorQuantParams(src).quantizationEncoding;
+        qParams.axisScaleOffsetEncoding /* NOLINT */.axis =
+            getQnnTensorQuantParams(src)
+                .axisScaleOffsetEncoding /* NOLINT */.axis;
+        qParams.axisScaleOffsetEncoding /* NOLINT */.numScaleOffsets =
+            getQnnTensorQuantParams(src)
+                .axisScaleOffsetEncoding /* NOLINT */.numScaleOffsets;
+        if (getQnnTensorQuantParams(src)
+                .axisScaleOffsetEncoding /* NOLINT */.numScaleOffsets
+            > 0)
+        {
+            qParams.axisScaleOffsetEncoding.scaleOffset /* NOLINT */ =
+                reinterpret_cast<Qnn_ScaleOffset_t*> /* NOLINT */ (malloc(
+                    getQnnTensorQuantParams(src)
+                        .axisScaleOffsetEncoding /* NOLINT */.numScaleOffsets
+                    * sizeof(Qnn_ScaleOffset_t)));
+            if (qParams.axisScaleOffsetEncoding /* NOLINT */.scaleOffset
+                != nullptr)
+            {
+                for (size_t idx = 0;
+                     idx < getQnnTensorQuantParams(src)
+                               .axisScaleOffsetEncoding /* NOLINT */
+                               .numScaleOffsets;
+                     idx++)
+                {
+                    qParams
+                        .axisScaleOffsetEncoding /* NOLINT */.scaleOffset[idx]
+                        .scale = getQnnTensorQuantParams(src) /* NOLINT */
+                                     .axisScaleOffsetEncoding /* NOLINT */
+                                     .scaleOffset[idx]
+                                     .scale;
+                    qParams
+                        .axisScaleOffsetEncoding /* NOLINT */.scaleOffset[idx]
+                        .offset = getQnnTensorQuantParams(src) /* NOLINT */
+                                      .axisScaleOffsetEncoding /* NOLINT */
+                                      .scaleOffset[idx]
+                                      .offset;
+                }
+            }
+        }
+    }
+    setQnnTensorQuantParams(dst, qParams);
+    setQnnTensorRank(dst, getQnnTensorRank(src));
+    setQnnTensorDimensions(dst, nullptr);
+    if (getQnnTensorRank(src) > 0) {
+        setQnnTensorDimensions(dst,
+                               static_cast<uint32_t*>(malloc /* NOLINT */ (
+                                   getQnnTensorRank(src) * sizeof(uint32_t))));
+        if (getQnnTensorDimensions(dst) != nullptr) {
+            memcpy(getQnnTensorDimensions(dst),
+                   getQnnTensorDimensions(src),
+                   getQnnTensorRank(src) * sizeof(uint32_t));
+        }
+        if (getQnnTensorIsDynamicDimensions(src) != nullptr) {
+            setQnnTensorIsDynamicDimensions(
+                dst,
+                static_cast<uint8_t*>(malloc /* NOLINT */ (getQnnTensorRank(src)
+                                                           * sizeof(uint8_t))));
+            memcpy(getQnnTensorIsDynamicDimensions(dst),
+                   getQnnTensorIsDynamicDimensions(src),
+                   getQnnTensorRank(src) * sizeof(uint8_t));
+        }
+    }
+
+    setQnnTensorSparseParams(dst, getQnnTensorSparseParams(src));
+
+    return true;
+}
+
+auto copyTensorsInfo(const Qnn_Tensor_t* tensorsInfoSrc,
+                     Qnn_Tensor_t*& tensorWrappers,
+                     uint32_t tensorsCount) -> bool {
+    tensorWrappers /* NOLINT */ = static_cast<Qnn_Tensor_t*>(
+        calloc /* NOLINT */ (tensorsCount, sizeof(Qnn_Tensor_t)));
+    if (nullptr == tensorWrappers) {
+        return false;
+    }
+    for (size_t tIdx = 0; tIdx < tensorsCount; ++tIdx) {
+        tensorWrappers[tIdx] /* NOLINT */ = QNN_TENSOR_INIT;
+        if (!deepCopyQnnTensorInfo(tensorWrappers[tIdx], tensorsInfoSrc[tIdx]))
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+auto copyGraphsInfoV1(const QnnSystemContext_GraphInfoV1_t* graphInfoSrc,
+                      GraphInfoT* graphInfoDst) -> bool {
+    graphInfoDst->graphName = nullptr;
+    if (graphInfoSrc->graphName != nullptr) {
+        graphInfoDst->graphName =
+            strndup(graphInfoSrc->graphName, strlen(graphInfoSrc->graphName));
+    }
+    graphInfoDst->inputTensors = nullptr;
+    graphInfoDst->numInputTensors = 0;
+    if (graphInfoSrc->graphInputs != nullptr) {
+        if (!copyTensorsInfo(graphInfoSrc->graphInputs,
+                             graphInfoDst->inputTensors,
+                             graphInfoSrc->numGraphInputs))
+        {
+            return false;
+        }
+        graphInfoDst->numInputTensors = graphInfoSrc->numGraphInputs;
+    }
+    graphInfoDst->outputTensors = nullptr;
+    graphInfoDst->numOutputTensors = 0;
+    if (graphInfoSrc->graphOutputs != nullptr) {
+        if (!copyTensorsInfo(graphInfoSrc->graphOutputs,
+                             graphInfoDst->outputTensors,
+                             graphInfoSrc->numGraphOutputs))
+        {
+            return false;
+        }
+        graphInfoDst->numOutputTensors = graphInfoSrc->numGraphOutputs;
+    }
+    return true;
+}
+
+auto copyGraphsInfo(const QnnSystemContext_GraphInfo_t* graphsInput,
+                    const uint32_t numGraphs,
+                    GraphInfoT**& graphsInfo) -> bool {
+    if (graphsInput == nullptr) {
+        return false;
+    }
+    graphsInfo =
+        static_cast<GraphInfoT**>(calloc(numGraphs, sizeof(GraphInfoT*)));
+    auto* graphInfoArr =
+        static_cast<GraphInfoT*>(calloc(numGraphs, sizeof(GraphInfoT)));
+    if (nullptr == graphsInfo || nullptr == graphInfoArr) {
+        return false;
+    }
+
+    for (size_t gIdx = 0; gIdx < numGraphs; ++gIdx) {
+        if (graphsInput[gIdx].version
+            == QNN_SYSTEM_CONTEXT_GRAPH_INFO_VERSION_1)
+        {
+            if (!copyGraphsInfoV1(&graphsInput[gIdx].graphInfoV1,
+                                  &graphInfoArr[gIdx]))
+            {
+                return false;
+            }
+        }
+        graphsInfo[gIdx] = graphInfoArr + gIdx;
+    }
+
+    return true;
+}
+
+auto copyMetadataToGraphsInfo(const QnnSystemContext_BinaryInfo_t* binaryInfo,
+                              GraphInfoT**& graphsInfo,
+                              uint32_t& graphsCount) -> bool {
+    if (nullptr == binaryInfo) {
+        return false;
+    }
+    graphsCount = 0;
+    if (binaryInfo->version == QNN_SYSTEM_CONTEXT_BINARY_INFO_VERSION_1) {
+        if (binaryInfo->contextBinaryInfoV1.graphs != nullptr) {
+            if (!copyGraphsInfo(binaryInfo->contextBinaryInfoV1.graphs,
+                                binaryInfo->contextBinaryInfoV1.numGraphs,
+                                graphsInfo))
+            {
+                return false;
+            }
+            graphsCount = binaryInfo->contextBinaryInfoV1.numGraphs;
+            return true;
+        }
+    } else if (binaryInfo->version == QNN_SYSTEM_CONTEXT_BINARY_INFO_VERSION_2)
+    {
+        if (binaryInfo->contextBinaryInfoV2.graphs != nullptr) {
+            if (!copyGraphsInfo(binaryInfo->contextBinaryInfoV2.graphs,
+                                binaryInfo->contextBinaryInfoV2.numGraphs,
+                                graphsInfo))
+            {
+                return false;
+            }
+            graphsCount = binaryInfo->contextBinaryInfoV2.numGraphs;
+            return true;
+        }
+    }
+    return false;
+}
+
+auto ModelImpl::loadFromContextBinary(const nonstd::span<uint8_t>& modelBuffer)
+    -> STATUS {
+    auto& qnnSystemInterface = m_backend->getSystemInterface();
+    QnnSystemContext_Handle_t sysCtxHandle {nullptr};
+    if (QNN_SUCCESS != qnnSystemInterface.systemContextCreate(&sysCtxHandle)) {
+        return STATUS::FAIL;
+    }
+    const QnnSystemContext_BinaryInfo_t* binaryInfo {nullptr};
+    Qnn_ContextBinarySize_t binaryInfoSize {0};
+    if (QNN_SUCCESS
+        != qnnSystemInterface.systemContextGetBinaryInfo(
+            sysCtxHandle,
+            static_cast<void*>(modelBuffer.data()),
+            modelBuffer.size(),
+            &binaryInfo,
+            &binaryInfoSize))
+    {
+        return STATUS::FAIL;
+    }
+
+    if (!copyMetadataToGraphsInfo(binaryInfo, m_graphsInfo, m_graphsCount)) {
+        return STATUS::FAIL;
+    }
+
+    qnnSystemInterface.systemContextFree(sysCtxHandle);
+    sysCtxHandle = nullptr;
+
+    auto& qnnInterface = m_backend->getInterface();
+
+    if (nullptr == qnnInterface.contextCreateFromBinary) {
+        return STATUS::FAIL;
+    }
+
+    auto& backendHandle = m_backend->getHandle();
+    auto& deviceHandle = m_backend->getDeviceHandle();
+    auto& context = m_backend->getContext();
+
+    Config<QnnContext_Config_t, void*> contextConfig {QNN_CONTEXT_CONFIG_INIT,
+                                                      {}};
+    if (qnnInterface.contextCreateFromBinary(
+            backendHandle,
+            deviceHandle,
+            contextConfig.getPtr(),
+            static_cast<void*>(modelBuffer.data()),
+            modelBuffer.size(),
+            &context,
+            nullptr)
+        != 0U)
+    {
+        return STATUS::FAIL;
+    }
+
+    for (size_t graphIdx = 0; graphIdx < m_graphsCount; ++graphIdx) {
+        if (nullptr == qnnInterface.graphRetrieve) {
+            return STATUS::FAIL;
+        }
+        auto& graphInfo = (*m_graphsInfo) /* NOLINT */[graphIdx];
+        if (QNN_SUCCESS
+            != qnnInterface.graphRetrieve(
+                context, graphInfo.graphName, &graphInfo.graph))
+        {
+            return STATUS::FAIL;
+        }
+    }
+
+    m_graphInfo = m_graphsInfo[0];  // NOLINT
 
     return STATUS::SUCCESS;
 }

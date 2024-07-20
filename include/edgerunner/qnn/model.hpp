@@ -129,9 +129,22 @@ class ModelImpl final : public Model {
      * specified path.
      *
      * @param modelPath The path to the shared library containing the QNN model.
-     * @return STATUS The status of the operation (SUCCESS or ERROR).
+     * @return STATUS The status of the operation (SUCCESS or FAIL).
      */
     auto loadFromSharedLibrary(const std::filesystem::path& modelPath)
+        -> STATUS;
+    /**
+     * Loads a QNN model from a serialized binary buffer.
+     *
+     * This function takes a nonstd::span<uint8_t> modelBuffer as input and
+     * attempts to load a model from the binary data contained within it.
+     *
+     * @param modelBuffer A nonstd::span<uint8_t> containing the binary data of
+     * the model to be loaded.
+     *
+     * @return STATUS The status of the operation (SUCCESS or FAIL).
+     */
+    auto loadFromContextBinary(const nonstd::span<uint8_t>& modelBuffer)
         -> STATUS;
 
     /**
@@ -140,7 +153,7 @@ class ModelImpl final : public Model {
      * This function composes the graphs for the loaded QNN model based on the
      * model configuration.
      *
-     * @return STATUS The status of the operation (SUCCESS or ERROR).
+     * @return STATUS The status of the operation (SUCCESS or FAIL).
      */
     auto composeGraphs() -> STATUS;
 
@@ -150,7 +163,7 @@ class ModelImpl final : public Model {
      * This function sets the configuration for the composed graphs, operation
      * precision, graph optimization level.
      *
-     * @return STATUS The status of the operation (SUCCESS or ERROR).
+     * @return STATUS The status of the operation (SUCCESS or FAIL).
      */
     auto setGraphConfig() -> STATUS;
 
@@ -160,7 +173,7 @@ class ModelImpl final : public Model {
      * This function finalizes the composed graphs and prepares them for
      * execution.
      *
-     * @return STATUS The status of the operation (SUCCESS or ERROR).
+     * @return STATUS The status of the operation (SUCCESS or FAIL).
      */
     auto finalizeGraphs() -> STATUS;
 
@@ -183,7 +196,7 @@ class ModelImpl final : public Model {
      * This function allocates input and output tensors. Should be used before
      * executing.
      *
-     * @return STATUS The status of the operation (SUCCESS or ERROR).
+     * @return STATUS The status of the operation (SUCCESS or FAIL).
      */
     auto allocate() -> STATUS;
 
