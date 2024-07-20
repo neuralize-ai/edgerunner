@@ -8,62 +8,13 @@
 
 #include "edgerunner/tensor.hpp"
 
-#include <QnnCommon.h>
 #include <QnnTypes.h>
 #include <nonstd/span.hpp>
 
 #include "edgerunner/qnn/tensor.hpp"
+#include "edgerunner/qnn/tensorOps.hpp"
 
 namespace edge::qnn {
-
-using TensorVariant = std::variant<std::reference_wrapper<Qnn_TensorV1_t>,
-                                   std::reference_wrapper<Qnn_TensorV2_t>>;
-
-auto getTensorTypeVariant(Qnn_Tensor_t& tensor) -> TensorVariant {
-    switch (tensor.version) {
-#ifdef QNN_TENSOR_V2_INIT
-        case QNN_TENSOR_VERSION_2:
-            return std::ref(tensor.v2 /* NOLINT */);
-#endif
-        default:
-            return std::ref(tensor.v1 /* NOLINT */);
-    }
-}
-
-using TensorMemoryVariant =
-    std::variant<Qnn_MemHandle_t, std::reference_wrapper<Qnn_ClientBuffer_t>>;
-
-auto getTensorMemoryPtr(Qnn_Tensor_t& tensor) -> void* {
-    auto tensorVariant = getTensorTypeVariant(tensor);
-    return std::visit(
-        [](auto&& typedTensor) {
-            switch (typedTensor.get().memType) {
-                case QNN_TENSORMEMTYPE_MEMHANDLE:
-                    return typedTensor.get().memHandle;  // NOLINT
-                case QNN_TENSORMEMTYPE_RAW:
-                    return typedTensor.get().clientBuf.data;  // NOLINT
-                default:
-                    return static_cast<void*>(nullptr);
-            }
-        },
-        tensorVariant);
-}
-
-void setQnnTensorMemType(Qnn_Tensor_t& qnnTensor, Qnn_TensorMemType_t memType) {
-    auto tensorVariant = getTensorTypeVariant(qnnTensor);
-    std::visit([memType](auto&& tensor) { tensor.get().memType = memType; },
-               tensorVariant);
-}
-
-void setQnnTensorClientBuf(Qnn_Tensor_t& qnnTensor,
-                           Qnn_ClientBuffer_t& clientBuf) {
-    auto tensorVariant = getTensorTypeVariant(qnnTensor);
-    std::visit(
-        [&clientBuf](auto&& tensor) {
-            tensor.get().clientBuf /* NOLINT */ = clientBuf;
-        },
-        tensorVariant);
-}
 
 TensorImpl::TensorImpl(Qnn_Tensor_t* qnnTensor, const bool allocate)
     : m_tensor(qnnTensor) {
