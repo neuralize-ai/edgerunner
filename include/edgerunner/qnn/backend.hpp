@@ -35,8 +35,10 @@ class Backend {
     /**
      * @brief Constructor for the Backend class.
      * @param delegate The delegate type for the backend (CPU, GPU, NPU).
+     * @param isContextBinary Whether the model will be loaded from a context
+     * binary.
      */
-    explicit Backend(DELEGATE delegate);
+    explicit Backend(DELEGATE delegate, bool isContextBinary);
 
     Backend(const Backend&) = default;
     Backend(Backend&&) = delete;
