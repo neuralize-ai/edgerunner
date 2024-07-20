@@ -34,7 +34,7 @@ using QnnInterfaceGetProvidersFnT =
 using QnnSystemInterfaceGetProvidersFnT =
     Qnn_ErrorHandle_t (*)(const QnnSystemInterface_t***, uint32_t*);
 
-Backend::Backend(const DELEGATE delegate)
+Backend::Backend(const DELEGATE delegate, const bool isContextBinary)
     : m_delegate(delegate) {
     loadBackend();
 
@@ -44,7 +44,11 @@ Backend::Backend(const DELEGATE delegate)
 
     createDevice();
 
-    createContext();
+    if (isContextBinary) {
+        loadSystemLibrary();
+    } else {
+        createContext();
+    }
 
     setPowerConfig();
 }
