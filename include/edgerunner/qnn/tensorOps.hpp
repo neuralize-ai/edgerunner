@@ -1,7 +1,9 @@
 #pragma once
 
 #include <cstdlib>
+#include <cstring>
 #include <functional>
+#include <type_traits>
 #include <variant>
 
 #include <QnnTypes.h>
@@ -288,6 +290,122 @@ inline void freeQnnTensors(Qnn_Tensor_t*& tensors, uint32_t numTensors) {
     }
     free(tensors);
     /* NOLINTEND */
+}
+
+inline auto deepCopyQnnTensorInfo(Qnn_Tensor_t& dst,
+                                  const Qnn_Tensor_t& src) -> bool {
+    dst.version = src.version;
+    const char* tensorName = getQnnTensorName(src);
+    if (tensorName == nullptr) {
+        setQnnTensorName(dst, nullptr);
+    } else {
+        setQnnTensorName(dst, strndup(tensorName, strlen(tensorName)));
+    }
+    setQnnTensorId(dst, getQnnTensorId(src));
+    setQnnTensorType(dst, getQnnTensorType(src));
+    setQnnTensorDataFormat(dst, getQnnTensorDataFormat(src));
+    setQnnTensorDataType(dst, getQnnTensorDataType(src));
+    Qnn_QuantizeParams_t qParams = QNN_QUANTIZE_PARAMS_INIT;
+    qParams.encodingDefinition =
+        getQnnTensorQuantParams(src).encodingDefinition;
+    qParams.quantizationEncoding = QNN_QUANTIZATION_ENCODING_UNDEFINED;
+    if (getQnnTensorQuantParams(src).quantizationEncoding
+        == QNN_QUANTIZATION_ENCODING_SCALE_OFFSET)
+    {
+        qParams.quantizationEncoding =
+            getQnnTensorQuantParams(src).quantizationEncoding;
+        qParams.scaleOffsetEncoding /* NOLINT */ =
+            getQnnTensorQuantParams(src).scaleOffsetEncoding /* NOLINT */;
+    } else if (getQnnTensorQuantParams(src).quantizationEncoding
+               == QNN_QUANTIZATION_ENCODING_AXIS_SCALE_OFFSET)
+    {
+        qParams.quantizationEncoding =
+            getQnnTensorQuantParams(src).quantizationEncoding;
+        qParams.axisScaleOffsetEncoding /* NOLINT */.axis =
+            getQnnTensorQuantParams(src)
+                .axisScaleOffsetEncoding /* NOLINT */.axis;
+        qParams.axisScaleOffsetEncoding /* NOLINT */.numScaleOffsets =
+            getQnnTensorQuantParams(src)
+                .axisScaleOffsetEncoding /* NOLINT */.numScaleOffsets;
+        if (getQnnTensorQuantParams(src)
+                .axisScaleOffsetEncoding /* NOLINT */.numScaleOffsets
+            > 0)
+        {
+            qParams.axisScaleOffsetEncoding.scaleOffset /* NOLINT */ =
+                reinterpret_cast<Qnn_ScaleOffset_t*> /* NOLINT */ (malloc(
+                    getQnnTensorQuantParams(src)
+                        .axisScaleOffsetEncoding /* NOLINT */.numScaleOffsets
+                    * sizeof(Qnn_ScaleOffset_t)));
+            if (qParams.axisScaleOffsetEncoding /* NOLINT */.scaleOffset
+                != nullptr)
+            {
+                for (size_t idx = 0;
+                     idx < getQnnTensorQuantParams(src)
+                               .axisScaleOffsetEncoding /* NOLINT */
+                               .numScaleOffsets;
+                     idx++)
+                {
+                    qParams /* NOLINT */
+                        .axisScaleOffsetEncoding /* NOLINT */.scaleOffset[idx]
+                        .scale = getQnnTensorQuantParams(src) /* NOLINT */
+                                     .axisScaleOffsetEncoding /* NOLINT */
+                                     .scaleOffset[idx]
+                                     .scale;
+                    qParams /* NOLINT */
+                        .axisScaleOffsetEncoding /* NOLINT */.scaleOffset[idx]
+                        .offset = getQnnTensorQuantParams(src) /* NOLINT */
+                                      .axisScaleOffsetEncoding /* NOLINT */
+                                      .scaleOffset[idx]
+                                      .offset;
+                }
+            }
+        }
+    }
+    setQnnTensorQuantParams(dst, qParams);
+    setQnnTensorRank(dst, getQnnTensorRank(src));
+    setQnnTensorDimensions(dst, nullptr);
+    if (getQnnTensorRank(src) > 0) {
+        setQnnTensorDimensions(dst,
+                               static_cast<uint32_t*>(malloc /* NOLINT */ (
+                                   getQnnTensorRank(src) * sizeof(uint32_t))));
+        if (getQnnTensorDimensions(dst) != nullptr) {
+            memcpy(getQnnTensorDimensions(dst),
+                   getQnnTensorDimensions(src),
+                   getQnnTensorRank(src) * sizeof(uint32_t));
+        }
+        if (getQnnTensorIsDynamicDimensions(src) != nullptr) {
+            setQnnTensorIsDynamicDimensions(
+                dst,
+                static_cast<uint8_t*>(malloc /* NOLINT */ (getQnnTensorRank(src)
+                                                           * sizeof(uint8_t))));
+            memcpy(getQnnTensorIsDynamicDimensions(dst),
+                   getQnnTensorIsDynamicDimensions(src),
+                   getQnnTensorRank(src) * sizeof(uint8_t));
+        }
+    }
+
+    setQnnTensorSparseParams(dst, getQnnTensorSparseParams(src));
+
+    return true;
+}
+
+inline auto copyTensorsInfo(const Qnn_Tensor_t* tensorsInfoSrc,
+                            Qnn_Tensor_t*& tensorWrappers,
+                            uint32_t tensorsCount) -> bool {
+    tensorWrappers /* NOLINT */ = static_cast<Qnn_Tensor_t*>(
+        calloc /* NOLINT */ (tensorsCount, sizeof(Qnn_Tensor_t)));
+    if (nullptr == tensorWrappers) {
+        return false;
+    }
+    for (size_t tIdx = 0; tIdx < tensorsCount; ++tIdx) {
+        tensorWrappers[tIdx] /* NOLINT */ = QNN_TENSOR_INIT;
+        if (!deepCopyQnnTensorInfo(tensorWrappers[tIdx], tensorsInfoSrc[tIdx]))
+        {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 }  // namespace edge::qnn
