@@ -55,6 +55,15 @@ class Backend {
      * @return Reference to the backend handle.
      */
     auto getHandle() -> auto& { return m_backendHandle; }
+    /**
+     * @brief Returns a reference to the device handle.
+     *
+     * This function returns a reference to the device handle, allowing access
+     * to the underlying device handle object.
+     *
+     * @return Reference to the device handle.
+     */
+    auto getDeviceHandle() -> auto& { return m_deviceHandle; }
 
     /**
      * @brief Get the context for the backend.
