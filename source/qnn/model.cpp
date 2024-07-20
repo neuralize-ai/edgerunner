@@ -28,15 +28,34 @@ ModelImpl::ModelImpl(const std::filesystem::path& modelPath)
     const auto modelExtension = modelPath.extension().string().substr(1);
     m_loadCachedBinary = modelExtension == "bin";
 
-    m_backend = std::make_unique<Backend>(DELEGATE::NPU);
-
-    setCreationStatus(loadModel(modelPath));
+    m_backend = std::make_unique<Backend>(DELEGATE::NPU, m_loadCachedBinary);
 
     if (!m_loadCachedBinary) {
+        setCreationStatus(loadModel(modelPath));
         setCreationStatus(composeGraphs());
         setPrecision(detectPrecision());
         setCreationStatus(setGraphConfig());
         setCreationStatus(finalizeGraphs());
+    } else {
+        std::ifstream file(modelPath, std::ios::binary);
+        if (!file) {
+            setCreationStatus(STATUS::FAIL);
+            return;
+        }
+
+        const auto bufferSize = std::filesystem::file_size(modelPath);
+
+        std::vector<uint8_t> modelBuffer(bufferSize);
+
+        if (!file.read(
+                reinterpret_cast<char*> /* NOLINT */ (modelBuffer.data()),
+                static_cast<std::streamsize>(modelBuffer.size())))
+        {
+            setCreationStatus(STATUS::FAIL);
+            return;
+        }
+
+        setCreationStatus(loadModel(modelBuffer));
     }
 
     setCreationStatus(allocate());
