@@ -27,7 +27,7 @@ auto createModel(const std::filesystem::path& modelPath)
     }
 
 #ifdef EDGERUNNER_QNN
-    if (modelExtension == "so") {
+    if (modelExtension == "so" || modelExtension == "bin") {
         model = std::make_unique<qnn::ModelImpl>(modelPath);
     }
 #endif
@@ -49,7 +49,7 @@ auto createModel(const nonstd::span<uint8_t>& modelBuffer,
     }
 
 #ifdef EDGERUNNER_QNN
-    if (modelExtension == "so") {
+    if (modelExtension == "so" || modelExtension == "bin") {
         model = std::make_unique<qnn::ModelImpl>(modelBuffer);
     }
 #endif
