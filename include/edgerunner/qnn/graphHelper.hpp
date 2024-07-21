@@ -111,7 +111,7 @@ class GraphInfoWrapper {
     auto accessGraphs() -> auto& { return m_graphsInfo; }
 
     auto setGraph() {
-        m_graphInfo = std::unique_ptr<GraphInfoT>(m_graphsInfo[0]);
+        m_graphInfo = std::unique_ptr<GraphInfoT>(m_graphsInfo[0] /* NOLINT */);
     }
 
     auto getGraphsCountPtr() -> uint32_t* { return &m_graphsCount; }
@@ -172,7 +172,7 @@ class GraphInfoWrapper {
             if (nullptr == qnnInterface.graphRetrieve) {
                 return STATUS::FAIL;
             }
-            auto& graphInfo = (*m_graphsInfo)[graphIdx];
+            auto& graphInfo = (*m_graphsInfo)[graphIdx] /* NOLINT */;
             if (QNN_SUCCESS
                 != qnnInterface.graphRetrieve(
                     qnnContext, graphInfo.graphName, &graphInfo.graph))
@@ -198,7 +198,9 @@ class GraphInfoWrapper {
 
     auto getNumOutputs() const { return m_graphInfo->numOutputTensors; }
 
-    auto& operator[](const size_t index) { return (*m_graphsInfo)[index]; }
+    auto operator[](const size_t index) -> auto& {
+        return (*m_graphsInfo)[index] /* NOLINT */;
+    }
 
     static auto copyGraphsInfoV1(
         const QnnSystemContext_GraphInfoV1_t* graphInfoSrc,
@@ -238,17 +240,15 @@ class GraphInfoWrapper {
         if (graphsInput == nullptr) {
             return false;
         }
-        m_graphsInfo =
-            static_cast<GraphInfoT**>(calloc(numGraphs, sizeof(GraphInfoT*)));
-        auto* graphInfoArr =
-            static_cast<GraphInfoT*>(calloc(numGraphs, sizeof(GraphInfoT)));
-        if (nullptr == m_graphsInfo || nullptr == graphInfoArr) {
-            free(graphInfoArr);
-            return false;
+        m_graphs.resize(numGraphs);
+        m_graphPtrs.clear();
+        m_graphPtrs.reserve(numGraphs);
+
+        for (auto& graph : m_graphs) {
+            m_graphPtrs.push_back(&graph);
         }
 
-        for (size_t gIdx = 0; gIdx < numGraphs; ++gIdx) {
-            if (graphsInput[gIdx].version
+        m_graphsInfo = m_graphPtrs.data();
                 == QNN_SYSTEM_CONTEXT_GRAPH_INFO_VERSION_1)
             {
                 if (!copyGraphsInfoV1(&graphsInput[gIdx].graphInfoV1,
@@ -257,7 +257,6 @@ class GraphInfoWrapper {
                     return false;
                 }
             }
-            m_graphsInfo[gIdx] = graphInfoArr + gIdx;
         }
 
         return true;
@@ -296,6 +295,9 @@ class GraphInfoWrapper {
     }
 
   private:
+    std::vector<GraphInfoT> m_graphs;
+    std::vector<GraphInfoT*> m_graphPtrs;
+
     GraphInfoT** m_graphsInfo {};
     uint32_t m_graphsCount {};
 
