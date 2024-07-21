@@ -39,7 +39,7 @@ class ModelImpl final : public Model {
     auto operator=(const ModelImpl&) -> ModelImpl& = delete;
     auto operator=(ModelImpl&&) -> ModelImpl& = delete;
 
-    ~ModelImpl() final;
+    ~ModelImpl() final = default;
 
     /**
      * @brief Loads the QNN model from the specified path.
@@ -169,16 +169,7 @@ class ModelImpl final : public Model {
 
     std::unique_ptr<Backend> m_backend;
 
-    /* Graph */
-    GraphInfoT** m_graphsInfo {};
-    uint32_t m_graphsCount {};
-
-    GraphInfoT* m_graphInfo {};
-
-    ComposeGraphsFnHandleTypeT m_composeGraphsFnHandle {};
-    FreeGraphInfoFnHandleTypeT m_freeGraphInfoFnHandle {};
-
-    void* m_libModelHandle {};
+    GraphInfoWrapper m_graphInfo;
 
     bool m_loadCachedBinary {};
 };
