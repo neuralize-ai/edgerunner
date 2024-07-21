@@ -81,7 +81,7 @@ if(edgerunner_ENABLE_NPU)
     target_sources(
         edgerunner_edgerunner
         PRIVATE source/qnn/model.cpp source/qnn/tensor.cpp
-                source/qnn/backend.cpp
+                source/qnn/backend.cpp source/qnn/graph.cpp
     )
 
     find_package(qnn REQUIRED)
