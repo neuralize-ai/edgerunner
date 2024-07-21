@@ -12,7 +12,7 @@
 
 #include "backend.hpp"
 #include "edgerunner/model.hpp"
-#include "graphHelper.hpp"
+#include "graph.hpp"
 
 namespace edge::qnn {
 
@@ -169,7 +169,7 @@ class ModelImpl final : public Model {
 
     std::unique_ptr<Backend> m_backend;
 
-    GraphInfoWrapper m_graphInfo;
+    GraphsInfo m_graphInfo;
 
     bool m_loadCachedBinary {};
 };
