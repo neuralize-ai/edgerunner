@@ -1,5 +1,7 @@
 #include "edgerunner/qnn/graph.hpp"
 
+#include "edgerunner/qnn/tensorOps.hpp"
+
 namespace edge::qnn {
 
 GraphsInfo::~GraphsInfo() {
@@ -9,8 +11,15 @@ GraphsInfo::~GraphsInfo() {
 
     if (m_freeGraphInfoFnHandle != nullptr) {
         m_freeGraphInfoFnHandle(&m_graphsInfo, m_graphsCount);
-        return;
+    } else {
+        for (auto& tensor : m_inputTensors) {
+            freeQnnTensor(tensor);
+        }
+        for (auto& tensor : m_outputTensors) {
+            freeQnnTensor(tensor);
+        }
     }
+
     if (m_libModelHandle != nullptr) {
         dlclose(m_libModelHandle);
     }
@@ -112,24 +121,20 @@ auto GraphsInfo::copyGraphsInfoV1(
     graphInfoDst->inputTensors = nullptr;
     graphInfoDst->numInputTensors = 0;
     if (graphInfoSrc->graphInputs != nullptr) {
-        if (!copyTensorsInfo(graphInfoSrc->graphInputs,
-                             graphInfoDst->inputTensors,
-                             graphInfoSrc->numGraphInputs))
-        {
-            return false;
-        }
-        graphInfoDst->numInputTensors = graphInfoSrc->numGraphInputs;
+        m_inputTensors = createTensorsFromInfo(graphInfoSrc->graphInputs,
+                                               graphInfoSrc->numGraphInputs);
+        graphInfoDst->inputTensors = m_inputTensors.data();
+        graphInfoDst->numInputTensors =
+            static_cast<uint32_t>(m_inputTensors.size());
     }
     graphInfoDst->outputTensors = nullptr;
     graphInfoDst->numOutputTensors = 0;
     if (graphInfoSrc->graphOutputs != nullptr) {
-        if (!copyTensorsInfo(graphInfoSrc->graphOutputs,
-                             graphInfoDst->outputTensors,
-                             graphInfoSrc->numGraphOutputs))
-        {
-            return false;
-        }
-        graphInfoDst->numOutputTensors = graphInfoSrc->numGraphOutputs;
+        m_outputTensors = createTensorsFromInfo(graphInfoSrc->graphOutputs,
+                                                graphInfoSrc->numGraphOutputs);
+        graphInfoDst->outputTensors = m_outputTensors.data();
+        graphInfoDst->numOutputTensors =
+            static_cast<uint32_t>(m_outputTensors.size());
     }
     return true;
 }

@@ -162,9 +162,8 @@ class GraphsInfo {
         QnnInterface_ImplementationV2_16_t& qnnInterface,
         Qnn_ContextHandle_t& qnnContext) -> STATUS;
 
-    static auto copyGraphsInfoV1(
-        const QnnSystemContext_GraphInfoV1_t* graphInfoSrc,
-        GraphInfoT* graphInfoDst) -> bool;
+    auto copyGraphsInfoV1(const QnnSystemContext_GraphInfoV1_t* graphInfoSrc,
+                          GraphInfoT* graphInfoDst) -> bool;
 
     auto copyGraphsInfo(const QnnSystemContext_GraphInfo_t* graphsInput,
                         uint32_t numGraphs) -> bool;
@@ -185,6 +184,9 @@ class GraphsInfo {
     FreeGraphInfoFnHandleTypeT m_freeGraphInfoFnHandle {};
 
     void* m_libModelHandle {};
+
+    std::vector<Qnn_Tensor_t> m_inputTensors;
+    std::vector<Qnn_Tensor_t> m_outputTensors;
 };
 
 }  // namespace edge::qnn
