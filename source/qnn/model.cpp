@@ -1,4 +1,3 @@
-#include <cstddef>
 #include <cstdint>
 #include <cstring>
 #include <filesystem>
@@ -70,16 +69,6 @@ ModelImpl::ModelImpl(const nonstd::span<uint8_t>& modelBuffer) {
     setCreationStatus(loadModel(modelBuffer));
 }
 
-ModelImpl::~ModelImpl() {
-    if (m_graphsInfo != nullptr && m_freeGraphInfoFnHandle != nullptr) {
-        m_freeGraphInfoFnHandle(&m_graphsInfo, m_graphsCount);
-    }
-
-    if (m_libModelHandle != nullptr) {
-        dlclose(m_libModelHandle);
-    }
-}
-
 auto ModelImpl::loadModel(const std::filesystem::path& modelPath) -> STATUS {
     return loadFromSharedLibrary(modelPath);
 }
@@ -96,8 +85,7 @@ auto ModelImpl::applyDelegate(const DELEGATE& delegate) -> STATUS {
 }
 
 auto ModelImpl::detectPrecision() -> TensorType {
-    nonstd::span<Qnn_Tensor_t> inputTensorSpecs {m_graphInfo->inputTensors,
-                                                 m_graphInfo->numInputTensors};
+    const auto inputTensorSpecs = m_graphInfo.getInputs();
 
     std::vector<TensorImpl> inputs;
     inputs.reserve(inputTensorSpecs.size());
@@ -123,10 +111,8 @@ auto ModelImpl::allocate() -> STATUS {
     inputs.clear();
     outputs.clear();
 
-    nonstd::span<Qnn_Tensor_t> inputTensorSpecs {m_graphInfo->inputTensors,
-                                                 m_graphInfo->numInputTensors};
-    nonstd::span<Qnn_Tensor_t> outputTensorSpecs {
-        m_graphInfo->outputTensors, m_graphInfo->numOutputTensors};
+    const auto inputTensorSpecs = m_graphInfo.getInputs();
+    const auto outputTensorSpecs = m_graphInfo.getOutputs();
 
     if (inputTensorSpecs.data() == nullptr
         || outputTensorSpecs.data() == nullptr)
@@ -151,11 +137,11 @@ auto ModelImpl::execute() -> STATUS {
     auto& qnnInterface = m_backend->getInterface();
 
     const auto executeStatus =
-        qnnInterface.graphExecute(m_graphInfo->graph,
-                                  m_graphInfo->inputTensors,
-                                  m_graphInfo->numInputTensors,
-                                  m_graphInfo->outputTensors,
-                                  m_graphInfo->numOutputTensors,
+        qnnInterface.graphExecute(m_graphInfo.getGraph(),
+                                  m_graphInfo.getInputs().data(),
+                                  m_graphInfo.getNumInputs(),
+                                  m_graphInfo.getOutputs().data(),
+                                  m_graphInfo.getNumOutputs(),
                                   nullptr,
                                   nullptr);
     if (QNN_GRAPH_NO_ERROR != executeStatus) {
@@ -200,8 +186,8 @@ auto ModelImpl::setGraphConfig() -> STATUS {
             &optimizationCustomConfig;
     }
 
-    const auto status =
-        qnnInterface.graphSetConfig(m_graphInfo->graph, graphConfigs.getPtr());
+    const auto status = qnnInterface.graphSetConfig(m_graphInfo.getGraph(),
+                                                    graphConfigs.getPtr());
 
     if (QNN_GRAPH_NO_ERROR != status) {
         return STATUS::FAIL;
@@ -215,22 +201,12 @@ auto ModelImpl::composeGraphs() -> STATUS {
     auto& qnnContext = m_backend->getContext();
     auto& qnnBackendHandle = m_backend->getHandle();
 
-    const auto status = m_composeGraphsFnHandle(qnnBackendHandle,
-                                                qnnInterface,
-                                                qnnContext,
-                                                nullptr,
-                                                0,
-                                                &m_graphsInfo,
-                                                &m_graphsCount,
-                                                false,
-                                                nullptr,
-                                                QNN_LOG_LEVEL_ERROR);
+    const auto status =
+        m_graphInfo.composeGraphs(qnnBackendHandle, qnnInterface, qnnContext);
 
     if (GraphErrorT::GRAPH_NO_ERROR != status) {
         return STATUS::FAIL;
     }
-
-    m_graphInfo = m_graphsInfo[0];  // NOLINT
 
     return STATUS::SUCCESS;
 }
@@ -239,7 +215,7 @@ auto ModelImpl::finalizeGraphs() -> STATUS {
     auto& qnnInterface = m_backend->getInterface();
 
     const auto status =
-        qnnInterface.graphFinalize(m_graphInfo->graph, nullptr, nullptr);
+        qnnInterface.graphFinalize(m_graphInfo.getGraph(), nullptr, nullptr);
 
     if (QNN_GRAPH_NO_ERROR != status) {
         return STATUS::FAIL;
@@ -293,27 +269,7 @@ auto ModelImpl::saveContextBinary(const std::filesystem::path& binaryPath)
 
 auto ModelImpl::loadFromSharedLibrary(const std::filesystem::path& modelPath)
     -> STATUS {
-    m_libModelHandle = dlopen(modelPath.string().data(), RTLD_NOW | RTLD_LOCAL);
-
-    if (nullptr == m_libModelHandle) {
-        return STATUS::FAIL;
-    }
-
-    m_composeGraphsFnHandle =
-        reinterpret_cast<ComposeGraphsFnHandleTypeT> /* NOLINT */ (
-            dlsym(m_libModelHandle, "QnnModel_composeGraphs"));
-    if (nullptr == m_composeGraphsFnHandle) {
-        return STATUS::FAIL;
-    }
-
-    m_freeGraphInfoFnHandle =
-        reinterpret_cast<FreeGraphInfoFnHandleTypeT> /* NOLINT */ (
-            dlsym(m_libModelHandle, "QnnModel_freeGraphsInfo"));
-    if (nullptr == m_freeGraphInfoFnHandle) {
-        return STATUS::FAIL;
-    }
-
-    return STATUS::SUCCESS;
+    return m_graphInfo.loadFromSharedLibrary(modelPath);
 }
 
 auto ModelImpl::loadFromContextBinary(const nonstd::span<uint8_t>& modelBuffer)
@@ -336,7 +292,7 @@ auto ModelImpl::loadFromContextBinary(const nonstd::span<uint8_t>& modelBuffer)
         return STATUS::FAIL;
     }
 
-    if (!copyMetadataToGraphsInfo(binaryInfo, m_graphsInfo, m_graphsCount)) {
+    if (!m_graphInfo.copyMetadataToGraphsInfo(binaryInfo)) {
         return STATUS::FAIL;
     }
 
@@ -368,22 +324,7 @@ auto ModelImpl::loadFromContextBinary(const nonstd::span<uint8_t>& modelBuffer)
         return STATUS::FAIL;
     }
 
-    for (size_t graphIdx = 0; graphIdx < m_graphsCount; ++graphIdx) {
-        if (nullptr == qnnInterface.graphRetrieve) {
-            return STATUS::FAIL;
-        }
-        auto& graphInfo = (*m_graphsInfo) /* NOLINT */[graphIdx];
-        if (QNN_SUCCESS
-            != qnnInterface.graphRetrieve(
-                context, graphInfo.graphName, &graphInfo.graph))
-        {
-            return STATUS::FAIL;
-        }
-    }
-
-    m_graphInfo = m_graphsInfo[0];  // NOLINT
-
-    return STATUS::SUCCESS;
+    return m_graphInfo.retrieveGraphFromContext(qnnInterface, context);
 }
 
 }  // namespace edge::qnn

@@ -1,13 +1,17 @@
 #pragma once
 
 #include <cstring>
+#include <memory>
 
 #include <QnnCommon.h>
 #include <QnnGraph.h>
 #include <QnnInterface.h>
 #include <QnnTypes.h>
 #include <System/QnnSystemContext.h>
+#include <dlfcn.h>
+#include <nonstd/span.hpp>
 
+#include "edgerunner/model.hpp"
 #include "edgerunner/qnn/tensorOps.hpp"
 
 namespace edge::qnn {
@@ -56,102 +60,251 @@ using ComposeGraphsFnHandleTypeT =
 
 using FreeGraphInfoFnHandleTypeT = GraphErrorT (*)(GraphInfoT***, uint32_t);
 
-inline auto copyGraphsInfoV1(const QnnSystemContext_GraphInfoV1_t* graphInfoSrc,
-                             GraphInfoT* graphInfoDst) -> bool {
-    graphInfoDst->graphName = nullptr;
-    if (graphInfoSrc->graphName != nullptr) {
-        graphInfoDst->graphName =
-            strndup(graphInfoSrc->graphName, strlen(graphInfoSrc->graphName));
+class GraphInfoWrapper {
+  public:
+    GraphInfoWrapper() = default;
+
+    GraphInfoWrapper(const GraphInfoWrapper&) = delete;
+    GraphInfoWrapper(GraphInfoWrapper&&) = delete;
+    auto operator=(const GraphInfoWrapper&) -> GraphInfoWrapper& = delete;
+    auto operator=(GraphInfoWrapper&&) -> GraphInfoWrapper& = delete;
+
+    ~GraphInfoWrapper() {
+        if (m_graphsInfo == nullptr) {
+            return;
+        }
+
+        if (m_freeGraphInfoFnHandle != nullptr) {
+            m_freeGraphInfoFnHandle(&m_graphsInfo, m_graphsCount);
+            return;
+        }
+        if (m_libModelHandle != nullptr) {
+            dlclose(m_libModelHandle);
+        }
     }
-    graphInfoDst->inputTensors = nullptr;
-    graphInfoDst->numInputTensors = 0;
-    if (graphInfoSrc->graphInputs != nullptr) {
-        if (!copyTensorsInfo(graphInfoSrc->graphInputs,
-                             graphInfoDst->inputTensors,
-                             graphInfoSrc->numGraphInputs))
-        {
+
+    auto loadFromSharedLibrary(const std::filesystem::path& modelPath) {
+        m_libModelHandle =
+            dlopen(modelPath.string().data(), RTLD_NOW | RTLD_LOCAL);
+
+        if (nullptr == m_libModelHandle) {
+            return STATUS::FAIL;
+        }
+
+        auto status = setComposeGraphsFnHandle(
+            reinterpret_cast<ComposeGraphsFnHandleTypeT> /* NOLINT */ (
+                dlsym(m_libModelHandle, "QnnModel_composeGraphs")));
+
+        if (status == STATUS::FAIL) {
+            return status;
+        }
+
+        status = setFreeGraphInfoFnHandle(
+            reinterpret_cast<FreeGraphInfoFnHandleTypeT> /* NOLINT */ (
+                dlsym(m_libModelHandle, "QnnModel_freeGraphsInfo")));
+
+        return status;
+    }
+
+    auto getPtr() -> GraphInfoT*** { return &m_graphsInfo; }
+
+    auto accessGraphs() -> auto& { return m_graphsInfo; }
+
+    auto setGraph() {
+        m_graphInfo = std::unique_ptr<GraphInfoT>(m_graphsInfo[0]);
+    }
+
+    auto getGraphsCountPtr() -> uint32_t* { return &m_graphsCount; }
+
+    auto getGraphCount() const { return m_graphsCount; }
+
+    auto accessGraphCount() -> auto& { return m_graphsCount; }
+
+    auto getGraph() -> auto& { return m_graphInfo->graph; }
+
+    auto accessGraph() -> auto& { return m_graphInfo; }
+
+    auto setComposeGraphsFnHandle(
+        ComposeGraphsFnHandleTypeT composeGraphsFnHandle) -> STATUS {
+        m_composeGraphsFnHandle = composeGraphsFnHandle;
+
+        if (m_composeGraphsFnHandle == nullptr) {
+            return STATUS::FAIL;
+        }
+
+        return STATUS::SUCCESS;
+    }
+
+    auto setFreeGraphInfoFnHandle(
+        FreeGraphInfoFnHandleTypeT freeGraphInfoFnHandle) -> STATUS {
+        m_freeGraphInfoFnHandle = freeGraphInfoFnHandle;
+
+        if (m_freeGraphInfoFnHandle == nullptr) {
+            return STATUS::FAIL;
+        }
+
+        return STATUS::SUCCESS;
+    }
+
+    auto composeGraphs(Qnn_BackendHandle_t& qnnBackendHandle,
+                       QnnInterface_ImplementationV2_16_t& qnnInterface,
+                       Qnn_ContextHandle_t& qnnContext) -> GraphErrorT {
+        const auto status = m_composeGraphsFnHandle(qnnBackendHandle,
+                                                    qnnInterface,
+                                                    qnnContext,
+                                                    nullptr,
+                                                    0,
+                                                    &m_graphsInfo,
+                                                    &m_graphsCount,
+                                                    false,
+                                                    nullptr,
+                                                    QNN_LOG_LEVEL_ERROR);
+
+        setGraph();
+
+        return status;
+    }
+
+    auto retrieveGraphFromContext(
+        QnnInterface_ImplementationV2_16_t& qnnInterface,
+        Qnn_ContextHandle_t& qnnContext) -> STATUS {
+        for (size_t graphIdx = 0; graphIdx < m_graphsCount; ++graphIdx) {
+            if (nullptr == qnnInterface.graphRetrieve) {
+                return STATUS::FAIL;
+            }
+            auto& graphInfo = (*m_graphsInfo)[graphIdx];
+            if (QNN_SUCCESS
+                != qnnInterface.graphRetrieve(
+                    qnnContext, graphInfo.graphName, &graphInfo.graph))
+            {
+                return STATUS::FAIL;
+            }
+        }
+
+        setGraph();
+
+        return STATUS::SUCCESS;
+    }
+
+    auto getInputs() -> nonstd::span<Qnn_Tensor_t> {
+        return {m_graphInfo->inputTensors, m_graphInfo->numInputTensors};
+    }
+
+    auto getOutputs() -> nonstd::span<Qnn_Tensor_t> {
+        return {m_graphInfo->outputTensors, m_graphInfo->numOutputTensors};
+    }
+
+    auto getNumInputs() const { return m_graphInfo->numInputTensors; }
+
+    auto getNumOutputs() const { return m_graphInfo->numOutputTensors; }
+
+    auto& operator[](const size_t index) { return (*m_graphsInfo)[index]; }
+
+    static auto copyGraphsInfoV1(
+        const QnnSystemContext_GraphInfoV1_t* graphInfoSrc,
+        GraphInfoT* graphInfoDst) -> bool {
+        graphInfoDst->graphName = nullptr;
+        if (graphInfoSrc->graphName != nullptr) {
+            graphInfoDst->graphName = strndup(graphInfoSrc->graphName,
+                                              strlen(graphInfoSrc->graphName));
+        }
+        graphInfoDst->inputTensors = nullptr;
+        graphInfoDst->numInputTensors = 0;
+        if (graphInfoSrc->graphInputs != nullptr) {
+            if (!copyTensorsInfo(graphInfoSrc->graphInputs,
+                                 graphInfoDst->inputTensors,
+                                 graphInfoSrc->numGraphInputs))
+            {
+                return false;
+            }
+            graphInfoDst->numInputTensors = graphInfoSrc->numGraphInputs;
+        }
+        graphInfoDst->outputTensors = nullptr;
+        graphInfoDst->numOutputTensors = 0;
+        if (graphInfoSrc->graphOutputs != nullptr) {
+            if (!copyTensorsInfo(graphInfoSrc->graphOutputs,
+                                 graphInfoDst->outputTensors,
+                                 graphInfoSrc->numGraphOutputs))
+            {
+                return false;
+            }
+            graphInfoDst->numOutputTensors = graphInfoSrc->numGraphOutputs;
+        }
+        return true;
+    }
+
+    auto copyGraphsInfo(const QnnSystemContext_GraphInfo_t* graphsInput,
+                        const uint32_t numGraphs) -> bool {
+        if (graphsInput == nullptr) {
             return false;
         }
-        graphInfoDst->numInputTensors = graphInfoSrc->numGraphInputs;
-    }
-    graphInfoDst->outputTensors = nullptr;
-    graphInfoDst->numOutputTensors = 0;
-    if (graphInfoSrc->graphOutputs != nullptr) {
-        if (!copyTensorsInfo(graphInfoSrc->graphOutputs,
-                             graphInfoDst->outputTensors,
-                             graphInfoSrc->numGraphOutputs))
-        {
+        m_graphsInfo =
+            static_cast<GraphInfoT**>(calloc(numGraphs, sizeof(GraphInfoT*)));
+        auto* graphInfoArr =
+            static_cast<GraphInfoT*>(calloc(numGraphs, sizeof(GraphInfoT)));
+        if (nullptr == m_graphsInfo || nullptr == graphInfoArr) {
+            free(graphInfoArr);
             return false;
         }
-        graphInfoDst->numOutputTensors = graphInfoSrc->numGraphOutputs;
-    }
-    return true;
-}
 
-inline auto copyGraphsInfo(const QnnSystemContext_GraphInfo_t* graphsInput,
-                           const uint32_t numGraphs,
-                           GraphInfoT**& graphsInfo) -> bool {
-    if (graphsInput == nullptr) {
-        return false;
-    }
-    graphsInfo =
-        static_cast<GraphInfoT**>(calloc(numGraphs, sizeof(GraphInfoT*)));
-    auto* graphInfoArr =
-        static_cast<GraphInfoT*>(calloc(numGraphs, sizeof(GraphInfoT)));
-    if (nullptr == graphsInfo || nullptr == graphInfoArr) {
-        free(graphInfoArr);
-        return false;
+        for (size_t gIdx = 0; gIdx < numGraphs; ++gIdx) {
+            if (graphsInput[gIdx].version
+                == QNN_SYSTEM_CONTEXT_GRAPH_INFO_VERSION_1)
+            {
+                if (!copyGraphsInfoV1(&graphsInput[gIdx].graphInfoV1,
+                                      &graphInfoArr[gIdx]))
+                {
+                    return false;
+                }
+            }
+            m_graphsInfo[gIdx] = graphInfoArr + gIdx;
+        }
+
+        return true;
     }
 
-    for (size_t gIdx = 0; gIdx < numGraphs; ++gIdx) {
-        if (graphsInput[gIdx].version
-            == QNN_SYSTEM_CONTEXT_GRAPH_INFO_VERSION_1)
+    auto copyMetadataToGraphsInfo(
+        const QnnSystemContext_BinaryInfo_t* binaryInfo) -> bool {
+        if (nullptr == binaryInfo) {
+            return false;
+        }
+        m_graphsCount = 0;
+        if (binaryInfo->version == QNN_SYSTEM_CONTEXT_BINARY_INFO_VERSION_1) {
+            if (binaryInfo->contextBinaryInfoV1.graphs != nullptr) {
+                if (!copyGraphsInfo(binaryInfo->contextBinaryInfoV1.graphs,
+                                    binaryInfo->contextBinaryInfoV1.numGraphs))
+                {
+                    return false;
+                }
+                m_graphsCount = binaryInfo->contextBinaryInfoV1.numGraphs;
+                return true;
+            }
+        } else if (binaryInfo->version
+                   == QNN_SYSTEM_CONTEXT_BINARY_INFO_VERSION_2)
         {
-            if (!copyGraphsInfoV1(&graphsInput[gIdx].graphInfoV1,
-                                  &graphInfoArr[gIdx]))
-            {
-                return false;
+            if (binaryInfo->contextBinaryInfoV2.graphs != nullptr) {
+                if (!copyGraphsInfo(binaryInfo->contextBinaryInfoV2.graphs,
+                                    binaryInfo->contextBinaryInfoV2.numGraphs))
+                {
+                    return false;
+                }
+                m_graphsCount = binaryInfo->contextBinaryInfoV2.numGraphs;
+                return true;
             }
         }
-        graphsInfo[gIdx] = graphInfoArr + gIdx;
-    }
-
-    return true;
-}
-
-inline auto copyMetadataToGraphsInfo(
-    const QnnSystemContext_BinaryInfo_t* binaryInfo,
-    GraphInfoT**& graphsInfo,
-    uint32_t& graphsCount) -> bool {
-    if (nullptr == binaryInfo) {
         return false;
     }
-    graphsCount = 0;
-    if (binaryInfo->version == QNN_SYSTEM_CONTEXT_BINARY_INFO_VERSION_1) {
-        if (binaryInfo->contextBinaryInfoV1.graphs != nullptr) {
-            if (!copyGraphsInfo(binaryInfo->contextBinaryInfoV1.graphs,
-                                binaryInfo->contextBinaryInfoV1.numGraphs,
-                                graphsInfo))
-            {
-                return false;
-            }
-            graphsCount = binaryInfo->contextBinaryInfoV1.numGraphs;
-            return true;
-        }
-    } else if (binaryInfo->version == QNN_SYSTEM_CONTEXT_BINARY_INFO_VERSION_2)
-    {
-        if (binaryInfo->contextBinaryInfoV2.graphs != nullptr) {
-            if (!copyGraphsInfo(binaryInfo->contextBinaryInfoV2.graphs,
-                                binaryInfo->contextBinaryInfoV2.numGraphs,
-                                graphsInfo))
-            {
-                return false;
-            }
-            graphsCount = binaryInfo->contextBinaryInfoV2.numGraphs;
-            return true;
-        }
-    }
-    return false;
-}
+
+  private:
+    GraphInfoT** m_graphsInfo {};
+    uint32_t m_graphsCount {};
+
+    std::unique_ptr<GraphInfoT> m_graphInfo;
+
+    ComposeGraphsFnHandleTypeT m_composeGraphsFnHandle {};
+    FreeGraphInfoFnHandleTypeT m_freeGraphInfoFnHandle {};
+
+    void* m_libModelHandle {};
+};
 
 }  // namespace edge::qnn
