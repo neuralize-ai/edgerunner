@@ -1,8 +1,65 @@
+#include <cstddef>
+#include <cstdint>
+#include <cstring>
+#include <exception>
+#include <filesystem>
+#include <functional>
+#include <variant>
+
 #include "edgerunner/qnn/graph.hpp"
 
+#include <QnnCommon.h>
+#include <QnnInterface.h>
+#include <QnnLog.h>
+#include <System/QnnSystemContext.h>
+#include <dlfcn.h>
+#include <fmt/core.h>
+#include <nonstd/span.hpp>
+
+#include "edgerunner/model.hpp"
 #include "edgerunner/qnn/tensorOps.hpp"
 
 namespace edge::qnn {
+
+using ContextBinaryInfoVariant =
+    std::variant<std::reference_wrapper<QnnSystemContext_BinaryInfoV1_t>,
+                 std::reference_wrapper<QnnSystemContext_BinaryInfoV2_t>>;
+
+using ConstContextBinaryInfoVariant =
+    std::variant<std::reference_wrapper<const QnnSystemContext_BinaryInfoV1_t>,
+                 std::reference_wrapper<const QnnSystemContext_BinaryInfoV2_t>>;
+
+inline auto getContextBinaryInfoVariant(
+    QnnSystemContext_BinaryInfo_t* contextBinaryInfo)
+    -> ContextBinaryInfoVariant {
+    switch (contextBinaryInfo->version) {
+        case QNN_SYSTEM_CONTEXT_BINARY_INFO_VERSION_1:
+            return std::ref(
+                contextBinaryInfo->contextBinaryInfoV1 /* NOLINT */);
+        case QNN_SYSTEM_CONTEXT_BINARY_INFO_VERSION_2:
+            return std::ref(
+                contextBinaryInfo->contextBinaryInfoV2 /* NOLINT */);
+        default:
+            return std::ref(
+                contextBinaryInfo->contextBinaryInfoV1 /* NOLINT */);
+    }
+}
+
+inline auto getContextBinaryInfoVariant(
+    const QnnSystemContext_BinaryInfo_t* contextBinaryInfo)
+    -> ConstContextBinaryInfoVariant {
+    switch (contextBinaryInfo->version) {
+        case QNN_SYSTEM_CONTEXT_BINARY_INFO_VERSION_1:
+            return std::cref(
+                contextBinaryInfo->contextBinaryInfoV1 /* NOLINT */);
+        case QNN_SYSTEM_CONTEXT_BINARY_INFO_VERSION_2:
+            return std::cref(
+                contextBinaryInfo->contextBinaryInfoV2 /* NOLINT */);
+        default:
+            return std::cref(
+                contextBinaryInfo->contextBinaryInfoV1 /* NOLINT */);
+    }
+}
 
 GraphsInfo::~GraphsInfo() {
     if (m_graphsInfo == nullptr) {
@@ -12,16 +69,26 @@ GraphsInfo::~GraphsInfo() {
     if (m_freeGraphInfoFnHandle != nullptr) {
         m_freeGraphInfoFnHandle(&m_graphsInfo, m_graphsCount);
     } else {
-        for (auto& tensor : m_inputTensors) {
-            freeQnnTensor(tensor);
-        }
-        for (auto& tensor : m_outputTensors) {
-            freeQnnTensor(tensor);
+        try {
+            for (auto& tensor : m_inputTensors) {
+                freeQnnTensor(tensor);
+            }
+            for (auto& tensor : m_outputTensors) {
+                freeQnnTensor(tensor);
+            }
+        } catch (std::exception& ex) {
+            fmt::print(stderr, "Failed to free graph tensors: {}\n", ex.what());
         }
     }
 
     if (m_libModelHandle != nullptr) {
-        dlclose(m_libModelHandle);
+        try {
+            dlclose(m_libModelHandle);
+        } catch (std::exception& ex) {
+            fmt::print(stderr,
+                       "Failed to close model library handle: {}\n",
+                       ex.what());
+        }
     }
 }
 
@@ -72,7 +139,7 @@ auto GraphsInfo::setFreeGraphInfoFnHandle(
 
 auto GraphsInfo::composeGraphs(Qnn_BackendHandle_t& qnnBackendHandle,
                                QnnInterface_ImplementationV2_16_t& qnnInterface,
-                               Qnn_ContextHandle_t& qnnContext) -> GraphErrorT {
+                               Qnn_ContextHandle_t& qnnContext) -> STATUS {
     const auto status = m_composeGraphsFnHandle(qnnBackendHandle,
                                                 qnnInterface,
                                                 qnnContext,
@@ -84,9 +151,13 @@ auto GraphsInfo::composeGraphs(Qnn_BackendHandle_t& qnnBackendHandle,
                                                 nullptr,
                                                 QNN_LOG_LEVEL_ERROR);
 
+    if (status != GRAPH_NO_ERROR) {
+        return STATUS::FAIL;
+    }
+
     setGraph();
 
-    return status;
+    return STATUS::SUCCESS;
 }
 
 auto GraphsInfo::retrieveGraphFromContext(
@@ -154,8 +225,8 @@ auto GraphsInfo::copyGraphsInfo(const QnnSystemContext_GraphInfo_t* graphsInput,
 
     m_graphsInfo = m_graphPtrs.data();
 
-    nonstd::span<const QnnSystemContext_GraphInfo_t> srcGraphs {graphsInput,
-                                                                numGraphs};
+    const nonstd::span<const QnnSystemContext_GraphInfo_t> srcGraphs {
+        graphsInput, numGraphs};
 
     for (uint32_t i = 0; i < numGraphs; ++i) {
         if (srcGraphs[i].version == QNN_SYSTEM_CONTEXT_GRAPH_INFO_VERSION_1) {

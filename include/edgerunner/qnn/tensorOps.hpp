@@ -388,7 +388,8 @@ inline auto deepCopyQnnTensorInfo(Qnn_Tensor_t& dst,
 inline auto createTensorsFromInfo(const Qnn_Tensor_t* tensorsInfoSrc,
                                   uint32_t tensorsCount)
     -> std::vector<Qnn_Tensor_t> {
-    nonstd::span<const Qnn_Tensor_t> tensorsInfo {tensorsInfoSrc, tensorsCount};
+    const nonstd::span<const Qnn_Tensor_t> tensorsInfo {tensorsInfoSrc,
+                                                        tensorsCount};
     std::vector<Qnn_Tensor_t> tensorWrappers(tensorsCount);
     for (size_t tIdx = 0; tIdx < tensorsCount; ++tIdx) {
         tensorWrappers[tIdx] /* NOLINT */ = QNN_TENSOR_INIT;

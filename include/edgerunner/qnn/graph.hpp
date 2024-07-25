@@ -12,7 +12,6 @@
 #include <nonstd/span.hpp>
 
 #include "edgerunner/model.hpp"
-#include "edgerunner/qnn/tensorOps.hpp"
 
 namespace edge::qnn {
 
@@ -59,46 +58,6 @@ using ComposeGraphsFnHandleTypeT =
                     QnnLog_Level_t);
 
 using FreeGraphInfoFnHandleTypeT = GraphErrorT (*)(GraphInfoT***, uint32_t);
-
-using ContextBinaryInfoVariant =
-    std::variant<std::reference_wrapper<QnnSystemContext_BinaryInfoV1_t>,
-                 std::reference_wrapper<QnnSystemContext_BinaryInfoV2_t>>;
-
-using ConstContextBinaryInfoVariant =
-    std::variant<std::reference_wrapper<const QnnSystemContext_BinaryInfoV1_t>,
-                 std::reference_wrapper<const QnnSystemContext_BinaryInfoV2_t>>;
-
-inline auto getContextBinaryInfoVariant(
-    QnnSystemContext_BinaryInfo_t* contextBinaryInfo)
-    -> ContextBinaryInfoVariant {
-    switch (contextBinaryInfo->version) {
-        case QNN_SYSTEM_CONTEXT_BINARY_INFO_VERSION_1:
-            return std::ref(
-                contextBinaryInfo->contextBinaryInfoV1 /* NOLINT */);
-        case QNN_SYSTEM_CONTEXT_BINARY_INFO_VERSION_2:
-            return std::ref(
-                contextBinaryInfo->contextBinaryInfoV2 /* NOLINT */);
-        default:
-            return std::ref(
-                contextBinaryInfo->contextBinaryInfoV1 /* NOLINT */);
-    }
-}
-
-inline auto getContextBinaryInfoVariant(
-    const QnnSystemContext_BinaryInfo_t* contextBinaryInfo)
-    -> ConstContextBinaryInfoVariant {
-    switch (contextBinaryInfo->version) {
-        case QNN_SYSTEM_CONTEXT_BINARY_INFO_VERSION_1:
-            return std::cref(
-                contextBinaryInfo->contextBinaryInfoV1 /* NOLINT */);
-        case QNN_SYSTEM_CONTEXT_BINARY_INFO_VERSION_2:
-            return std::cref(
-                contextBinaryInfo->contextBinaryInfoV2 /* NOLINT */);
-        default:
-            return std::cref(
-                contextBinaryInfo->contextBinaryInfoV1 /* NOLINT */);
-    }
-}
 
 class GraphsInfo {
   public:
@@ -156,7 +115,7 @@ class GraphsInfo {
 
     auto composeGraphs(Qnn_BackendHandle_t& qnnBackendHandle,
                        QnnInterface_ImplementationV2_16_t& qnnInterface,
-                       Qnn_ContextHandle_t& qnnContext) -> GraphErrorT;
+                       Qnn_ContextHandle_t& qnnContext) -> STATUS;
 
     auto retrieveGraphFromContext(
         QnnInterface_ImplementationV2_16_t& qnnInterface,

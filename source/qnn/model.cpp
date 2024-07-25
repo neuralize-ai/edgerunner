@@ -10,13 +10,12 @@
 #include "edgerunner/model.hpp"
 
 #include <HTP/QnnHtpGraph.h>
+#include <QnnCommon.h>
 #include <QnnContext.h>
 #include <QnnGraph.h>
 #include <QnnInterface.h>
-#include <QnnLog.h>
 #include <QnnTypes.h>
 #include <System/QnnSystemContext.h>
-#include <dlfcn.h>
 #include <nonstd/span.hpp>
 
 #include "edgerunner/qnn/backend.hpp"
@@ -201,14 +200,8 @@ auto ModelImpl::composeGraphs() -> STATUS {
     auto& qnnContext = m_backend->getContext();
     auto& qnnBackendHandle = m_backend->getHandle();
 
-    const auto status =
-        m_graphInfo.composeGraphs(qnnBackendHandle, qnnInterface, qnnContext);
-
-    if (GraphErrorT::GRAPH_NO_ERROR != status) {
-        return STATUS::FAIL;
-    }
-
-    return STATUS::SUCCESS;
+    return m_graphInfo.composeGraphs(
+        qnnBackendHandle, qnnInterface, qnnContext);
 }
 
 auto ModelImpl::finalizeGraphs() -> STATUS {
