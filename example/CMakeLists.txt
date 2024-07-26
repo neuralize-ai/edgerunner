@@ -29,7 +29,7 @@ function(add_example NAME)
         add_custom_target(
             "run_${NAME}"
             COMMAND "${CMAKE_SOURCE_DIR}/example/run_with_adb.sh" -b
-                    "${CMAKE_BINARY_DIR}" -e "${NAME}"
+                    "${CMAKE_CURRENT_BINARY_DIR}" -e "${NAME}"
             VERBATIM
         )
     else()
@@ -45,8 +45,6 @@ endfunction()
 
 # NOTE: for Android, adb push fails on symlinks, push directly manually instead
 if(ANDROID)
-    # file(COPY "${CMAKE_BINARY_DIR}/../runtimeLibs/" DESTINATION
-    # ${CMAKE_CURRENT_BINARY_DIR} )
     foreach(dir ${CONAN_RUNTIME_LIB_DIRS})
         file(GLOB_RECURSE shared_libs "${dir}/*.so")
         file(COPY ${shared_libs} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
