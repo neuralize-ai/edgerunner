@@ -110,6 +110,15 @@ Note that if your conan profile does not specify the same compiler, standard
 level, build type and runtime library as CMake, then that could potentially
 cause issues. See the link above for profiles documentation.
 
+An example Android profile is bundled with this repository. Install it to
+your local conan prefix using:
+
+```sh
+conan config install profiles -tf profiles
+```
+
+and invoke it with `-pr android` in your `conan install` invocation.
+
 [conan]: https://conan.io/
 [profile]: https://docs.conan.io/2/reference/config_files/profiles.html
 
@@ -133,6 +142,15 @@ Please note that both the build and test commands accept a `-j` flag to specify
 the number of jobs to use, which should ideally be specified to the number of
 threads your CPU has. You may also want to add that to your preset using the
 `jobs` property, see the [presets documentation][1] for more details.
+
+For Android, the above `ctest` approach does not work. Instead, provided that `conan install` is invoked with an appropriate android profile and Android compatible presets are used, there will be an additional `test-android` target that can be executed with:
+
+```sh
+cmake --build --preset=<preset> -t test-android
+```
+
+Ensure [adb](https://developer.android.com/tools/adb) is configured and a device
+with USB debugging enabled is connected.
 
 ### Developer mode targets
 

@@ -17,12 +17,21 @@ include(Catch)
 
 # ---- Test data ----
 
-set(MODELS_DIR "${CMAKE_SOURCE_DIR}/models")
-set(MODELS_DEST_DIR "${CMAKE_CURRENT_BINARY_DIR}/models")
-if(UNIX)
-    execute_process(COMMAND ln -sfn ${MODELS_DIR} ${MODELS_DEST_DIR})
-elseif(WIN32)
-    execute_process(COMMAND cmd.exe /c mklink ${MODELS_DEST_DIR} ${MODELS_DIR})
+if(ANDROID)
+    foreach(dir ${CONAN_RUNTIME_LIB_DIRS})
+        file(GLOB_RECURSE shared_libs "${dir}/*.so")
+        file(COPY ${shared_libs} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+    endforeach()
+else()
+    set(MODELS_DIR "${CMAKE_SOURCE_DIR}/models")
+    set(MODELS_DEST_DIR "${CMAKE_CURRENT_BINARY_DIR}/models")
+    if(UNIX)
+        execute_process(COMMAND ln -sfn ${MODELS_DIR} ${MODELS_DEST_DIR})
+    elseif(WIN32)
+        execute_process(
+            COMMAND cmd.exe /c mklink ${MODELS_DEST_DIR} ${MODELS_DIR}
+        )
+    endif()
 endif()
 
 # ---- Tests ----
@@ -43,7 +52,17 @@ target_link_libraries(
 )
 target_compile_features(edgerunner_test PRIVATE cxx_std_17)
 
-catch_discover_tests(edgerunner_test)
+if(ANDROID)
+    add_custom_target(
+        test-android
+        COMMAND "${CMAKE_SOURCE_DIR}/scripts/run_with_adb.sh" -b
+                "${CMAKE_CURRENT_BINARY_DIR}" -e "edgerunner_test"
+        VERBATIM
+    )
+    add_dependencies(test-android edgerunner_test)
+else()
+    catch_discover_tests(edgerunner_test)
+endif()
 
 # ---- End-of-file commands ----
 
