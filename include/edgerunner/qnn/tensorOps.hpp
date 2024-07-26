@@ -275,7 +275,7 @@ inline void setQnnTensorMemHandle(Qnn_Tensor_t& tensor,
 
 inline void freeQnnTensor(Qnn_Tensor_t& tensor) {
     /* NOLINTBEGIN */
-    free((void*)getQnnTensorName(tensor));
+    free(std::remove_const_t<void*>(getQnnTensorName(tensor)));
     free(getQnnTensorDimensions(tensor));
     if (getQnnTensorIsDynamicDimensions(tensor)) {
         free(getQnnTensorIsDynamicDimensions(tensor));
