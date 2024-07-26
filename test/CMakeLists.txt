@@ -46,6 +46,10 @@ if(edgerunner_ENABLE_GPU)
     list(APPEND TEST_SOURCES source/tflite_gpu_test.cpp)
 endif()
 
+if(edgerunner_ENABLE_NPU)
+    list(APPEND TEST_SOURCES source/tflite_npu_test.cpp)
+endif()
+
 add_executable(edgerunner_test ${TEST_SOURCES})
 target_link_libraries(
     edgerunner_test PRIVATE edgerunner::edgerunner Catch2::Catch2WithMain
