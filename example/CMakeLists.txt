@@ -28,7 +28,7 @@ function(add_example NAME)
     if(ANDROID)
         add_custom_target(
             "run_${NAME}"
-            COMMAND "${CMAKE_SOURCE_DIR}/example/run_with_adb.sh" -b
+            COMMAND "${CMAKE_SOURCE_DIR}/scripts/run_with_adb.sh" -b
                     "${CMAKE_CURRENT_BINARY_DIR}" -e "${NAME}"
             VERBATIM
         )
