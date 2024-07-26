@@ -80,6 +80,9 @@ auto ModelImpl::applyDelegate(const DELEGATE& delegate) -> STATUS {
     if (delegate != DELEGATE::NPU) {
         return STATUS::FAIL;
     }
+
+    setDelegate(delegate);
+
     return STATUS::SUCCESS;
 }
 
