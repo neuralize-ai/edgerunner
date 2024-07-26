@@ -3,9 +3,9 @@
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 ROOT_DIR="${SCRIPT_DIR}/.."
 
-usage="Usage: $(basename "$0") [-h,--help] [-e,--example <example name>] [-b,--build-dir <build directory>] -- script to execute edgerunner examples on Android devices"
+usage="Usage: $(basename "$0") [-h,--help] [-e,--exe <executable>] [-b,--build-dir <build directory>] -- script to execute edgerunner executables on Android devices"
 
-EXAMPLE=""
+EXE=""
 BUILD_DIR=""
 
 while [[ $# -gt 0 ]]; do
@@ -14,14 +14,14 @@ while [[ $# -gt 0 ]]; do
         echo "$usage"
         exit
         ;;
-    -e | --example)
+    -e | --exe)
         shift
         if [[ -z "$1" || "$1" == --* ]]; then
-            echo "Error: -e,--example requires an argument."
+            echo "Error: -e,--exe requires an argument."
             echo "$usage"
             exit 1
         fi
-        EXAMPLE="$1"
+        EXE="$1"
         shift
         ;;
     -b | --build-dir)
@@ -41,8 +41,8 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-if [[ -z "$EXAMPLE" ]]; then
-    echo "Error: -e,--example is a mandatory argument."
+if [[ -z "$EXE" ]]; then
+    echo "Error: -e,--exe is a mandatory argument."
     echo "$usage"
     exit 1
 fi
@@ -58,16 +58,11 @@ IMAGES_DIR="${ROOT_DIR}/images"
 
 APP_ROOT_DIR="/data/local/tmp/edgerunner"
 APP_BUILD_DIR="${APP_ROOT_DIR}/build"
-APP_EXAMPLE_DIR="${APP_BUILD_DIR}/prod/example"
-
-adb shell "mkdir -p ${APP_BUILD_DIR}"
 
 adb push --sync "${BUILD_DIR}" "${APP_BUILD_DIR}"
-adb push --sync "${MODELS_DIR}" "${APP_EXAMPLE_DIR}"
-adb push --sync "${IMAGES_DIR}" "${APP_EXAMPLE_DIR}"
+adb push --sync "${MODELS_DIR}" "${APP_BUILD_DIR}/models"
+adb push --sync "${IMAGES_DIR}" "${APP_BUILD_DIR}/images"
 
-adb shell "cd ${APP_EXAMPLE_DIR} && LD_LIBRARY_PATH=. ADSP_LIBRARY_PATH=. ./${EXAMPLE}"
-
-adb pull --sync "${APP_EXAMPLE_DIR}/${EXAMPLE}.bin" "${BUILD_DIR}"
+adb shell "cd ${APP_BUILD_DIR} && LD_LIBRARY_PATH=. ADSP_LIBRARY_PATH=. ./${EXE}"
 
 adb shell "rm -rf ${APP_ROOT_DIR}"
