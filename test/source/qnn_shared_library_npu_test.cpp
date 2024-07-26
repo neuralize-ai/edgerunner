@@ -13,7 +13,7 @@
 #include "edgerunner/tensor.hpp"
 #include "utils.hpp"
 
-TEST_CASE("QNN NPU runtime", "[qnn][npu]") {
+TEST_CASE("QNN shared library NPU runtime", "[qnn][shared][npu]") {
     const std::string modelPath = "models/qnn/mobilenet_v3_small.so";
 
     auto model = edge::createModel(modelPath);
@@ -66,7 +66,7 @@ TEST_CASE("QNN NPU runtime", "[qnn][npu]") {
     };
 
     auto output = model->getOutput(0);
-    REQUIRE(output->getName() == "output_0");
+    REQUIRE(output->getName() == "class_logits");
     REQUIRE(output->getDimensions() == std::vector<size_t> {1, 1000});
     REQUIRE(output->getType() == edge::TensorType::FLOAT32);
 
