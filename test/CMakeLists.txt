@@ -47,7 +47,9 @@ if(edgerunner_ENABLE_GPU)
 endif()
 
 if(edgerunner_ENABLE_NPU)
-    list(APPEND TEST_SOURCES source/tflite_npu_test.cpp)
+    list(APPEND TEST_SOURCES source/tflite_npu_test.cpp
+         source/qnn_shared_library_npu_test.cpp
+    )
 endif()
 
 add_executable(edgerunner_test ${TEST_SOURCES})
