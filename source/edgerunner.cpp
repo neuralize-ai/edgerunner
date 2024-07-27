@@ -22,9 +22,11 @@ auto createModel(const std::filesystem::path& modelPath)
 
     std::unique_ptr<Model> model;
 
+#ifdef EDGERUNNER_TFLITE
     if (modelExtension == "tflite") {
         model = std::make_unique<tflite::ModelImpl>(modelPath);
     }
+#endif
 
 #ifdef EDGERUNNER_QNN
     if (modelExtension == "so" || modelExtension == "bin") {
@@ -44,9 +46,11 @@ auto createModel(const nonstd::span<uint8_t>& modelBuffer,
                  const std::string& modelExtension) -> std::unique_ptr<Model> {
     std::unique_ptr<Model> model;
 
+#ifdef EDGERUNNER_TFLITE
     if (modelExtension == "tflite") {
         model = std::make_unique<tflite::ModelImpl>(modelBuffer);
     }
+#endif
 
 #ifdef EDGERUNNER_QNN
     if (modelExtension == "so" || modelExtension == "bin") {
