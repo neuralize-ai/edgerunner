@@ -138,7 +138,7 @@ auto GraphsInfo::setFreeGraphInfoFnHandle(
 }
 
 auto GraphsInfo::composeGraphs(Qnn_BackendHandle_t& qnnBackendHandle,
-                               QnnInterface_ImplementationV2_16_t& qnnInterface,
+                               QNN_INTERFACE_VER_TYPE& qnnInterface,
                                Qnn_ContextHandle_t& qnnContext) -> STATUS {
     const auto status = m_composeGraphsFnHandle(qnnBackendHandle,
                                                 qnnInterface,
@@ -160,9 +160,9 @@ auto GraphsInfo::composeGraphs(Qnn_BackendHandle_t& qnnBackendHandle,
     return STATUS::SUCCESS;
 }
 
-auto GraphsInfo::retrieveGraphFromContext(
-    QnnInterface_ImplementationV2_16_t& qnnInterface,
-    Qnn_ContextHandle_t& qnnContext) -> STATUS {
+auto GraphsInfo::retrieveGraphFromContext(QNN_INTERFACE_VER_TYPE& qnnInterface,
+                                          Qnn_ContextHandle_t& qnnContext)
+    -> STATUS {
     for (size_t graphIdx = 0; graphIdx < m_graphsCount; ++graphIdx) {
         if (nullptr == qnnInterface.graphRetrieve) {
             return STATUS::FAIL;
