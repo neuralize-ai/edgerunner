@@ -69,7 +69,7 @@ class EdgerunnerRecipe(ConanFile):
         self.test_requires("catch2/3.6.0")
 
     def configure(self):
-        if self.options.tflite:
+        if self.options.with_tflite:
             self.options["tensorflow-lite"].with_gpu = self.options.with_gpu
 
         if self.options.examples:
