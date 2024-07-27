@@ -21,6 +21,7 @@ class EdgerunnerRecipe(ConanFile):
         "fPIC": [True, False],
         "with_gpu": [True, False],
         "with_npu": [True, False],
+        "with_tflite": [True, False],
         "examples": [True, False],
     }
 
@@ -29,6 +30,7 @@ class EdgerunnerRecipe(ConanFile):
         "fPIC": True,
         "with_gpu": False,
         "with_npu": False,
+        "with_tflite": True,
         "examples": False,
     }
 
@@ -54,7 +56,8 @@ class EdgerunnerRecipe(ConanFile):
     def requirements(self):
         self.requires("fmt/10.2.1")
         self.requires("span-lite/0.11.0", transitive_headers=True)
-        self.requires("tensorflow-lite/2.12.0")
+        if self.options.with_tflite:
+            self.requires("tensorflow-lite/2.12.0")
 
         if self.options.examples:
             self.requires("opencv/4.9.0")
@@ -66,7 +69,8 @@ class EdgerunnerRecipe(ConanFile):
         self.test_requires("catch2/3.6.0")
 
     def configure(self):
-        self.options["tensorflow-lite"].with_gpu = self.options.with_gpu
+        if self.options.tflite:
+            self.options["tensorflow-lite"].with_gpu = self.options.with_gpu
 
         if self.options.examples:
             self.options["opencv"].with_quirc = False
@@ -89,6 +93,7 @@ class EdgerunnerRecipe(ConanFile):
         toolchain.variables["BUILD_EXAMPLES"] = self.options.examples
         toolchain.variables["edgerunner_ENABLE_GPU"] = self.options.with_gpu
         toolchain.variables["edgerunner_ENABLE_NPU"] = self.options.with_npu
+        toolchain.variables["edgerunner_ENABLE_TFLITE"] = self.options.with_tflite
 
         toolchain.generate()
 
@@ -116,6 +121,9 @@ class EdgerunnerRecipe(ConanFile):
 
         if self.options.with_npu:
             defines.append("EDGERUNNER_QNN")
+
+        if self.options.with_tflite:
+            defines.append("EDGERUNNER_TFLITE")
 
         self.cpp_info.defines = defines
         self.cpp_info.libs = ["edgerunner"]
