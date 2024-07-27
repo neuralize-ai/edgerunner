@@ -72,6 +72,9 @@ class EdgerunnerRecipe(ConanFile):
         if self.options.with_tflite:
             self.options["tensorflow-lite"].with_gpu = self.options.with_gpu
 
+        if self.options.with_npu:
+            self.options["qnn"].with_tflite = self.options.with_tflite
+
         if self.options.examples:
             self.options["opencv"].with_quirc = False
             self.options["opencv"].with_ffmpeg = False
