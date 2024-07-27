@@ -60,6 +60,7 @@
               <ul>
                 <li><a href="#nested-classes">Classes</a></li>
                 <li><a href="#typedef-members">Typedefs</a></li>
+                <li><a href="#func-members">Functions</a></li>
                 <li><a href="#var-members">Variables</a></li>
               </ul>
             </li>
@@ -78,6 +79,10 @@
             </dt>
             <dd>A class template for managing QNN backend configurations.</dd>
             <dt>
+              class <a href="classedge_1_1qnn_1_1GraphsInfo.html" class="m-doc">GraphsInfo</a>
+            </dt>
+            <dd><span></span></dd>
+            <dt>
               class <a href="classedge_1_1qnn_1_1ModelImpl.html" class="m-doc">ModelImpl</a>
             </dt>
             <dd>Implementation of the <a href="classedge_1_1Model.html" class="m-doc">Model</a> interface for QNN models.</dd>
@@ -91,7 +96,7 @@
           <h2><a href="#typedef-members">Typedefs</a></h2>
           <dl class="m-doc">
             <dt>
-              using <a href="#a049831b32766e5d5410fdb040212cd4e" class="m-doc">ModelErrorT</a> = enum ModelError { MODEL_NO_ERROR=0, MODEL_TENSOR_ERROR=1, MODEL_PARAMS_ERROR=2, MODEL_NODES_ERROR=3, MODEL_GRAPH_ERROR=4, MODEL_CONTEXT_ERROR=5, MODEL_GENERATION_ERROR=6, MODEL_SETUP_ERROR=7, MODEL_INVALID_ARGUMENT_ERROR=8, MODEL_FILE_ERROR=9, MODEL_MEMORY_ALLOCATE_ERROR=10, MODEL_UNKNOWN_ERROR=0x7FFFFFFF }
+              using <a href="#a3b033b2f41a153b25dc6802e2294d4d5" class="m-doc">GraphErrorT</a> = enum GraphError { GRAPH_NO_ERROR=0, GRAPH_TENSOR_ERROR=1, GRAPH_PARAMS_ERROR=2, GRAPH_NODES_ERROR=3, GRAPH_GRAPH_ERROR=4, GRAPH_CONTEXT_ERROR=5, GRAPH_GENERATION_ERROR=6, GRAPH_SETUP_ERROR=7, GRAPH_INVALID_ARGUMENT_ERROR=8, GRAPH_FILE_ERROR=9, GRAPH_MEMORY_ALLOCATE_ERROR=10, GRAPH_UNKNOWN_ERROR=0x7FFFFFFF }
             </dt>
             <dd><span></span></dd>
             <dt>
@@ -103,11 +108,171 @@
             </dt>
             <dd><span></span></dd>
             <dt>
-              using <a href="#a19c5bac27aed180c853b18a15463a707" class="m-doc">ComposeGraphsFnHandleTypeT</a> = <a href="namespaceedge_1_1qnn.html#a049831b32766e5d5410fdb040212cd4e" class="m-doc">ModelErrorT</a>(*)(Qnn_BackendHandle_t, QnnInterface_ImplementationV2_16_t, Qnn_ContextHandle_t, const <a href="namespaceedge_1_1qnn.html#ab0c216e0a9fee6408905cbed81fad34b" class="m-doc">GraphConfigInfoT</a>**, const uint32_t, <a href="namespaceedge_1_1qnn.html#a1b0701966da6adde86ebd7436baf1e8d" class="m-doc">GraphInfoT</a>***, uint32_t*, bool, QnnLog_Callback_t, QnnLog_Level_t)
+              using <a href="#a1704a386376504f456b9539625965fb8" class="m-doc">ComposeGraphsFnHandleTypeT</a> = <a href="namespaceedge_1_1qnn.html#a3b033b2f41a153b25dc6802e2294d4d5" class="m-doc">GraphErrorT</a>(*)(Qnn_BackendHandle_t, QnnInterface_ImplementationV2_16_t, Qnn_ContextHandle_t, const <a href="namespaceedge_1_1qnn.html#ab0c216e0a9fee6408905cbed81fad34b" class="m-doc">GraphConfigInfoT</a>**, const uint32_t, <a href="namespaceedge_1_1qnn.html#a1b0701966da6adde86ebd7436baf1e8d" class="m-doc">GraphInfoT</a>***, uint32_t*, bool, QnnLog_Callback_t, QnnLog_Level_t)
             </dt>
             <dd><span></span></dd>
             <dt>
-              using <a href="#aca174436a1af57a1bc4a282e0ab4b6e3" class="m-doc">FreeGraphInfoFnHandleTypeT</a> = <a href="namespaceedge_1_1qnn.html#a049831b32766e5d5410fdb040212cd4e" class="m-doc">ModelErrorT</a>(*)(<a href="namespaceedge_1_1qnn.html#a1b0701966da6adde86ebd7436baf1e8d" class="m-doc">GraphInfoT</a>***, uint32_t)
+              using <a href="#a4fbe505ba12f6679cfe912003658b2fd" class="m-doc">FreeGraphInfoFnHandleTypeT</a> = <a href="namespaceedge_1_1qnn.html#a3b033b2f41a153b25dc6802e2294d4d5" class="m-doc">GraphErrorT</a>(*)(<a href="namespaceedge_1_1qnn.html#a1b0701966da6adde86ebd7436baf1e8d" class="m-doc">GraphInfoT</a>***, uint32_t)
+            </dt>
+            <dd><span></span></dd>
+            <dt>
+              using <a href="#abae732455879e74a89f555996c322e29" class="m-doc">TensorVariant</a> = std::variant&lt;std::reference_wrapper&lt;Qnn_TensorV1_t&gt;, std::reference_wrapper&lt;Qnn_TensorV2_t&gt;&gt;
+            </dt>
+            <dd><span></span></dd>
+            <dt>
+              using <a href="#a493364478d2b98981362db4caf84e6a3" class="m-doc">ConstTensorVariant</a> = std::variant&lt;std::reference_wrapper&lt;const Qnn_TensorV1_t&gt;, std::reference_wrapper&lt;const Qnn_TensorV2_t&gt;&gt;
+            </dt>
+            <dd><span></span></dd>
+            <dt>
+              using <a href="#abbaf52f020846e559f7e265a1821ca1c" class="m-doc">TensorMemoryVariant</a> = std::variant&lt;Qnn_MemHandle_t, std::reference_wrapper&lt;Qnn_ClientBuffer_t&gt;&gt;
+            </dt>
+            <dd><span></span></dd>
+          </dl>
+        </section>
+        <section id="func-members">
+          <h2><a href="#func-members">Functions</a></h2>
+          <dl class="m-doc">
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#a72e8b697c56a99d74ddd7faa833958c5" class="m-doc">getTensorTypeVariant</a>(</span><span class="m-doc-wrap">Qnn_Tensor_t&amp; tensor) -&gt; TensorVariant</span>
+            </dt>
+            <dd><span></span></dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#ad27acecf4f8edd04d56aacda0e7d1ebd" class="m-doc">getTensorTypeVariant</a>(</span><span class="m-doc-wrap">const Qnn_Tensor_t&amp; tensor) -&gt; ConstTensorVariant</span>
+            </dt>
+            <dd><span></span></dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#aee3b4dc91afbbac56e637ef9a249b560" class="m-doc">getTensorMemoryPtr</a>(</span><span class="m-doc-wrap">const Qnn_Tensor_t&amp; tensor) -&gt; void *</span>
+            </dt>
+            <dd><span></span></dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#a64ed4e423b06ceb2ed2aa098a6c57bdb" class="m-doc">getQnnTensorId</a>(</span><span class="m-doc-wrap">const Qnn_Tensor_t&amp; tensor) -&gt; uint32_t</span>
+            </dt>
+            <dd><span></span></dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#aa5b503d7c8b656b862bd0c8c745281d2" class="m-doc">getQnnTensorName</a>(</span><span class="m-doc-wrap">const Qnn_Tensor_t&amp; tensor) -&gt; const char *</span>
+            </dt>
+            <dd><span></span></dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#a20023586079b96722de26f9c7ea3f8a2" class="m-doc">getQnnTensorType</a>(</span><span class="m-doc-wrap">const Qnn_Tensor_t&amp; tensor) -&gt; Qnn_TensorType_t</span>
+            </dt>
+            <dd><span></span></dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#a78b9a722ee8ba4e1fc597e975aaef21c" class="m-doc">getQnnTensorDataFormat</a>(</span><span class="m-doc-wrap">const Qnn_Tensor_t&amp; tensor) -&gt; Qnn_TensorDataFormat_t</span>
+            </dt>
+            <dd><span></span></dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#ad320d782a52d19f754aaaf7fcece5b2e" class="m-doc">getQnnTensorDataType</a>(</span><span class="m-doc-wrap">const Qnn_Tensor_t&amp; tensor) -&gt; Qnn_DataType_t</span>
+            </dt>
+            <dd><span></span></dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#a833f99df81d5ad6b6d8b3d75c977baec" class="m-doc">getQnnTensorQuantParams</a>(</span><span class="m-doc-wrap">const Qnn_Tensor_t&amp; tensor) -&gt; Qnn_QuantizeParams_t</span>
+            </dt>
+            <dd><span></span></dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#a766c03427bc1f3e32592d99336850d6d" class="m-doc">getQnnTensorRank</a>(</span><span class="m-doc-wrap">const Qnn_Tensor_t&amp; tensor) -&gt; uint32_t</span>
+            </dt>
+            <dd><span></span></dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#acbe2f235dd859b8b35e32e890e3a8454" class="m-doc">getQnnTensorDimensions</a>(</span><span class="m-doc-wrap">const Qnn_Tensor_t&amp; tensor) -&gt; uint32_t *</span>
+            </dt>
+            <dd><span></span></dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#a4e1c66a9217ef6f3a756cb32fb3ca838" class="m-doc">getQnnTensorIsDynamicDimensions</a>(</span><span class="m-doc-wrap">const Qnn_Tensor_t&amp; tensor) -&gt; uint8_t *</span>
+            </dt>
+            <dd><span></span></dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#ad33fd085c4e6f713b75dcd0a6c74314f" class="m-doc">getQnnTensorSparseParams</a>(</span><span class="m-doc-wrap">const Qnn_Tensor_t&amp; tensor) -&gt; Qnn_SparseParams_t</span>
+            </dt>
+            <dd><span></span></dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#a4dd3307507af9d84f71027b56829cbf2" class="m-doc">getQnnTensorMemType</a>(</span><span class="m-doc-wrap">const Qnn_Tensor_t&amp; tensor) -&gt; Qnn_TensorMemType_t</span>
+            </dt>
+            <dd><span></span></dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#ae744344157267c39517d471c49776e6c" class="m-doc">getQnnTensorClientBuf</a>(</span><span class="m-doc-wrap">const Qnn_Tensor_t&amp; tensor) -&gt; Qnn_ClientBuffer_t</span>
+            </dt>
+            <dd><span></span></dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#a352cd6733917b7dc16308150f4912c33" class="m-doc">getQnnTensorMemHandle</a>(</span><span class="m-doc-wrap">const Qnn_Tensor_t&amp; tensor) -&gt; Qnn_MemHandle_t</span>
+            </dt>
+            <dd><span></span></dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">void <a href="#abf909eb9e93094913286269d766b74d9" class="m-doc">setQnnTensorId</a>(</span><span class="m-doc-wrap">Qnn_Tensor_t&amp; tensor,
+              uint32_t tensorId)</span>
+            </dt>
+            <dd><span></span></dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">void <a href="#ae6f25623e960b29df2a535e0cf39c945" class="m-doc">setQnnTensorName</a>(</span><span class="m-doc-wrap">Qnn_Tensor_t&amp; tensor,
+              const char* name)</span>
+            </dt>
+            <dd><span></span></dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">void <a href="#aaffbd0a2f2ce7af8b1c0707213cc991e" class="m-doc">setQnnTensorType</a>(</span><span class="m-doc-wrap">Qnn_Tensor_t&amp; tensor,
+              Qnn_TensorType_t type)</span>
+            </dt>
+            <dd><span></span></dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">void <a href="#af6b3758b164d1886d7d5cb7bd0bcacc1" class="m-doc">setQnnTensorDataFormat</a>(</span><span class="m-doc-wrap">Qnn_Tensor_t&amp; tensor,
+              Qnn_TensorDataFormat_t dataFormat)</span>
+            </dt>
+            <dd><span></span></dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">void <a href="#aa29cdd797f4ff846bef9f1b584ba62db" class="m-doc">setQnnTensorDataType</a>(</span><span class="m-doc-wrap">Qnn_Tensor_t&amp; tensor,
+              Qnn_DataType_t dataType)</span>
+            </dt>
+            <dd><span></span></dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">void <a href="#a23065397c8a17fe50d3bd523503408b0" class="m-doc">setQnnTensorQuantParams</a>(</span><span class="m-doc-wrap">Qnn_Tensor_t&amp; tensor,
+              Qnn_QuantizeParams_t quantizeParams)</span>
+            </dt>
+            <dd><span></span></dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">void <a href="#a15f61b93cc7deda3d4e8ba3de05b3b6a" class="m-doc">setQnnTensorRank</a>(</span><span class="m-doc-wrap">Qnn_Tensor_t&amp; tensor,
+              uint32_t rank)</span>
+            </dt>
+            <dd><span></span></dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">void <a href="#a01f66068e235a1ab2c29498487e2ffa9" class="m-doc">setQnnTensorDimensions</a>(</span><span class="m-doc-wrap">Qnn_Tensor_t&amp; tensor,
+              uint32_t*const dimensions)</span>
+            </dt>
+            <dd><span></span></dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">void <a href="#a96ad16e153e8d1309924cc63551fa2ca" class="m-doc">setQnnTensorIsDynamicDimensions</a>(</span><span class="m-doc-wrap">Qnn_Tensor_t&amp; tensor,
+              uint8_t* isDynamicDimensions)</span>
+            </dt>
+            <dd><span></span></dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">void <a href="#ab68b87e745028cebcbb9713bf837c9a0" class="m-doc">setQnnTensorSparseParams</a>(</span><span class="m-doc-wrap">Qnn_Tensor_t&amp; tensor,
+              Qnn_SparseParams_t sparseParams)</span>
+            </dt>
+            <dd><span></span></dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">void <a href="#a0668c41a9b70a265c1982d1da63b760f" class="m-doc">setQnnTensorMemType</a>(</span><span class="m-doc-wrap">Qnn_Tensor_t&amp; tensor,
+              Qnn_TensorMemType_t memType)</span>
+            </dt>
+            <dd><span></span></dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">void <a href="#a8ecfd1474b9c894d06970b9812c59db4" class="m-doc">setQnnTensorClientBuf</a>(</span><span class="m-doc-wrap">Qnn_Tensor_t&amp; tensor,
+              Qnn_ClientBuffer_t clientBuf)</span>
+            </dt>
+            <dd><span></span></dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">void <a href="#aa1ea451099f9ae65054f3e70959330e3" class="m-doc">setQnnTensorMemHandle</a>(</span><span class="m-doc-wrap">Qnn_Tensor_t&amp; tensor,
+              Qnn_MemHandle_t memHandle)</span>
+            </dt>
+            <dd><span></span></dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">void <a href="#a9180829d6676429d3b68d0225b2f6a04" class="m-doc">freeQnnTensor</a>(</span><span class="m-doc-wrap">Qnn_Tensor_t&amp; tensor)</span>
+            </dt>
+            <dd><span></span></dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#ae6e06dfecac915b91854b931ca66c443" class="m-doc">deepCopyQnnTensorInfo</a>(</span><span class="m-doc-wrap">Qnn_Tensor_t&amp; dst,
+              const Qnn_Tensor_t&amp; src) -&gt; bool</span>
+            </dt>
+            <dd><span></span></dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#aa8fbc5800e4762e5413af368ea9d7b52" class="m-doc">createTensorsFromInfo</a>(</span><span class="m-doc-wrap">const Qnn_Tensor_t* tensorsInfoSrc,
+              uint32_t tensorsCount) -&gt; std::vector&lt; Qnn_Tensor_t &gt;</span>
             </dt>
             <dd><span></span></dd>
           </dl>
@@ -143,38 +308,301 @@
         </section>
         <section>
           <h2>Typedef documentation</h2>
-          <section class="m-doc-details" id="a049831b32766e5d5410fdb040212cd4e"><div>
+          <section class="m-doc-details" id="a3b033b2f41a153b25dc6802e2294d4d5"><div>
             <h3>
-              using edge::<wbr />qnn::<wbr /><a href="#a049831b32766e5d5410fdb040212cd4e" class="m-doc-self">ModelErrorT</a> = enum ModelError { MODEL_NO_ERROR=0, MODEL_TENSOR_ERROR=1, MODEL_PARAMS_ERROR=2, MODEL_NODES_ERROR=3, MODEL_GRAPH_ERROR=4, MODEL_CONTEXT_ERROR=5, MODEL_GENERATION_ERROR=6, MODEL_SETUP_ERROR=7, MODEL_INVALID_ARGUMENT_ERROR=8, MODEL_FILE_ERROR=9, MODEL_MEMORY_ALLOCATE_ERROR=10, MODEL_UNKNOWN_ERROR=0x7FFFFFFF }
-              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="qnn_2model_8hpp.html">&lt;edgerunner/qnn/model.hpp&gt;</a></div>
+              using edge::<wbr />qnn::<wbr /><a href="#a3b033b2f41a153b25dc6802e2294d4d5" class="m-doc-self">GraphErrorT</a> = enum GraphError { GRAPH_NO_ERROR=0, GRAPH_TENSOR_ERROR=1, GRAPH_PARAMS_ERROR=2, GRAPH_NODES_ERROR=3, GRAPH_GRAPH_ERROR=4, GRAPH_CONTEXT_ERROR=5, GRAPH_GENERATION_ERROR=6, GRAPH_SETUP_ERROR=7, GRAPH_INVALID_ARGUMENT_ERROR=8, GRAPH_FILE_ERROR=9, GRAPH_MEMORY_ALLOCATE_ERROR=10, GRAPH_UNKNOWN_ERROR=0x7FFFFFFF }
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="graph_8hpp.html">&lt;edgerunner/qnn/graph.hpp&gt;</a></div>
             </h3>
             <p><span></span></p>
           </div></section>
           <section class="m-doc-details" id="a1b0701966da6adde86ebd7436baf1e8d"><div>
             <h3>
               using edge::<wbr />qnn::<wbr /><a href="#a1b0701966da6adde86ebd7436baf1e8d" class="m-doc-self">GraphInfoT</a> = struct GraphInfo { Qnn_GraphHandle_t graph
-              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="qnn_2model_8hpp.html">&lt;edgerunner/qnn/model.hpp&gt;</a></div>
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="graph_8hpp.html">&lt;edgerunner/qnn/graph.hpp&gt;</a></div>
             </h3>
             <p><span></span></p>
           </div></section>
           <section class="m-doc-details" id="ab0c216e0a9fee6408905cbed81fad34b"><div>
             <h3>
               using edge::<wbr />qnn::<wbr /><a href="#ab0c216e0a9fee6408905cbed81fad34b" class="m-doc-self">GraphConfigInfoT</a> = struct GraphConfigInfo { char*<a href="namespaceedge_1_1qnn.html#a92f77ec2932792bbc8dc3a3a808ffd2a" class="m-doc">graphName</a>
-              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="qnn_2model_8hpp.html">&lt;edgerunner/qnn/model.hpp&gt;</a></div>
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="graph_8hpp.html">&lt;edgerunner/qnn/graph.hpp&gt;</a></div>
             </h3>
             <p><span></span></p>
           </div></section>
-          <section class="m-doc-details" id="a19c5bac27aed180c853b18a15463a707"><div>
+          <section class="m-doc-details" id="a1704a386376504f456b9539625965fb8"><div>
             <h3>
-              using edge::<wbr />qnn::<wbr /><a href="#a19c5bac27aed180c853b18a15463a707" class="m-doc-self">ComposeGraphsFnHandleTypeT</a> = <a href="namespaceedge_1_1qnn.html#a049831b32766e5d5410fdb040212cd4e" class="m-doc">ModelErrorT</a>(*)(Qnn_BackendHandle_t, QnnInterface_ImplementationV2_16_t, Qnn_ContextHandle_t, const <a href="namespaceedge_1_1qnn.html#ab0c216e0a9fee6408905cbed81fad34b" class="m-doc">GraphConfigInfoT</a>**, const uint32_t, <a href="namespaceedge_1_1qnn.html#a1b0701966da6adde86ebd7436baf1e8d" class="m-doc">GraphInfoT</a>***, uint32_t*, bool, QnnLog_Callback_t, QnnLog_Level_t)
-              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="qnn_2model_8hpp.html">&lt;edgerunner/qnn/model.hpp&gt;</a></div>
+              using edge::<wbr />qnn::<wbr /><a href="#a1704a386376504f456b9539625965fb8" class="m-doc-self">ComposeGraphsFnHandleTypeT</a> = <a href="namespaceedge_1_1qnn.html#a3b033b2f41a153b25dc6802e2294d4d5" class="m-doc">GraphErrorT</a>(*)(Qnn_BackendHandle_t, QnnInterface_ImplementationV2_16_t, Qnn_ContextHandle_t, const <a href="namespaceedge_1_1qnn.html#ab0c216e0a9fee6408905cbed81fad34b" class="m-doc">GraphConfigInfoT</a>**, const uint32_t, <a href="namespaceedge_1_1qnn.html#a1b0701966da6adde86ebd7436baf1e8d" class="m-doc">GraphInfoT</a>***, uint32_t*, bool, QnnLog_Callback_t, QnnLog_Level_t)
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="graph_8hpp.html">&lt;edgerunner/qnn/graph.hpp&gt;</a></div>
             </h3>
             <p><span></span></p>
           </div></section>
-          <section class="m-doc-details" id="aca174436a1af57a1bc4a282e0ab4b6e3"><div>
+          <section class="m-doc-details" id="a4fbe505ba12f6679cfe912003658b2fd"><div>
             <h3>
-              using edge::<wbr />qnn::<wbr /><a href="#aca174436a1af57a1bc4a282e0ab4b6e3" class="m-doc-self">FreeGraphInfoFnHandleTypeT</a> = <a href="namespaceedge_1_1qnn.html#a049831b32766e5d5410fdb040212cd4e" class="m-doc">ModelErrorT</a>(*)(<a href="namespaceedge_1_1qnn.html#a1b0701966da6adde86ebd7436baf1e8d" class="m-doc">GraphInfoT</a>***, uint32_t)
-              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="qnn_2model_8hpp.html">&lt;edgerunner/qnn/model.hpp&gt;</a></div>
+              using edge::<wbr />qnn::<wbr /><a href="#a4fbe505ba12f6679cfe912003658b2fd" class="m-doc-self">FreeGraphInfoFnHandleTypeT</a> = <a href="namespaceedge_1_1qnn.html#a3b033b2f41a153b25dc6802e2294d4d5" class="m-doc">GraphErrorT</a>(*)(<a href="namespaceedge_1_1qnn.html#a1b0701966da6adde86ebd7436baf1e8d" class="m-doc">GraphInfoT</a>***, uint32_t)
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="graph_8hpp.html">&lt;edgerunner/qnn/graph.hpp&gt;</a></div>
+            </h3>
+            <p><span></span></p>
+          </div></section>
+          <section class="m-doc-details" id="abae732455879e74a89f555996c322e29"><div>
+            <h3>
+              using edge::<wbr />qnn::<wbr /><a href="#abae732455879e74a89f555996c322e29" class="m-doc-self">TensorVariant</a> = std::variant&lt;std::reference_wrapper&lt;Qnn_TensorV1_t&gt;, std::reference_wrapper&lt;Qnn_TensorV2_t&gt;&gt;
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="tensorOps_8hpp.html">&lt;edgerunner/qnn/tensorOps.hpp&gt;</a></div>
+            </h3>
+            <p><span></span></p>
+          </div></section>
+          <section class="m-doc-details" id="a493364478d2b98981362db4caf84e6a3"><div>
+            <h3>
+              using edge::<wbr />qnn::<wbr /><a href="#a493364478d2b98981362db4caf84e6a3" class="m-doc-self">ConstTensorVariant</a> = std::variant&lt;std::reference_wrapper&lt;const Qnn_TensorV1_t&gt;, std::reference_wrapper&lt;const Qnn_TensorV2_t&gt;&gt;
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="tensorOps_8hpp.html">&lt;edgerunner/qnn/tensorOps.hpp&gt;</a></div>
+            </h3>
+            <p><span></span></p>
+          </div></section>
+          <section class="m-doc-details" id="abbaf52f020846e559f7e265a1821ca1c"><div>
+            <h3>
+              using edge::<wbr />qnn::<wbr /><a href="#abbaf52f020846e559f7e265a1821ca1c" class="m-doc-self">TensorMemoryVariant</a> = std::variant&lt;Qnn_MemHandle_t, std::reference_wrapper&lt;Qnn_ClientBuffer_t&gt;&gt;
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="tensorOps_8hpp.html">&lt;edgerunner/qnn/tensorOps.hpp&gt;</a></div>
+            </h3>
+            <p><span></span></p>
+          </div></section>
+        </section>
+        <section>
+          <h2>Function documentation</h2>
+          <section class="m-doc-details" id="a72e8b697c56a99d74ddd7faa833958c5"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">auto edge::<wbr />qnn::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a72e8b697c56a99d74ddd7faa833958c5" class="m-doc-self">getTensorTypeVariant</a>(</span><span class="m-doc-wrap">Qnn_Tensor_t&amp; tensor) -&gt; TensorVariant</span></span>
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="tensorOps_8hpp.html">&lt;edgerunner/qnn/tensorOps.hpp&gt;</a></div>
+            </h3>
+            <p><span></span></p>
+          </div></section>
+          <section class="m-doc-details" id="ad27acecf4f8edd04d56aacda0e7d1ebd"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">auto edge::<wbr />qnn::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#ad27acecf4f8edd04d56aacda0e7d1ebd" class="m-doc-self">getTensorTypeVariant</a>(</span><span class="m-doc-wrap">const Qnn_Tensor_t&amp; tensor) -&gt; ConstTensorVariant</span></span>
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="tensorOps_8hpp.html">&lt;edgerunner/qnn/tensorOps.hpp&gt;</a></div>
+            </h3>
+            <p><span></span></p>
+          </div></section>
+          <section class="m-doc-details" id="aee3b4dc91afbbac56e637ef9a249b560"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">auto edge::<wbr />qnn::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#aee3b4dc91afbbac56e637ef9a249b560" class="m-doc-self">getTensorMemoryPtr</a>(</span><span class="m-doc-wrap">const Qnn_Tensor_t&amp; tensor) -&gt; void *</span></span>
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="tensorOps_8hpp.html">&lt;edgerunner/qnn/tensorOps.hpp&gt;</a></div>
+            </h3>
+            <p><span></span></p>
+          </div></section>
+          <section class="m-doc-details" id="a64ed4e423b06ceb2ed2aa098a6c57bdb"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">auto edge::<wbr />qnn::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a64ed4e423b06ceb2ed2aa098a6c57bdb" class="m-doc-self">getQnnTensorId</a>(</span><span class="m-doc-wrap">const Qnn_Tensor_t&amp; tensor) -&gt; uint32_t</span></span>
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="tensorOps_8hpp.html">&lt;edgerunner/qnn/tensorOps.hpp&gt;</a></div>
+            </h3>
+            <p><span></span></p>
+          </div></section>
+          <section class="m-doc-details" id="aa5b503d7c8b656b862bd0c8c745281d2"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">auto edge::<wbr />qnn::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#aa5b503d7c8b656b862bd0c8c745281d2" class="m-doc-self">getQnnTensorName</a>(</span><span class="m-doc-wrap">const Qnn_Tensor_t&amp; tensor) -&gt; const char *</span></span>
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="tensorOps_8hpp.html">&lt;edgerunner/qnn/tensorOps.hpp&gt;</a></div>
+            </h3>
+            <p><span></span></p>
+          </div></section>
+          <section class="m-doc-details" id="a20023586079b96722de26f9c7ea3f8a2"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">auto edge::<wbr />qnn::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a20023586079b96722de26f9c7ea3f8a2" class="m-doc-self">getQnnTensorType</a>(</span><span class="m-doc-wrap">const Qnn_Tensor_t&amp; tensor) -&gt; Qnn_TensorType_t</span></span>
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="tensorOps_8hpp.html">&lt;edgerunner/qnn/tensorOps.hpp&gt;</a></div>
+            </h3>
+            <p><span></span></p>
+          </div></section>
+          <section class="m-doc-details" id="a78b9a722ee8ba4e1fc597e975aaef21c"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">auto edge::<wbr />qnn::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a78b9a722ee8ba4e1fc597e975aaef21c" class="m-doc-self">getQnnTensorDataFormat</a>(</span><span class="m-doc-wrap">const Qnn_Tensor_t&amp; tensor) -&gt; Qnn_TensorDataFormat_t</span></span>
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="tensorOps_8hpp.html">&lt;edgerunner/qnn/tensorOps.hpp&gt;</a></div>
+            </h3>
+            <p><span></span></p>
+          </div></section>
+          <section class="m-doc-details" id="ad320d782a52d19f754aaaf7fcece5b2e"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">auto edge::<wbr />qnn::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#ad320d782a52d19f754aaaf7fcece5b2e" class="m-doc-self">getQnnTensorDataType</a>(</span><span class="m-doc-wrap">const Qnn_Tensor_t&amp; tensor) -&gt; Qnn_DataType_t</span></span>
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="tensorOps_8hpp.html">&lt;edgerunner/qnn/tensorOps.hpp&gt;</a></div>
+            </h3>
+            <p><span></span></p>
+          </div></section>
+          <section class="m-doc-details" id="a833f99df81d5ad6b6d8b3d75c977baec"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">auto edge::<wbr />qnn::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a833f99df81d5ad6b6d8b3d75c977baec" class="m-doc-self">getQnnTensorQuantParams</a>(</span><span class="m-doc-wrap">const Qnn_Tensor_t&amp; tensor) -&gt; Qnn_QuantizeParams_t</span></span>
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="tensorOps_8hpp.html">&lt;edgerunner/qnn/tensorOps.hpp&gt;</a></div>
+            </h3>
+            <p><span></span></p>
+          </div></section>
+          <section class="m-doc-details" id="a766c03427bc1f3e32592d99336850d6d"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">auto edge::<wbr />qnn::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a766c03427bc1f3e32592d99336850d6d" class="m-doc-self">getQnnTensorRank</a>(</span><span class="m-doc-wrap">const Qnn_Tensor_t&amp; tensor) -&gt; uint32_t</span></span>
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="tensorOps_8hpp.html">&lt;edgerunner/qnn/tensorOps.hpp&gt;</a></div>
+            </h3>
+            <p><span></span></p>
+          </div></section>
+          <section class="m-doc-details" id="acbe2f235dd859b8b35e32e890e3a8454"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">auto edge::<wbr />qnn::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#acbe2f235dd859b8b35e32e890e3a8454" class="m-doc-self">getQnnTensorDimensions</a>(</span><span class="m-doc-wrap">const Qnn_Tensor_t&amp; tensor) -&gt; uint32_t *</span></span>
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="tensorOps_8hpp.html">&lt;edgerunner/qnn/tensorOps.hpp&gt;</a></div>
+            </h3>
+            <p><span></span></p>
+          </div></section>
+          <section class="m-doc-details" id="a4e1c66a9217ef6f3a756cb32fb3ca838"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">auto edge::<wbr />qnn::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a4e1c66a9217ef6f3a756cb32fb3ca838" class="m-doc-self">getQnnTensorIsDynamicDimensions</a>(</span><span class="m-doc-wrap">const Qnn_Tensor_t&amp; tensor) -&gt; uint8_t *</span></span>
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="tensorOps_8hpp.html">&lt;edgerunner/qnn/tensorOps.hpp&gt;</a></div>
+            </h3>
+            <p><span></span></p>
+          </div></section>
+          <section class="m-doc-details" id="ad33fd085c4e6f713b75dcd0a6c74314f"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">auto edge::<wbr />qnn::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#ad33fd085c4e6f713b75dcd0a6c74314f" class="m-doc-self">getQnnTensorSparseParams</a>(</span><span class="m-doc-wrap">const Qnn_Tensor_t&amp; tensor) -&gt; Qnn_SparseParams_t</span></span>
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="tensorOps_8hpp.html">&lt;edgerunner/qnn/tensorOps.hpp&gt;</a></div>
+            </h3>
+            <p><span></span></p>
+          </div></section>
+          <section class="m-doc-details" id="a4dd3307507af9d84f71027b56829cbf2"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">auto edge::<wbr />qnn::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a4dd3307507af9d84f71027b56829cbf2" class="m-doc-self">getQnnTensorMemType</a>(</span><span class="m-doc-wrap">const Qnn_Tensor_t&amp; tensor) -&gt; Qnn_TensorMemType_t</span></span>
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="tensorOps_8hpp.html">&lt;edgerunner/qnn/tensorOps.hpp&gt;</a></div>
+            </h3>
+            <p><span></span></p>
+          </div></section>
+          <section class="m-doc-details" id="ae744344157267c39517d471c49776e6c"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">auto edge::<wbr />qnn::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#ae744344157267c39517d471c49776e6c" class="m-doc-self">getQnnTensorClientBuf</a>(</span><span class="m-doc-wrap">const Qnn_Tensor_t&amp; tensor) -&gt; Qnn_ClientBuffer_t</span></span>
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="tensorOps_8hpp.html">&lt;edgerunner/qnn/tensorOps.hpp&gt;</a></div>
+            </h3>
+            <p><span></span></p>
+          </div></section>
+          <section class="m-doc-details" id="a352cd6733917b7dc16308150f4912c33"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">auto edge::<wbr />qnn::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a352cd6733917b7dc16308150f4912c33" class="m-doc-self">getQnnTensorMemHandle</a>(</span><span class="m-doc-wrap">const Qnn_Tensor_t&amp; tensor) -&gt; Qnn_MemHandle_t</span></span>
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="tensorOps_8hpp.html">&lt;edgerunner/qnn/tensorOps.hpp&gt;</a></div>
+            </h3>
+            <p><span></span></p>
+          </div></section>
+          <section class="m-doc-details" id="abf909eb9e93094913286269d766b74d9"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">void edge::<wbr />qnn::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#abf909eb9e93094913286269d766b74d9" class="m-doc-self">setQnnTensorId</a>(</span><span class="m-doc-wrap">Qnn_Tensor_t&amp; tensor,
+              uint32_t tensorId)</span></span>
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="tensorOps_8hpp.html">&lt;edgerunner/qnn/tensorOps.hpp&gt;</a></div>
+            </h3>
+            <p><span></span></p>
+          </div></section>
+          <section class="m-doc-details" id="ae6f25623e960b29df2a535e0cf39c945"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">void edge::<wbr />qnn::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#ae6f25623e960b29df2a535e0cf39c945" class="m-doc-self">setQnnTensorName</a>(</span><span class="m-doc-wrap">Qnn_Tensor_t&amp; tensor,
+              const char* name)</span></span>
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="tensorOps_8hpp.html">&lt;edgerunner/qnn/tensorOps.hpp&gt;</a></div>
+            </h3>
+            <p><span></span></p>
+          </div></section>
+          <section class="m-doc-details" id="aaffbd0a2f2ce7af8b1c0707213cc991e"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">void edge::<wbr />qnn::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#aaffbd0a2f2ce7af8b1c0707213cc991e" class="m-doc-self">setQnnTensorType</a>(</span><span class="m-doc-wrap">Qnn_Tensor_t&amp; tensor,
+              Qnn_TensorType_t type)</span></span>
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="tensorOps_8hpp.html">&lt;edgerunner/qnn/tensorOps.hpp&gt;</a></div>
+            </h3>
+            <p><span></span></p>
+          </div></section>
+          <section class="m-doc-details" id="af6b3758b164d1886d7d5cb7bd0bcacc1"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">void edge::<wbr />qnn::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#af6b3758b164d1886d7d5cb7bd0bcacc1" class="m-doc-self">setQnnTensorDataFormat</a>(</span><span class="m-doc-wrap">Qnn_Tensor_t&amp; tensor,
+              Qnn_TensorDataFormat_t dataFormat)</span></span>
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="tensorOps_8hpp.html">&lt;edgerunner/qnn/tensorOps.hpp&gt;</a></div>
+            </h3>
+            <p><span></span></p>
+          </div></section>
+          <section class="m-doc-details" id="aa29cdd797f4ff846bef9f1b584ba62db"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">void edge::<wbr />qnn::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#aa29cdd797f4ff846bef9f1b584ba62db" class="m-doc-self">setQnnTensorDataType</a>(</span><span class="m-doc-wrap">Qnn_Tensor_t&amp; tensor,
+              Qnn_DataType_t dataType)</span></span>
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="tensorOps_8hpp.html">&lt;edgerunner/qnn/tensorOps.hpp&gt;</a></div>
+            </h3>
+            <p><span></span></p>
+          </div></section>
+          <section class="m-doc-details" id="a23065397c8a17fe50d3bd523503408b0"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">void edge::<wbr />qnn::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a23065397c8a17fe50d3bd523503408b0" class="m-doc-self">setQnnTensorQuantParams</a>(</span><span class="m-doc-wrap">Qnn_Tensor_t&amp; tensor,
+              Qnn_QuantizeParams_t quantizeParams)</span></span>
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="tensorOps_8hpp.html">&lt;edgerunner/qnn/tensorOps.hpp&gt;</a></div>
+            </h3>
+            <p><span></span></p>
+          </div></section>
+          <section class="m-doc-details" id="a15f61b93cc7deda3d4e8ba3de05b3b6a"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">void edge::<wbr />qnn::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a15f61b93cc7deda3d4e8ba3de05b3b6a" class="m-doc-self">setQnnTensorRank</a>(</span><span class="m-doc-wrap">Qnn_Tensor_t&amp; tensor,
+              uint32_t rank)</span></span>
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="tensorOps_8hpp.html">&lt;edgerunner/qnn/tensorOps.hpp&gt;</a></div>
+            </h3>
+            <p><span></span></p>
+          </div></section>
+          <section class="m-doc-details" id="a01f66068e235a1ab2c29498487e2ffa9"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">void edge::<wbr />qnn::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a01f66068e235a1ab2c29498487e2ffa9" class="m-doc-self">setQnnTensorDimensions</a>(</span><span class="m-doc-wrap">Qnn_Tensor_t&amp; tensor,
+              uint32_t*const dimensions)</span></span>
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="tensorOps_8hpp.html">&lt;edgerunner/qnn/tensorOps.hpp&gt;</a></div>
+            </h3>
+            <p><span></span></p>
+          </div></section>
+          <section class="m-doc-details" id="a96ad16e153e8d1309924cc63551fa2ca"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">void edge::<wbr />qnn::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a96ad16e153e8d1309924cc63551fa2ca" class="m-doc-self">setQnnTensorIsDynamicDimensions</a>(</span><span class="m-doc-wrap">Qnn_Tensor_t&amp; tensor,
+              uint8_t* isDynamicDimensions)</span></span>
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="tensorOps_8hpp.html">&lt;edgerunner/qnn/tensorOps.hpp&gt;</a></div>
+            </h3>
+            <p><span></span></p>
+          </div></section>
+          <section class="m-doc-details" id="ab68b87e745028cebcbb9713bf837c9a0"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">void edge::<wbr />qnn::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#ab68b87e745028cebcbb9713bf837c9a0" class="m-doc-self">setQnnTensorSparseParams</a>(</span><span class="m-doc-wrap">Qnn_Tensor_t&amp; tensor,
+              Qnn_SparseParams_t sparseParams)</span></span>
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="tensorOps_8hpp.html">&lt;edgerunner/qnn/tensorOps.hpp&gt;</a></div>
+            </h3>
+            <p><span></span></p>
+          </div></section>
+          <section class="m-doc-details" id="a0668c41a9b70a265c1982d1da63b760f"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">void edge::<wbr />qnn::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a0668c41a9b70a265c1982d1da63b760f" class="m-doc-self">setQnnTensorMemType</a>(</span><span class="m-doc-wrap">Qnn_Tensor_t&amp; tensor,
+              Qnn_TensorMemType_t memType)</span></span>
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="tensorOps_8hpp.html">&lt;edgerunner/qnn/tensorOps.hpp&gt;</a></div>
+            </h3>
+            <p><span></span></p>
+          </div></section>
+          <section class="m-doc-details" id="a8ecfd1474b9c894d06970b9812c59db4"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">void edge::<wbr />qnn::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a8ecfd1474b9c894d06970b9812c59db4" class="m-doc-self">setQnnTensorClientBuf</a>(</span><span class="m-doc-wrap">Qnn_Tensor_t&amp; tensor,
+              Qnn_ClientBuffer_t clientBuf)</span></span>
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="tensorOps_8hpp.html">&lt;edgerunner/qnn/tensorOps.hpp&gt;</a></div>
+            </h3>
+            <p><span></span></p>
+          </div></section>
+          <section class="m-doc-details" id="aa1ea451099f9ae65054f3e70959330e3"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">void edge::<wbr />qnn::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#aa1ea451099f9ae65054f3e70959330e3" class="m-doc-self">setQnnTensorMemHandle</a>(</span><span class="m-doc-wrap">Qnn_Tensor_t&amp; tensor,
+              Qnn_MemHandle_t memHandle)</span></span>
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="tensorOps_8hpp.html">&lt;edgerunner/qnn/tensorOps.hpp&gt;</a></div>
+            </h3>
+            <p><span></span></p>
+          </div></section>
+          <section class="m-doc-details" id="a9180829d6676429d3b68d0225b2f6a04"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">void edge::<wbr />qnn::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a9180829d6676429d3b68d0225b2f6a04" class="m-doc-self">freeQnnTensor</a>(</span><span class="m-doc-wrap">Qnn_Tensor_t&amp; tensor)</span></span>
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="tensorOps_8hpp.html">&lt;edgerunner/qnn/tensorOps.hpp&gt;</a></div>
+            </h3>
+            <p><span></span></p>
+          </div></section>
+          <section class="m-doc-details" id="ae6e06dfecac915b91854b931ca66c443"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">auto edge::<wbr />qnn::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#ae6e06dfecac915b91854b931ca66c443" class="m-doc-self">deepCopyQnnTensorInfo</a>(</span><span class="m-doc-wrap">Qnn_Tensor_t&amp; dst,
+              const Qnn_Tensor_t&amp; src) -&gt; bool</span></span>
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="tensorOps_8hpp.html">&lt;edgerunner/qnn/tensorOps.hpp&gt;</a></div>
+            </h3>
+            <p><span></span></p>
+          </div></section>
+          <section class="m-doc-details" id="aa8fbc5800e4762e5413af368ea9d7b52"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">auto edge::<wbr />qnn::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#aa8fbc5800e4762e5413af368ea9d7b52" class="m-doc-self">createTensorsFromInfo</a>(</span><span class="m-doc-wrap">const Qnn_Tensor_t* tensorsInfoSrc,
+              uint32_t tensorsCount) -&gt; std::vector&lt; Qnn_Tensor_t &gt;</span></span>
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="tensorOps_8hpp.html">&lt;edgerunner/qnn/tensorOps.hpp&gt;</a></div>
             </h3>
             <p><span></span></p>
           </div></section>
@@ -184,42 +612,42 @@
           <section class="m-doc-details" id="a92f77ec2932792bbc8dc3a3a808ffd2a"><div>
             <h3>
               char* edge::<wbr />qnn::<wbr /><a href="#a92f77ec2932792bbc8dc3a3a808ffd2a" class="m-doc-self">graphName</a>
-              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="qnn_2model_8hpp.html">&lt;edgerunner/qnn/model.hpp&gt;</a></div>
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="graph_8hpp.html">&lt;edgerunner/qnn/graph.hpp&gt;</a></div>
             </h3>
             <p><span></span></p>
           </div></section>
           <section class="m-doc-details" id="a93ec3874db6e70bd1fd237c62a520c90"><div>
             <h3>
               Qnn_Tensor_t* edge::<wbr />qnn::<wbr /><a href="#a93ec3874db6e70bd1fd237c62a520c90" class="m-doc-self">inputTensors</a>
-              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="qnn_2model_8hpp.html">&lt;edgerunner/qnn/model.hpp&gt;</a></div>
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="graph_8hpp.html">&lt;edgerunner/qnn/graph.hpp&gt;</a></div>
             </h3>
             <p><span></span></p>
           </div></section>
           <section class="m-doc-details" id="aa4e8a6fe5305dfbe5ecf7a45fb9ce1ad"><div>
             <h3>
               uint32_t edge::<wbr />qnn::<wbr /><a href="#aa4e8a6fe5305dfbe5ecf7a45fb9ce1ad" class="m-doc-self">numInputTensors</a>
-              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="qnn_2model_8hpp.html">&lt;edgerunner/qnn/model.hpp&gt;</a></div>
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="graph_8hpp.html">&lt;edgerunner/qnn/graph.hpp&gt;</a></div>
             </h3>
             <p><span></span></p>
           </div></section>
           <section class="m-doc-details" id="a70a9bb9cc9761af89a2a646d9af79a3a"><div>
             <h3>
               Qnn_Tensor_t* edge::<wbr />qnn::<wbr /><a href="#a70a9bb9cc9761af89a2a646d9af79a3a" class="m-doc-self">outputTensors</a>
-              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="qnn_2model_8hpp.html">&lt;edgerunner/qnn/model.hpp&gt;</a></div>
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="graph_8hpp.html">&lt;edgerunner/qnn/graph.hpp&gt;</a></div>
             </h3>
             <p><span></span></p>
           </div></section>
           <section class="m-doc-details" id="a30d1416b79ffe207d762d89f9c935f3a"><div>
             <h3>
               uint32_t edge::<wbr />qnn::<wbr /><a href="#a30d1416b79ffe207d762d89f9c935f3a" class="m-doc-self">numOutputTensors</a>
-              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="qnn_2model_8hpp.html">&lt;edgerunner/qnn/model.hpp&gt;</a></div>
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="graph_8hpp.html">&lt;edgerunner/qnn/graph.hpp&gt;</a></div>
             </h3>
             <p><span></span></p>
           </div></section>
           <section class="m-doc-details" id="a81b93ce432e75af2a1d1beeb560b72e8"><div>
             <h3>
               const QnnGraph_Config_t** edge::<wbr />qnn::<wbr /><a href="#a81b93ce432e75af2a1d1beeb560b72e8" class="m-doc-self">graphConfigs</a>
-              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="qnn_2model_8hpp.html">&lt;edgerunner/qnn/model.hpp&gt;</a></div>
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="graph_8hpp.html">&lt;edgerunner/qnn/graph.hpp&gt;</a></div>
             </h3>
             <p><span></span></p>
           </div></section>

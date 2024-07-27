@@ -82,7 +82,8 @@
           <h2><a href="#typeless-methods">Constructors, destructors, conversion operators</a></h2>
           <dl class="m-doc">
             <dt>
-              <span class="m-doc-wrap-bumper"><a href="#ab4a567bd1249513ded62fd4c45eb0988" class="m-doc">Backend</a>(</span><span class="m-doc-wrap"><a href="namespaceedge.html#a2a339162b70a461c879db12d3832592d" class="m-doc">DELEGATE</a> delegate) <span class="m-label m-flat m-info">explicit</span> </span>
+              <span class="m-doc-wrap-bumper"><a href="#ab22a42290630cc1c3675ff5f429cce8f" class="m-doc">Backend</a>(</span><span class="m-doc-wrap"><a href="namespaceedge.html#a2a339162b70a461c879db12d3832592d" class="m-doc">DELEGATE</a> delegate,
+              bool isContextBinary) <span class="m-label m-flat m-info">explicit</span> </span>
             </dt>
             <dd>Constructor for the <a href="classedge_1_1qnn_1_1Backend.html" class="m-doc">Backend</a> class.</dd>
             <dt id="a38bf42b24fd8e6522949665bc3b5e71a">
@@ -115,6 +116,10 @@
             </dt>
             <dd>Get the backend handle.</dd>
             <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#abdc34df0d0b71852386a2c73ed320f61" class="m-doc">getDeviceHandle</a>(</span><span class="m-doc-wrap">) -&gt; auto &amp;</span>
+            </dt>
+            <dd>Returns a reference to the device handle.</dd>
+            <dt>
               <span class="m-doc-wrap-bumper">auto <a href="#a9217944c7e683bc10705cf19cde9de98" class="m-doc">getContext</a>(</span><span class="m-doc-wrap">) -&gt; auto &amp;</span>
             </dt>
             <dd>Get the context for the backend.</dd>
@@ -122,6 +127,10 @@
               <span class="m-doc-wrap-bumper">auto <a href="#aa29121a22caa102783ca8333c0cbbe0e" class="m-doc">getInterface</a>(</span><span class="m-doc-wrap">) -&gt; auto &amp;</span>
             </dt>
             <dd>Get the QNN interface.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#abd2ebe4784abbf12851a70780c0408c0" class="m-doc">getSystemInterface</a>(</span><span class="m-doc-wrap">) -&gt; auto &amp;</span>
+            </dt>
+            <dd>Get the QNN system interface.</dd>
             <dt>
               <span class="m-doc-wrap-bumper">auto <a href="#ae28d9f0b2137e8a0b48ea357a7d6b13a" class="m-doc">getDelegate</a>(</span><span class="m-doc-wrap">)</span>
             </dt>
@@ -162,9 +171,10 @@
               </tbody>
             </table>
           </div></section>
-          <section class="m-doc-details" id="ab4a567bd1249513ded62fd4c45eb0988"><div>
+          <section class="m-doc-details" id="ab22a42290630cc1c3675ff5f429cce8f"><div>
             <h3>
-              <span class="m-doc-wrap-bumper"> edge::<wbr />qnn::<wbr />Backend::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#ab4a567bd1249513ded62fd4c45eb0988" class="m-doc-self">Backend</a>(</span><span class="m-doc-wrap"><a href="namespaceedge.html#a2a339162b70a461c879db12d3832592d" class="m-doc">DELEGATE</a> delegate) <span class="m-label m-info">explicit</span> </span></span>
+              <span class="m-doc-wrap-bumper"> edge::<wbr />qnn::<wbr />Backend::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#ab22a42290630cc1c3675ff5f429cce8f" class="m-doc-self">Backend</a>(</span><span class="m-doc-wrap"><a href="namespaceedge.html#a2a339162b70a461c879db12d3832592d" class="m-doc">DELEGATE</a> delegate,
+              bool isContextBinary) <span class="m-label m-info">explicit</span> </span></span>
             </h3>
             <p>Constructor for the <a href="classedge_1_1qnn_1_1Backend.html" class="m-doc">Backend</a> class.</p>
             <table class="m-table m-fullwidth m-flat">
@@ -175,6 +185,10 @@
                 <tr>
                   <td style="width: 1%">delegate</td>
                   <td>The delegate type for the backend (CPU, GPU, NPU).</td>
+                </tr>
+                <tr>
+                  <td>isContextBinary</td>
+                  <td>Whether the model will be loaded from a context binary.</td>
                 </tr>
               </tbody>
             </table>
@@ -192,6 +206,21 @@
                 </tr>
               </tfoot>
             </table>
+          </div></section>
+          <section class="m-doc-details" id="abdc34df0d0b71852386a2c73ed320f61"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">auto edge::<wbr />qnn::<wbr />Backend::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#abdc34df0d0b71852386a2c73ed320f61" class="m-doc-self">getDeviceHandle</a>(</span><span class="m-doc-wrap">) -&gt; auto &amp;</span></span>
+            </h3>
+            <p>Returns a reference to the device handle.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <tfoot>
+                <tr>
+                  <th style="width: 1%">Returns</th>
+                  <td>Reference to the device handle.</td>
+                </tr>
+              </tfoot>
+            </table>
+<p>This function returns a reference to the device handle, allowing access to the underlying device handle object.</p>
           </div></section>
           <section class="m-doc-details" id="a9217944c7e683bc10705cf19cde9de98"><div>
             <h3>
@@ -217,6 +246,20 @@
                 <tr>
                   <th style="width: 1%">Returns</th>
                   <td>Reference to the QNN interface.</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="abd2ebe4784abbf12851a70780c0408c0"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">auto edge::<wbr />qnn::<wbr />Backend::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#abd2ebe4784abbf12851a70780c0408c0" class="m-doc-self">getSystemInterface</a>(</span><span class="m-doc-wrap">) -&gt; auto &amp;</span></span>
+            </h3>
+            <p>Get the QNN system interface.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <tfoot>
+                <tr>
+                  <th style="width: 1%">Returns</th>
+                  <td>Reference to the QNN system interface.</td>
                 </tr>
               </tfoot>
             </table>
