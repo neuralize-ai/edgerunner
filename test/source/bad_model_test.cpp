@@ -11,7 +11,7 @@
 #include "edgerunner/edgerunner.hpp"
 #include "utils.hpp"
 
-TEST_CASE("Tflite bad model", "[tflite][misuse]") {
+TEST_CASE("Bad model", "[model][misuse]") {
     const std::string badPath = "test.bin";
     auto badPathModel = edge::createModel(badPath);
     REQUIRE(badPathModel == nullptr);

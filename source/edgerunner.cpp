@@ -8,7 +8,10 @@
 #include <nonstd/span.hpp>
 
 #include "edgerunner/model.hpp"
-#include "edgerunner/tflite/model.hpp"
+
+#ifdef EDGERUNNER_TFLITE
+#    include "edgerunner/tflite/model.hpp"
+#endif
 
 #ifdef EDGERUNNER_QNN
 #    include "edgerunner/qnn/model.hpp"
