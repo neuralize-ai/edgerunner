@@ -77,6 +77,7 @@ if(edgerunner_ENABLE_TFLITE)
         edgerunner_edgerunner PRIVATE source/tflite/model.cpp
                                       source/tflite/tensor.cpp
     )
+    target_compile_definitions(edgerunner_edgerunner PUBLIC EDGERUNNER_TFLITE)
 endif()
 
 if(edgerunner_ENABLE_GPU)
