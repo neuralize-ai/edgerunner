@@ -45,17 +45,16 @@ using GraphConfigInfoT = struct GraphConfigInfo {
     const QnnGraph_Config_t** graphConfigs;
 };
 
-using ComposeGraphsFnHandleTypeT =
-    GraphErrorT (*)(Qnn_BackendHandle_t,
-                    QnnInterface_ImplementationV2_16_t,
-                    Qnn_ContextHandle_t,
-                    const GraphConfigInfoT**,
-                    const uint32_t,
-                    GraphInfoT***,
-                    uint32_t*,
-                    bool,
-                    QnnLog_Callback_t,
-                    QnnLog_Level_t);
+using ComposeGraphsFnHandleTypeT = GraphErrorT (*)(Qnn_BackendHandle_t,
+                                                   QNN_INTERFACE_VER_TYPE,
+                                                   Qnn_ContextHandle_t,
+                                                   const GraphConfigInfoT**,
+                                                   const uint32_t,
+                                                   GraphInfoT***,
+                                                   uint32_t*,
+                                                   bool,
+                                                   QnnLog_Callback_t,
+                                                   QnnLog_Level_t);
 
 using FreeGraphInfoFnHandleTypeT = GraphErrorT (*)(GraphInfoT***, uint32_t);
 
@@ -114,12 +113,11 @@ class GraphsInfo {
         FreeGraphInfoFnHandleTypeT freeGraphInfoFnHandle) -> STATUS;
 
     auto composeGraphs(Qnn_BackendHandle_t& qnnBackendHandle,
-                       QnnInterface_ImplementationV2_16_t& qnnInterface,
+                       QNN_INTERFACE_VER_TYPE& qnnInterface,
                        Qnn_ContextHandle_t& qnnContext) -> STATUS;
 
-    auto retrieveGraphFromContext(
-        QnnInterface_ImplementationV2_16_t& qnnInterface,
-        Qnn_ContextHandle_t& qnnContext) -> STATUS;
+    auto retrieveGraphFromContext(QNN_INTERFACE_VER_TYPE& qnnInterface,
+                                  Qnn_ContextHandle_t& qnnContext) -> STATUS;
 
     auto copyGraphsInfoV1(const QnnSystemContext_GraphInfoV1_t* graphInfoSrc,
                           GraphInfoT* graphInfoDst) -> bool;
