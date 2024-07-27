@@ -73,9 +73,7 @@ class GraphsInfo {
 
     auto accessGraphs() -> auto& { return m_graphsInfo; }
 
-    auto setGraph() {
-        m_graphInfo = std::unique_ptr<GraphInfoT>(m_graphsInfo[0] /* NOLINT */);
-    }
+    auto setGraph() { m_graphInfo = m_graphsInfo[0] /* NOLINT */; }
 
     auto getGraphsCountPtr() -> uint32_t* { return &m_graphsCount; }
 
@@ -132,10 +130,10 @@ class GraphsInfo {
     std::vector<GraphInfoT> m_graphs;
     std::vector<GraphInfoT*> m_graphPtrs;
 
+    GraphInfoT* m_graphInfo {};
+
     GraphInfoT** m_graphsInfo {};
     uint32_t m_graphsCount {};
-
-    std::unique_ptr<GraphInfoT> m_graphInfo;
 
     ComposeGraphsFnHandleTypeT m_composeGraphsFnHandle {};
     FreeGraphInfoFnHandleTypeT m_freeGraphInfoFnHandle {};
