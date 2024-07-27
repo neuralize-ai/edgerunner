@@ -110,17 +110,45 @@ Note that if your conan profile does not specify the same compiler, standard
 level, build type and runtime library as CMake, then that could potentially
 cause issues. See the link above for profiles documentation.
 
-An example Android profile is bundled with this repository. Install it to
-your local conan prefix using:
+[conan]: https://conan.io/
+[profile]: https://docs.conan.io/2/reference/config_files/profiles.html
+
+#### Android
+
+An example Android profile is bundled with this repository. It can be installed
+to your local conan prefix using:
 
 ```sh
 conan config install profiles -tf profiles
 ```
 
-and invoke it with `-pr android` in your `conan install` invocation.
+Use it by adding `-pr android` to your `conan install` invocation.
 
-[conan]: https://conan.io/
-[profile]: https://docs.conan.io/2/reference/config_files/profiles.html
+#### GPU
+
+For GPU support add `-o gpu=True` to the `conan install` invocation.
+> [!NOTE]
+> The tensorflow-lite conan package disables GPU by default and as such these
+  steps will not work currently. I have patched the recipe locally to enable GPU
+  support and will make this available on Conan Center or another repository
+  soon. In the mean time, my custom recipe can be be used as outlined
+  [here](https://github.com/neuralize-ai/tensorflow-lite-conan). If you have
+  previously `conan install`ed, remove the existing TFLite package(s) using
+  `conan remove "tensorflow-lite"`. Make sure to create the TFLite package
+  version that is required in [conanfile](/conanfile.py).
+
+GPU support requires a functioning OpenCL installation. Refer to your OS
+documentation for the steps for setting this up correctly for your GPU vendor.
+
+#### NPU
+
+There is support for executing on Qualcomm NPUs (more hardware support is
+upcoming). Since this involves using Qualcomm's pre-compiled shared libraries,
+I have created a Conan recipe that must be used
+[here](https://github.com/neuralize-ai/qnn-conan). Follow the instructions on
+that repository and the steps above with `-o with_npu=True` supplied to the
+`conan install` invocation. Make sure to create the package version required
+in [conanfile](/conanfile.py).
 
 ### Configure, build and test
 
