@@ -39,19 +39,7 @@ For MacOS, replace "Unix Makefiles" with "Xcode".
 > Examples require additional dependencies to the main library. As such, it is
 required to supply `-o examples=True` to the `conan install` command.
 
-In the examples below, for GPU support add `-o gpu=True` to the `conan install` command.
-> [!NOTE]
-> The tensorflow-lite conan package disables GPU by default and as such these
-  steps will not work currently. I have patched the recipe locally to enable GPU
-  support and will make this available on Conan Center or another repository
-  soon. In the mean time, my custom recipe can be be used as outlined
-  [here](https://github.com/neuralize-ai/tensorflow-lite-conan). If you have
-  previously `conan install`ed, remove the existing TFLite package(s) using
-  `conan remove "tensorflow-lite"`. Make sure to create the TFLite package
-  version that is required in [conanfile](/conanfile.py).
-
-GPU support requires a functioning OpenCL installation. Refer to your OS
-documentation for the steps for setting this up correctly for your GPU vendor.
+Refer to [HACKING](/HACKING.md) for further configuration options.
 
 ## Unix
 
@@ -118,11 +106,3 @@ cmake --build --preset=rel -t run_<example_name>
 ```
 
 where `example_name` is the example filename without the extension (eg. `mobilenet_v3_small`).
-
-There is support for executing on Qualcomm NPUs (more hardware support is
-upcoming). Since this involves using Qualcomm's pre-compiled shared libraries,
-I have created a Conan recipe that must be used
-[here](https://github.com/neuralize-ai/qnn-conan). Follow the instructions on
-that repository and the steps above with `-o with_npu=True` supplied to the
-`conan install` invocation. Make sure to create the package version required
-in [conanfile](/conanfile.py).
