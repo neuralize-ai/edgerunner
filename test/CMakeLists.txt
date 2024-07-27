@@ -36,19 +36,23 @@ endif()
 
 # ---- Tests ----
 
-set(TEST_SOURCES
-    source/tflite_test.cpp source/tflite_from_buffer_test.cpp
-    source/tflite_quantized_test.cpp source/tflite_bad_model_test.cpp
-    source/tflite_delegate_test.cpp
-)
+set(TEST_SOURCES source/bad_model_test.cpp)
 
-if(edgerunner_ENABLE_GPU)
-    list(APPEND TEST_SOURCES source/tflite_gpu_test.cpp)
+if(edgerunner_ENABLE_TFLITE)
+    list(APPEND TEST_SOURCES source/tflite_test.cpp
+         source/tflite_from_buffer_test.cpp source/tflite_delegate_test.cpp
+         source/tflite_quantized_test.cpp
+    )
+    if(edgerunner_ENABLE_GPU)
+        list(APPEND TEST_SOURCES source/tflite_gpu_test.cpp)
+    endif()
+    if(edgerunner_ENABLE_NPU)
+        list(APPEND TEST_SOURCES source/tflite_npu_test.cpp)
+    endif()
 endif()
 
 if(edgerunner_ENABLE_NPU)
-    list(APPEND TEST_SOURCES source/tflite_npu_test.cpp
-         source/qnn_shared_library_npu_test.cpp
+    list(APPEND TEST_SOURCES source/qnn_shared_library_npu_test.cpp
          source/qnn_context_binary_npu_test.cpp
     )
 endif()
