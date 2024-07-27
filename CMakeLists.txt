@@ -19,10 +19,7 @@ include(cmake/variables.cmake)
 
 # ---- Declare library ----
 
-add_library(
-    edgerunner_edgerunner source/edgerunner.cpp source/tflite/model.cpp
-                          source/tflite/tensor.cpp
-)
+add_library(edgerunner_edgerunner source/edgerunner.cpp)
 add_library(edgerunner::edgerunner ALIAS edgerunner_edgerunner)
 
 include(GenerateExportHeader)
@@ -70,8 +67,17 @@ target_link_libraries(edgerunner_edgerunner PRIVATE fmt::fmt)
 find_package(span-lite REQUIRED)
 target_link_libraries(edgerunner_edgerunner PUBLIC nonstd::span-lite)
 
-find_package(tensorflowlite REQUIRED)
-target_link_libraries(edgerunner_edgerunner PRIVATE tensorflow::tensorflowlite)
+if(edgerunner_ENABLE_TFLITE)
+    find_package(tensorflowlite REQUIRED)
+    target_link_libraries(
+        edgerunner_edgerunner PRIVATE tensorflow::tensorflowlite
+    )
+
+    target_sources(
+        edgerunner_edgerunner PRIVATE source/tflite/model.cpp
+                                      source/tflite/tensor.cpp
+    )
+endif()
 
 if(edgerunner_ENABLE_GPU)
     target_compile_definitions(edgerunner_edgerunner PUBLIC EDGERUNNER_GPU)
@@ -89,8 +95,10 @@ if(edgerunner_ENABLE_NPU)
     target_link_libraries(edgerunner_edgerunner PRIVATE qnn::headers)
 
     if(ANDROID)
-        target_link_libraries(edgerunner_edgerunner PRIVATE qnn::tflite)
         target_compile_definitions(edgerunner_edgerunner PUBLIC EDGERUNNER_QNN)
+        if(edgerunner_ENABLE_TFLITE)
+            target_link_libraries(edgerunner_edgerunner PRIVATE qnn::tflite)
+        endif()
     endif()
 endif()
 
