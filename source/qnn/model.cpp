@@ -26,12 +26,14 @@
 
 namespace edge::qnn {
 
+std::unique_ptr<Backend> ModelImpl::m_backend = nullptr;
+
 ModelImpl::ModelImpl(const std::filesystem::path& modelPath)
     : Model(modelPath) {
     const auto modelExtension = modelPath.extension().string().substr(1);
     m_loadCachedBinary = modelExtension == "bin";
 
-    m_backend = std::make_unique<Backend>(DELEGATE::NPU, m_loadCachedBinary);
+    initializeBackend(m_loadCachedBinary);
 
     if (!m_loadCachedBinary) {
         setCreationStatus(loadModel(modelPath));
