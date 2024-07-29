@@ -5,15 +5,20 @@
 #include <filesystem>
 #include <fstream>
 #include <functional>
+#include <ios>
 #include <variant>
+#include <vector>
 
 #include "edgerunner/qnn/graph.hpp"
 
 #include <HTP/QnnHtpContext.h>
 #include <HTP/QnnHtpGraph.h>
 #include <QnnCommon.h>
+#include <QnnContext.h>
+#include <QnnGraph.h>
 #include <QnnInterface.h>
 #include <QnnLog.h>
+#include <QnnTypes.h>
 #include <System/QnnSystemCommon.h>
 #include <System/QnnSystemContext.h>
 #include <System/QnnSystemInterface.h>
@@ -24,6 +29,7 @@
 #include "edgerunner/model.hpp"
 #include "edgerunner/qnn/config.hpp"
 #include "edgerunner/qnn/tensorOps.hpp"
+#include "edgerunner/tensor.hpp"
 
 namespace edge::qnn {
 
@@ -310,15 +316,15 @@ auto GraphsInfo::loadContextFromBinary(QNN_INTERFACE_VER_TYPE& qnnInterface,
     -> STATUS {
     m_qnnInterface = qnnInterface;
 
-    auto& qnnSystemInterface = getSystemInterface();
     QnnSystemContext_Handle_t sysCtxHandle {nullptr};
-    if (QNN_SUCCESS != qnnSystemInterface.systemContextCreate(&sysCtxHandle)) {
+    if (QNN_SUCCESS != m_qnnSystemInterface.systemContextCreate(&sysCtxHandle))
+    {
         return STATUS::FAIL;
     }
     const QnnSystemContext_BinaryInfo_t* binaryInfo {nullptr};
     Qnn_ContextBinarySize_t binaryInfoSize {0};
     if (QNN_SUCCESS
-        != qnnSystemInterface.systemContextGetBinaryInfo(
+        != m_qnnSystemInterface.systemContextGetBinaryInfo(
             sysCtxHandle,
             static_cast<void*>(modelBuffer.data()),
             modelBuffer.size(),
@@ -332,7 +338,7 @@ auto GraphsInfo::loadContextFromBinary(QNN_INTERFACE_VER_TYPE& qnnInterface,
         return STATUS::FAIL;
     }
 
-    qnnSystemInterface.systemContextFree(sysCtxHandle);
+    m_qnnSystemInterface.systemContextFree(sysCtxHandle);
     sysCtxHandle = nullptr;
 
     if (nullptr == m_qnnInterface.contextCreateFromBinary) {
