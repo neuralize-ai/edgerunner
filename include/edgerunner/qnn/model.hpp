@@ -165,8 +165,10 @@ class ModelImpl final : public Model {
      */
     auto detectPrecision() -> TensorType;
 
-    static void initializeBackend(const bool loadCachedBinary) {
-        m_backend = std::make_unique<Backend>(DELEGATE::NPU, loadCachedBinary);
+    static void initializeBackend() {
+        if (m_backend == nullptr) {
+            m_backend = std::make_unique<Backend>(DELEGATE::NPU);
+        }
     }
 
     std::filesystem::path m_modelPath;  ///< The path to the QNN model file
