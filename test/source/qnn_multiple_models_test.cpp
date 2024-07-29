@@ -1,7 +1,5 @@
 #include <string>
 
-#include <catch2/benchmark/catch_benchmark.hpp>
-#include <catch2/catch_message.hpp>
 #include <catch2/catch_test_macros.hpp>
 
 #include "edgerunner/edgerunner.hpp"
@@ -9,7 +7,7 @@
 #include "utils.hpp"
 
 TEST_CASE("QNN multiple models", "[qnn][multiple]") {
-    const std::string modelPath1 = "models/qnn/mobilenet_v3_small.so";
+    const std::string modelPath1 = "models/qnn/mobilenet_v3_small.bin";
     const std::string modelPath2 = "models/qnn/mobilenet_v3_small.so";
 
     auto model1 = edge::createModel(modelPath1);
