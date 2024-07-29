@@ -25,7 +25,10 @@ ModelImpl::ModelImpl(const std::filesystem::path& modelPath)
     const auto modelExtension = modelPath.extension().string().substr(1);
     m_loadCachedBinary = modelExtension == "bin";
 
-    initializeBackend();
+    setCreationStatus(initializeBackend());
+    if (getCreationStatus() == STATUS::FAIL) {
+        return;
+    }
 
     if (!m_loadCachedBinary) {
         setCreationStatus(loadModel(modelPath));

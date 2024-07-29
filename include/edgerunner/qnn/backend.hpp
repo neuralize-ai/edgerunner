@@ -48,6 +48,15 @@ class Backend {
     ~Backend();
 
     /**
+     * @brief Get the status of backend creation
+     *
+     * Verify that the backend was created successfully
+     *
+     * @return The status of backend creation
+     */
+    auto getCreationStatus() const -> STATUS { return m_creationStatus; }
+
+    /**
      * @brief Get the backend handle.
      * @return Reference to the backend handle.
      */
@@ -87,6 +96,12 @@ class Backend {
                             va_list argp);
 
   private:
+    void setCreationStatus(const STATUS& status) {
+        if (m_creationStatus == STATUS::SUCCESS) {
+            m_creationStatus = status;
+        }
+    }
+
     auto loadBackend() -> STATUS;
 
     auto createLogger() -> STATUS;
@@ -126,6 +141,8 @@ class Backend {
 
     uint32_t m_deviceId {};
     QnnHtpDevice_Arch_t m_htpArch {};
+
+    STATUS m_creationStatus = STATUS::SUCCESS;
 };
 
 }  // namespace edge::qnn
