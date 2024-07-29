@@ -36,7 +36,7 @@ using ConstContextBinaryInfoVariant =
     std::variant<std::reference_wrapper<const QnnSystemContext_BinaryInfoV1_t>,
                  std::reference_wrapper<const QnnSystemContext_BinaryInfoV2_t>>;
 
-inline auto getContextBinaryInfoVariant(
+auto getContextBinaryInfoVariant(
     QnnSystemContext_BinaryInfo_t* contextBinaryInfo)
     -> ContextBinaryInfoVariant {
     switch (contextBinaryInfo->version) {
@@ -52,7 +52,7 @@ inline auto getContextBinaryInfoVariant(
     }
 }
 
-inline auto getContextBinaryInfoVariant(
+auto getContextBinaryInfoVariant(
     const QnnSystemContext_BinaryInfo_t* contextBinaryInfo)
     -> ConstContextBinaryInfoVariant {
     switch (contextBinaryInfo->version) {
@@ -98,24 +98,6 @@ GraphsInfo::~GraphsInfo() {
     }
 }
 
-auto GraphsInfo::createContext(QNN_INTERFACE_VER_TYPE& qnnInterface,
-                               Qnn_BackendHandle_t& backendHandle,
-                               Qnn_DeviceHandle_t& deviceHandle) -> STATUS {
-    Config<QnnContext_Config_t, void*> contextConfig {QNN_CONTEXT_CONFIG_INIT,
-                                                      {}};
-
-    m_qnnInterface = qnnInterface;
-
-    const auto status = m_qnnInterface.contextCreate(
-        backendHandle, deviceHandle, contextConfig.getPtr(), &m_context);
-
-    if (QNN_CONTEXT_NO_ERROR != status) {
-        return STATUS::FAIL;
-    }
-
-    return STATUS::SUCCESS;
-}
-
 auto GraphsInfo::loadFromSharedLibrary(const std::filesystem::path& modelPath)
     -> STATUS {
     m_libModelHandle = dlopen(modelPath.string().data(), RTLD_NOW | RTLD_LOCAL);
@@ -139,22 +121,18 @@ auto GraphsInfo::loadFromSharedLibrary(const std::filesystem::path& modelPath)
     return status;
 }
 
-auto GraphsInfo::setComposeGraphsFnHandle(
-    ComposeGraphsFnHandleTypeT composeGraphsFnHandle) -> STATUS {
-    m_composeGraphsFnHandle = composeGraphsFnHandle;
+auto GraphsInfo::createContext(QNN_INTERFACE_VER_TYPE& qnnInterface,
+                               Qnn_BackendHandle_t& backendHandle,
+                               Qnn_DeviceHandle_t& deviceHandle) -> STATUS {
+    Config<QnnContext_Config_t, void*> contextConfig {QNN_CONTEXT_CONFIG_INIT,
+                                                      {}};
 
-    if (m_composeGraphsFnHandle == nullptr) {
-        return STATUS::FAIL;
-    }
+    m_qnnInterface = qnnInterface;
 
-    return STATUS::SUCCESS;
-}
+    const auto status = m_qnnInterface.contextCreate(
+        backendHandle, deviceHandle, contextConfig.getPtr(), &m_context);
 
-auto GraphsInfo::setFreeGraphInfoFnHandle(
-    FreeGraphInfoFnHandleTypeT freeGraphInfoFnHandle) -> STATUS {
-    m_freeGraphInfoFnHandle = freeGraphInfoFnHandle;
-
-    if (m_freeGraphInfoFnHandle == nullptr) {
+    if (QNN_CONTEXT_NO_ERROR != status) {
         return STATUS::FAIL;
     }
 
@@ -304,6 +282,28 @@ auto GraphsInfo::retrieveGraphFromContext() -> STATUS {
     }
 
     setGraph();
+
+    return STATUS::SUCCESS;
+}
+
+auto GraphsInfo::setComposeGraphsFnHandle(
+    ComposeGraphsFnHandleTypeT composeGraphsFnHandle) -> STATUS {
+    m_composeGraphsFnHandle = composeGraphsFnHandle;
+
+    if (m_composeGraphsFnHandle == nullptr) {
+        return STATUS::FAIL;
+    }
+
+    return STATUS::SUCCESS;
+}
+
+auto GraphsInfo::setFreeGraphInfoFnHandle(
+    FreeGraphInfoFnHandleTypeT freeGraphInfoFnHandle) -> STATUS {
+    m_freeGraphInfoFnHandle = freeGraphInfoFnHandle;
+
+    if (m_freeGraphInfoFnHandle == nullptr) {
+        return STATUS::FAIL;
+    }
 
     return STATUS::SUCCESS;
 }
