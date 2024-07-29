@@ -76,7 +76,7 @@ auto getContextBinaryInfoVariant(
     }
 }
 
-GraphsInfo::~GraphsInfo() {
+Graph::~Graph() {
     if (m_graphsInfo != nullptr && m_freeGraphInfoFnHandle != nullptr) {
         m_freeGraphInfoFnHandle(&m_graphsInfo, m_graphsCount);
     } else {
@@ -106,7 +106,7 @@ GraphsInfo::~GraphsInfo() {
     }
 }
 
-auto GraphsInfo::loadFromSharedLibrary(const std::filesystem::path& modelPath)
+auto Graph::loadFromSharedLibrary(const std::filesystem::path& modelPath)
     -> STATUS {
     m_libModelHandle = dlopen(modelPath.string().data(), RTLD_NOW | RTLD_LOCAL);
 
@@ -129,9 +129,9 @@ auto GraphsInfo::loadFromSharedLibrary(const std::filesystem::path& modelPath)
     return status;
 }
 
-auto GraphsInfo::createContext(QNN_INTERFACE_VER_TYPE& qnnInterface,
-                               Qnn_BackendHandle_t& backendHandle,
-                               Qnn_DeviceHandle_t& deviceHandle) -> STATUS {
+auto Graph::createContext(QNN_INTERFACE_VER_TYPE& qnnInterface,
+                          Qnn_BackendHandle_t& backendHandle,
+                          Qnn_DeviceHandle_t& deviceHandle) -> STATUS {
     Config<QnnContext_Config_t, void*> contextConfig {QNN_CONTEXT_CONFIG_INIT,
                                                       {}};
 
@@ -147,8 +147,7 @@ auto GraphsInfo::createContext(QNN_INTERFACE_VER_TYPE& qnnInterface,
     return STATUS::SUCCESS;
 }
 
-auto GraphsInfo::composeGraphs(Qnn_BackendHandle_t& qnnBackendHandle)
-    -> STATUS {
+auto Graph::composeGraphs(Qnn_BackendHandle_t& qnnBackendHandle) -> STATUS {
     const auto status = m_composeGraphsFnHandle(qnnBackendHandle,
                                                 m_qnnInterface,
                                                 m_context,
@@ -169,8 +168,7 @@ auto GraphsInfo::composeGraphs(Qnn_BackendHandle_t& qnnBackendHandle)
     return STATUS::SUCCESS;
 }
 
-auto GraphsInfo::setGraphConfig(DELEGATE delegate,
-                                TensorType precision) -> STATUS {
+auto Graph::setGraphConfig(DELEGATE delegate, TensorType precision) -> STATUS {
     Config<QnnGraph_Config_t, QnnHtpGraph_CustomConfig_t> graphConfigs {
         QNN_GRAPH_CONFIG_INIT, QNN_HTP_GRAPH_CUSTOM_CONFIG_INIT};
 
@@ -213,7 +211,7 @@ auto GraphsInfo::setGraphConfig(DELEGATE delegate,
     return STATUS::SUCCESS;
 }
 
-auto GraphsInfo::finalizeGraphs() -> STATUS {
+auto Graph::finalizeGraphs() -> STATUS {
     const auto status =
         m_qnnInterface.graphFinalize(m_graphInfo->graph, nullptr, nullptr);
 
@@ -224,7 +222,7 @@ auto GraphsInfo::finalizeGraphs() -> STATUS {
     return STATUS::SUCCESS;
 }
 
-auto GraphsInfo::saveContextBinary(const std::filesystem::path& binaryPath)
+auto Graph::saveContextBinary(const std::filesystem::path& binaryPath)
     -> STATUS {
     if (nullptr == m_qnnInterface.contextGetBinarySize
         || nullptr == m_qnnInterface.contextGetBinary)
@@ -262,7 +260,7 @@ auto GraphsInfo::saveContextBinary(const std::filesystem::path& binaryPath)
     return STATUS::SUCCESS;
 }
 
-auto GraphsInfo::loadSystemLibrary() -> STATUS {
+auto Graph::loadSystemLibrary() -> STATUS {
     void* systemLibraryHandle =
         dlopen("libQnnSystem.so", RTLD_NOW | RTLD_LOCAL);
     if (nullptr == systemLibraryHandle) {
@@ -309,10 +307,10 @@ auto GraphsInfo::loadSystemLibrary() -> STATUS {
     return STATUS::FAIL;
 }
 
-auto GraphsInfo::loadContextFromBinary(QNN_INTERFACE_VER_TYPE& qnnInterface,
-                                       Qnn_BackendHandle_t& backendHandle,
-                                       Qnn_DeviceHandle_t& deviceHandle,
-                                       const nonstd::span<uint8_t>& modelBuffer)
+auto Graph::loadContextFromBinary(QNN_INTERFACE_VER_TYPE& qnnInterface,
+                                  Qnn_BackendHandle_t& backendHandle,
+                                  Qnn_DeviceHandle_t& deviceHandle,
+                                  const nonstd::span<uint8_t>& modelBuffer)
     -> STATUS {
     m_qnnInterface = qnnInterface;
 
@@ -368,7 +366,7 @@ auto GraphsInfo::loadContextFromBinary(QNN_INTERFACE_VER_TYPE& qnnInterface,
     return STATUS::SUCCESS;
 }
 
-auto GraphsInfo::retrieveGraphFromContext() -> STATUS {
+auto Graph::retrieveGraphFromContext() -> STATUS {
     for (size_t graphIdx = 0; graphIdx < m_graphsCount; ++graphIdx) {
         if (nullptr == m_qnnInterface.graphRetrieve) {
             return STATUS::FAIL;
@@ -387,7 +385,7 @@ auto GraphsInfo::retrieveGraphFromContext() -> STATUS {
     return STATUS::SUCCESS;
 }
 
-auto GraphsInfo::execute() -> STATUS {
+auto Graph::execute() -> STATUS {
     const auto executeStatus =
         m_qnnInterface.graphExecute(m_graphInfo->graph,
                                     m_graphInfo->inputTensors,
@@ -403,7 +401,7 @@ auto GraphsInfo::execute() -> STATUS {
     return STATUS::SUCCESS;
 }
 
-auto GraphsInfo::setComposeGraphsFnHandle(
+auto Graph::setComposeGraphsFnHandle(
     ComposeGraphsFnHandleTypeT composeGraphsFnHandle) -> STATUS {
     m_composeGraphsFnHandle = composeGraphsFnHandle;
 
@@ -414,7 +412,7 @@ auto GraphsInfo::setComposeGraphsFnHandle(
     return STATUS::SUCCESS;
 }
 
-auto GraphsInfo::setFreeGraphInfoFnHandle(
+auto Graph::setFreeGraphInfoFnHandle(
     FreeGraphInfoFnHandleTypeT freeGraphInfoFnHandle) -> STATUS {
     m_freeGraphInfoFnHandle = freeGraphInfoFnHandle;
 
@@ -425,9 +423,8 @@ auto GraphsInfo::setFreeGraphInfoFnHandle(
     return STATUS::SUCCESS;
 }
 
-auto GraphsInfo::copyGraphsInfoV1(
-    const QnnSystemContext_GraphInfoV1_t* graphInfoSrc,
-    GraphInfoT* graphInfoDst) -> bool {
+auto Graph::copyGraphsInfoV1(const QnnSystemContext_GraphInfoV1_t* graphInfoSrc,
+                             GraphInfoT* graphInfoDst) -> bool {
     graphInfoDst->graphName = nullptr;
     if (graphInfoSrc->graphName != nullptr) {
         graphInfoDst->graphName =
@@ -454,8 +451,8 @@ auto GraphsInfo::copyGraphsInfoV1(
     return true;
 }
 
-auto GraphsInfo::copyGraphsInfo(const QnnSystemContext_GraphInfo_t* graphsInput,
-                                const uint32_t numGraphs) -> bool {
+auto Graph::copyGraphsInfo(const QnnSystemContext_GraphInfo_t* graphsInput,
+                           const uint32_t numGraphs) -> bool {
     if (graphsInput == nullptr) {
         return false;
     }
@@ -485,7 +482,7 @@ auto GraphsInfo::copyGraphsInfo(const QnnSystemContext_GraphInfo_t* graphsInput,
     return true;
 }
 
-auto GraphsInfo::copyMetadataToGraphsInfo(
+auto Graph::copyMetadataToGraphsInfo(
     const QnnSystemContext_BinaryInfo_t* binaryInfo) -> bool {
     if (nullptr == binaryInfo) {
         return false;
