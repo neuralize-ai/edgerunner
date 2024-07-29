@@ -121,10 +121,12 @@ class ModelImpl final : public Model {
      */
     auto allocate() -> STATUS;
 
-    static void initializeBackend() {
+    static auto initializeBackend() -> STATUS {
         if (m_backend == nullptr) {
             m_backend = std::make_unique<Backend>(DELEGATE::NPU);
         }
+
+        return m_backend->getCreationStatus();
     }
 
     std::filesystem::path m_modelPath;  ///< The path to the QNN model file

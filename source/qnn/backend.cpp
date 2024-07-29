@@ -30,15 +30,13 @@ using QnnInterfaceGetProvidersFnT =
 
 Backend::Backend(const DELEGATE delegate)
     : m_delegate(delegate) {
-    loadBackend();
-
-    createLogger();
-
-    initializeBackend();
-
-    createDevice();
-
-    setPowerConfig();
+    setCreationStatus(loadBackend());
+    setCreationStatus(createLogger());
+    setCreationStatus(initializeBackend());
+    setCreationStatus(createDevice());
+    if (delegate == DELEGATE::NPU) {
+        setCreationStatus(setPowerConfig());
+    }
 }
 
 Backend::~Backend() {
@@ -157,7 +155,7 @@ auto Backend::createLogger() -> STATUS {
 
 auto Backend::initializeBackend() -> STATUS {
     const auto status = m_qnnInterface.backendCreate(
-        nullptr,
+        m_logHandle,
         const_cast<const QnnBackend_Config_t**>(m_backendConfig),
         &m_backendHandle);
     if (QNN_BACKEND_NO_ERROR != status) {
@@ -176,15 +174,16 @@ auto Backend::createDevice() -> STATUS {
         }
     }
 
-    Config<QnnDevice_Config_t, QnnHtpDevice_CustomConfig_t> deviceConfig {
-        QNN_DEVICE_CONFIG_INIT, {}};
+    Config<QnnDevice_Config_t, void*> deviceConfig {QNN_DEVICE_CONFIG_INIT, {}};
 
     if (nullptr != m_qnnInterface.deviceCreate) {
         auto qnnStatus = m_qnnInterface.deviceCreate(
-            nullptr, deviceConfig.getPtr(), &m_deviceHandle);
+            m_logHandle, deviceConfig.getPtr(), &m_deviceHandle);
         if (QNN_SUCCESS != qnnStatus) {
             return STATUS::FAIL;
         }
+    } else {
+        return STATUS::FAIL;
     }
 
     return STATUS::SUCCESS;
