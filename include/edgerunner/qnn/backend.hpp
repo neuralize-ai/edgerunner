@@ -4,9 +4,7 @@
  *
  * This class represents a backend for handling interfacing with QNN backend
  * libraries. It provides functionality for loading the backend, creating a
- * device, initializing the backend, and managing the context for QNN
- * operations.
- *
+ * device, and initializing the backend
  * The Backend class is currently restricted to NPU inference support.
  */
 
@@ -35,10 +33,9 @@ class Backend {
     /**
      * @brief Constructor for the Backend class.
      * @param delegate The delegate type for the backend (CPU, GPU, NPU).
-     * @param isContextBinary Whether the model will be loaded from a context
      * binary.
      */
-    explicit Backend(DELEGATE delegate, bool isContextBinary);
+    explicit Backend(DELEGATE delegate);
 
     Backend(const Backend&) = default;
     Backend(Backend&&) = delete;
@@ -66,22 +63,10 @@ class Backend {
     auto getDeviceHandle() -> auto& { return m_deviceHandle; }
 
     /**
-     * @brief Get the context for the backend.
-     * @return Reference to the backend context.
-     */
-    auto getContext() -> auto& { return m_context; }
-
-    /**
      * @brief Get the QNN interface.
      * @return Reference to the QNN interface.
      */
     auto getInterface() -> auto& { return m_qnnInterface; }
-
-    /**
-     * @brief Get the QNN system interface.
-     * @return Reference to the QNN system interface.
-     */
-    auto getSystemInterface() -> auto& { return m_qnnSystemInterface; }
 
     /**
      * @brief Get the delegate type for the backend.
@@ -108,17 +93,11 @@ class Backend {
 
     auto initializeBackend() -> STATUS;
 
-    auto loadSystemLibrary() -> STATUS;
-
     auto createDevice() -> STATUS;
-
-    auto createContext() -> STATUS;
 
     auto setPowerConfig() -> STATUS;
 
     auto destroyPowerConfig() const -> STATUS;
-
-    auto loadContextFromBinary() -> STATUS;
 
     auto validateBackendId(uint32_t backendId) const -> STATUS;
 
@@ -130,8 +109,6 @@ class Backend {
 
     Qnn_DeviceHandle_t m_deviceHandle {};
 
-    Qnn_ContextHandle_t m_context {};
-
     Qnn_LogHandle_t m_logHandle {};
 
     uint32_t m_powerConfigId {};
@@ -139,8 +116,6 @@ class Backend {
     QnnHtpDevice_PerfInfrastructure_t m_devicePerfInfrastructure {};
 
     QNN_INTERFACE_VER_TYPE m_qnnInterface = QNN_INTERFACE_VER_TYPE_INIT;
-    QNN_SYSTEM_INTERFACE_VER_TYPE m_qnnSystemInterface =
-        QNN_SYSTEM_INTERFACE_VER_TYPE_INIT;
 
     DELEGATE m_delegate;
 

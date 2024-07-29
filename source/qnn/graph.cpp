@@ -8,18 +8,25 @@
 
 #include "edgerunner/qnn/graph.hpp"
 
+#include <HTP/QnnHtpContext.h>
 #include <QnnCommon.h>
 #include <QnnInterface.h>
 #include <QnnLog.h>
+#include <System/QnnSystemCommon.h>
 #include <System/QnnSystemContext.h>
+#include <System/QnnSystemInterface.h>
 #include <dlfcn.h>
 #include <fmt/core.h>
 #include <nonstd/span.hpp>
 
 #include "edgerunner/model.hpp"
+#include "edgerunner/qnn/config.hpp"
 #include "edgerunner/qnn/tensorOps.hpp"
 
 namespace edge::qnn {
+
+using QnnSystemInterfaceGetProvidersFnT =
+    Qnn_ErrorHandle_t (*)(const QnnSystemInterface_t***, uint32_t*);
 
 using ContextBinaryInfoVariant =
     std::variant<std::reference_wrapper<QnnSystemContext_BinaryInfoV1_t>,
@@ -62,11 +69,7 @@ inline auto getContextBinaryInfoVariant(
 }
 
 GraphsInfo::~GraphsInfo() {
-    if (m_graphsInfo == nullptr) {
-        return;
-    }
-
-    if (m_freeGraphInfoFnHandle != nullptr) {
+    if (m_graphsInfo != nullptr && m_freeGraphInfoFnHandle != nullptr) {
         m_freeGraphInfoFnHandle(&m_graphsInfo, m_graphsCount);
     } else {
         try {
@@ -80,6 +83,9 @@ GraphsInfo::~GraphsInfo() {
             fmt::print(stderr, "Failed to free graph tensors: {}\n", ex.what());
         }
     }
+    if (m_context != nullptr && m_qnnInterface.contextFree != nullptr) {
+        m_qnnInterface.contextFree(m_context, nullptr);
+    }
 
     if (m_libModelHandle != nullptr) {
         try {
@@ -90,6 +96,24 @@ GraphsInfo::~GraphsInfo() {
                        ex.what());
         }
     }
+}
+
+auto GraphsInfo::createContext(QNN_INTERFACE_VER_TYPE& qnnInterface,
+                               Qnn_BackendHandle_t& backendHandle,
+                               Qnn_DeviceHandle_t& deviceHandle) -> STATUS {
+    Config<QnnContext_Config_t, void*> contextConfig {QNN_CONTEXT_CONFIG_INIT,
+                                                      {}};
+
+    m_qnnInterface = qnnInterface;
+
+    const auto status = m_qnnInterface.contextCreate(
+        backendHandle, deviceHandle, contextConfig.getPtr(), &m_context);
+
+    if (QNN_CONTEXT_NO_ERROR != status) {
+        return STATUS::FAIL;
+    }
+
+    return STATUS::SUCCESS;
 }
 
 auto GraphsInfo::loadFromSharedLibrary(const std::filesystem::path& modelPath)
@@ -137,12 +161,11 @@ auto GraphsInfo::setFreeGraphInfoFnHandle(
     return STATUS::SUCCESS;
 }
 
-auto GraphsInfo::composeGraphs(Qnn_BackendHandle_t& qnnBackendHandle,
-                               QNN_INTERFACE_VER_TYPE& qnnInterface,
-                               Qnn_ContextHandle_t& qnnContext) -> STATUS {
+auto GraphsInfo::composeGraphs(Qnn_BackendHandle_t& qnnBackendHandle)
+    -> STATUS {
     const auto status = m_composeGraphsFnHandle(qnnBackendHandle,
-                                                qnnInterface,
-                                                qnnContext,
+                                                m_qnnInterface,
+                                                m_context,
                                                 nullptr,
                                                 0,
                                                 &m_graphsInfo,
@@ -160,17 +183,66 @@ auto GraphsInfo::composeGraphs(Qnn_BackendHandle_t& qnnBackendHandle,
     return STATUS::SUCCESS;
 }
 
-auto GraphsInfo::retrieveGraphFromContext(QNN_INTERFACE_VER_TYPE& qnnInterface,
-                                          Qnn_ContextHandle_t& qnnContext)
+auto GraphsInfo::loadSystemLibrary() -> STATUS {
+    void* systemLibraryHandle =
+        dlopen("libQnnSystem.so", RTLD_NOW | RTLD_LOCAL);
+    if (nullptr == systemLibraryHandle) {
+        return STATUS::FAIL;
+    }
+
+    QnnSystemInterfaceGetProvidersFnT getSystemInterfaceProviders {nullptr};
+    getSystemInterfaceProviders =
+        reinterpret_cast<QnnSystemInterfaceGetProvidersFnT> /* NOLINT */ (
+            dlsym(systemLibraryHandle, "QnnSystemInterface_getProviders"));
+    if (nullptr == getSystemInterfaceProviders) {
+        return STATUS::FAIL;
+    }
+
+    QnnSystemInterface_t** systemInterfaceProvidersPtr {nullptr};
+    uint32_t numProviders = 0;
+    if (QNN_SUCCESS
+        != getSystemInterfaceProviders(
+            const_cast<const QnnSystemInterface_t***>(
+                &systemInterfaceProvidersPtr),
+            &numProviders))
+    {
+        return STATUS::FAIL;
+    }
+    if (nullptr == systemInterfaceProvidersPtr || 0 == numProviders) {
+        return STATUS::FAIL;
+    }
+
+    const nonstd::span<QnnSystemInterface_t*> systemInterfaceProviders {
+        systemInterfaceProvidersPtr, numProviders};
+
+    for (const auto& systemInterfaceProvider : systemInterfaceProviders) {
+        const auto systemApiVersion = systemInterfaceProvider->systemApiVersion;
+
+        if (QNN_SYSTEM_API_VERSION_MAJOR == systemApiVersion.major
+            && QNN_SYSTEM_API_VERSION_MINOR <= systemApiVersion.minor)
+        {
+            m_qnnSystemInterface =
+                systemInterfaceProvider->QNN_SYSTEM_INTERFACE_VER_NAME;
+            return STATUS::SUCCESS;
+        }
+    }
+
+    return STATUS::FAIL;
+}
+
     -> STATUS {
+    return STATUS::SUCCESS;
+}
+
+auto GraphsInfo::retrieveGraphFromContext() -> STATUS {
     for (size_t graphIdx = 0; graphIdx < m_graphsCount; ++graphIdx) {
-        if (nullptr == qnnInterface.graphRetrieve) {
+        if (nullptr == m_qnnInterface.graphRetrieve) {
             return STATUS::FAIL;
         }
         auto& graphInfo = (*m_graphsInfo)[graphIdx] /* NOLINT */;
         if (QNN_SUCCESS
-            != qnnInterface.graphRetrieve(
-                qnnContext, graphInfo.graphName, &graphInfo.graph))
+            != m_qnnInterface.graphRetrieve(
+                m_context, graphInfo.graphName, &graphInfo.graph))
         {
             return STATUS::FAIL;
         }

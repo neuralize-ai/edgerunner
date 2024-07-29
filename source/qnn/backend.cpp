@@ -13,13 +13,10 @@
 #include <HTP/QnnHtpPerfInfrastructure.h>
 #include <QnnBackend.h>
 #include <QnnCommon.h>
-#include <QnnContext.h>
 #include <QnnDevice.h>
 #include <QnnInterface.h>
 #include <QnnLog.h>
 #include <QnnProperty.h>
-#include <System/QnnSystemCommon.h>
-#include <System/QnnSystemInterface.h>
 #include <dlfcn.h>
 #include <nonstd/span.hpp>
 
@@ -31,10 +28,7 @@ namespace edge::qnn {
 using QnnInterfaceGetProvidersFnT =
     Qnn_ErrorHandle_t (*)(const QnnInterface_t***, uint32_t*);
 
-using QnnSystemInterfaceGetProvidersFnT =
-    Qnn_ErrorHandle_t (*)(const QnnSystemInterface_t***, uint32_t*);
-
-Backend::Backend(const DELEGATE delegate, const bool isContextBinary)
+Backend::Backend(const DELEGATE delegate)
     : m_delegate(delegate) {
     loadBackend();
 
@@ -44,21 +38,11 @@ Backend::Backend(const DELEGATE delegate, const bool isContextBinary)
 
     createDevice();
 
-    if (isContextBinary) {
-        loadSystemLibrary();
-    } else {
-        createContext();
-    }
-
     setPowerConfig();
 }
 
 Backend::~Backend() {
     destroyPowerConfig();
-
-    if (m_context != nullptr && m_qnnInterface.contextFree != nullptr) {
-        m_qnnInterface.contextFree(m_context, nullptr);
-    }
 
     if (m_deviceHandle != nullptr && m_qnnInterface.deviceFree != nullptr) {
         m_qnnInterface.deviceFree(m_deviceHandle);
@@ -124,53 +108,6 @@ auto Backend::loadBackend() -> STATUS {
     }
 
     return validateBackendId(backendId);
-}
-
-auto Backend::loadSystemLibrary() -> STATUS {
-    void* systemLibraryHandle =
-        dlopen("libQnnSystem.so", RTLD_NOW | RTLD_LOCAL);
-    if (nullptr == systemLibraryHandle) {
-        return STATUS::FAIL;
-    }
-
-    QnnSystemInterfaceGetProvidersFnT getSystemInterfaceProviders {nullptr};
-    getSystemInterfaceProviders =
-        reinterpret_cast<QnnSystemInterfaceGetProvidersFnT> /* NOLINT */ (
-            dlsym(systemLibraryHandle, "QnnSystemInterface_getProviders"));
-    if (nullptr == getSystemInterfaceProviders) {
-        return STATUS::FAIL;
-    }
-
-    QnnSystemInterface_t** systemInterfaceProvidersPtr {nullptr};
-    uint32_t numProviders = 0;
-    if (QNN_SUCCESS
-        != getSystemInterfaceProviders(
-            const_cast<const QnnSystemInterface_t***>(
-                &systemInterfaceProvidersPtr),
-            &numProviders))
-    {
-        return STATUS::FAIL;
-    }
-    if (nullptr == systemInterfaceProvidersPtr || 0 == numProviders) {
-        return STATUS::FAIL;
-    }
-
-    const nonstd::span<QnnSystemInterface_t*> systemInterfaceProviders {
-        systemInterfaceProvidersPtr, numProviders};
-
-    for (const auto& systemInterfaceProvider : systemInterfaceProviders) {
-        const auto systemApiVersion = systemInterfaceProvider->systemApiVersion;
-
-        if (QNN_SYSTEM_API_VERSION_MAJOR == systemApiVersion.major
-            && QNN_SYSTEM_API_VERSION_MINOR <= systemApiVersion.minor)
-        {
-            m_qnnSystemInterface =
-                systemInterfaceProvider->QNN_SYSTEM_INTERFACE_VER_NAME;
-            return STATUS::SUCCESS;
-        }
-    }
-
-    return STATUS::FAIL;
 }
 
 void Backend::logCallback(const char* fmtStr,
@@ -248,20 +185,6 @@ auto Backend::createDevice() -> STATUS {
         if (QNN_SUCCESS != qnnStatus) {
             return STATUS::FAIL;
         }
-    }
-
-    return STATUS::SUCCESS;
-}
-
-auto Backend::createContext() -> STATUS {
-    Config<QnnContext_Config_t, void*> contextConfig {QNN_CONTEXT_CONFIG_INIT,
-                                                      {}};
-
-    const auto status = m_qnnInterface.contextCreate(
-        m_backendHandle, m_deviceHandle, contextConfig.getPtr(), &m_context);
-
-    if (QNN_CONTEXT_NO_ERROR != status) {
-        return STATUS::FAIL;
     }
 
     return STATUS::SUCCESS;
