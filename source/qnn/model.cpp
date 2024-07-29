@@ -31,13 +31,13 @@ ModelImpl::ModelImpl(const std::filesystem::path& modelPath)
         setCreationStatus(loadModel(modelPath));
         setCreationStatus(composeGraphs());
         setPrecision(detectPrecision());
-        setCreationStatus(m_graphInfo.setGraphConfig(m_backend->getDelegate(),
-                                                     getPrecision()));
-        setCreationStatus(m_graphInfo.finalizeGraphs());
+        setCreationStatus(
+            m_graph.setGraphConfig(m_backend->getDelegate(), getPrecision()));
+        setCreationStatus(m_graph.finalizeGraphs());
 
         // m_graphInfo.saveContextBinary(name() + ".bin");
     } else {
-        setCreationStatus(m_graphInfo.loadSystemLibrary());
+        setCreationStatus(m_graph.loadSystemLibrary());
 
         std::ifstream file(modelPath, std::ios::binary);
         if (!file) {
@@ -68,7 +68,7 @@ ModelImpl::ModelImpl(const nonstd::span<uint8_t>& modelBuffer) {
 }
 
 auto ModelImpl::loadModel(const std::filesystem::path& modelPath) -> STATUS {
-    return m_graphInfo.loadFromSharedLibrary(modelPath);
+    return m_graph.loadFromSharedLibrary(modelPath);
 }
 
 auto ModelImpl::loadModel(const nonstd::span<uint8_t>& modelBuffer) -> STATUS {
@@ -86,7 +86,7 @@ auto ModelImpl::applyDelegate(const DELEGATE& delegate) -> STATUS {
 }
 
 auto ModelImpl::execute() -> STATUS {
-    return m_graphInfo.execute();
+    return m_graph.execute();
 }
 
 auto ModelImpl::loadFromContextBinary(const nonstd::span<uint8_t>& modelBuffer)
@@ -95,14 +95,14 @@ auto ModelImpl::loadFromContextBinary(const nonstd::span<uint8_t>& modelBuffer)
     auto& backendHandle = m_backend->getHandle();
     auto& deviceHandle = m_backend->getDeviceHandle();
 
-    if (m_graphInfo.loadContextFromBinary(
+    if (m_graph.loadContextFromBinary(
             qnnInterface, backendHandle, deviceHandle, modelBuffer)
         != STATUS::SUCCESS)
     {
         return STATUS::FAIL;
     }
 
-    return m_graphInfo.retrieveGraphFromContext();
+    return m_graph.retrieveGraphFromContext();
 }
 
 auto ModelImpl::composeGraphs() -> STATUS {
@@ -110,13 +110,13 @@ auto ModelImpl::composeGraphs() -> STATUS {
     auto& qnnBackendHandle = m_backend->getHandle();
     auto& qnnDeviceHandle = m_backend->getDeviceHandle();
 
-    m_graphInfo.createContext(qnnInterface, qnnBackendHandle, qnnDeviceHandle);
+    m_graph.createContext(qnnInterface, qnnBackendHandle, qnnDeviceHandle);
 
-    return m_graphInfo.composeGraphs(qnnBackendHandle);
+    return m_graph.composeGraphs(qnnBackendHandle);
 }
 
 auto ModelImpl::detectPrecision() -> TensorType {
-    const auto inputTensorSpecs = m_graphInfo.getInputs();
+    const auto inputTensorSpecs = m_graph.getInputs();
 
     std::vector<TensorImpl> inputs;
     inputs.reserve(inputTensorSpecs.size());
@@ -142,8 +142,8 @@ auto ModelImpl::allocate() -> STATUS {
     inputs.clear();
     outputs.clear();
 
-    const auto inputTensorSpecs = m_graphInfo.getInputs();
-    const auto outputTensorSpecs = m_graphInfo.getOutputs();
+    const auto inputTensorSpecs = m_graph.getInputs();
+    const auto outputTensorSpecs = m_graph.getOutputs();
 
     if (inputTensorSpecs.data() == nullptr
         || outputTensorSpecs.data() == nullptr)

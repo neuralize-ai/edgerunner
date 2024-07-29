@@ -1,7 +1,6 @@
 /**
- * @file GraphsInfo.hpp
- * @brief Header file for the GraphsInfo class, which manages information about
- * graphs for edge computing.
+ * @file Graphs.hpp
+ * @brief Header file for the Graphs class, which manages QNN graphs.
  */
 
 #pragma once
@@ -81,18 +80,18 @@ using ComposeGraphsFnHandleTypeT = GraphErrorT (*)(Qnn_BackendHandle_t,
 using FreeGraphInfoFnHandleTypeT = GraphErrorT (*)(GraphInfoT***, uint32_t);
 
 /**
- * @brief Class for managing information about graphs for edge computing.
+ * @brief Class for managing QNN graphs.
  */
-class GraphsInfo {
+class Graph {
   public:
-    GraphsInfo() = default;
+    Graph() = default;
 
-    GraphsInfo(const GraphsInfo&) = delete;
-    GraphsInfo(GraphsInfo&&) = delete;
-    auto operator=(const GraphsInfo&) -> GraphsInfo& = delete;
-    auto operator=(GraphsInfo&&) -> GraphsInfo& = delete;
+    Graph(const Graph&) = delete;
+    Graph(Graph&&) = delete;
+    auto operator=(const Graph&) -> Graph& = delete;
+    auto operator=(Graph&&) -> Graph& = delete;
 
-    ~GraphsInfo();
+    ~Graph();
 
     /**
      * @brief Get the input tensors for the current graph.
@@ -119,7 +118,7 @@ class GraphsInfo {
      * Creates a context for the QNN interface with the specified backend and
      * device handles.
      *
-     * GraphInfo keeps a reference to the qnnInterface
+     * Graph keeps a reference to the qnnInterface
      *
      * @param qnnInterface The handle of the QNN interface.
      * @param backendHandle The handle to the QNN backend.
@@ -164,7 +163,7 @@ class GraphsInfo {
     /**
      * Loads the context from a binary model buffer.
      *
-     * GraphInfo keeps a reference to the qnnInterface
+     * Graph keeps a reference to the qnnInterface
      *
      * @param qnnInterface The handle of the QNN interface.
      * @param backendHandle The handle to the QNN backend.
