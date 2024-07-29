@@ -1,7 +1,6 @@
 #pragma once
 
 #include <cstring>
-#include <memory>
 
 #include <QnnCommon.h>
 #include <QnnGraph.h>
@@ -70,22 +69,6 @@ class GraphsInfo {
 
     ~GraphsInfo();
 
-    auto getPtr() -> GraphInfoT*** { return &m_graphsInfo; }
-
-    auto accessGraphs() -> auto& { return m_graphsInfo; }
-
-    auto setGraph() { m_graphInfo = m_graphsInfo[0] /* NOLINT */; }
-
-    auto getGraphsCountPtr() -> uint32_t* { return &m_graphsCount; }
-
-    auto getGraphCount() const { return m_graphsCount; }
-
-    auto accessGraphCount() -> auto& { return m_graphsCount; }
-
-    auto getGraph() -> auto& { return m_graphInfo->graph; }
-
-    auto accessGraph() -> auto& { return m_graphInfo; }
-
     auto getInputs() -> nonstd::span<Qnn_Tensor_t> {
         return {m_graphInfo->inputTensors, m_graphInfo->numInputTensors};
     }
@@ -93,18 +76,6 @@ class GraphsInfo {
     auto getOutputs() -> nonstd::span<Qnn_Tensor_t> {
         return {m_graphInfo->outputTensors, m_graphInfo->numOutputTensors};
     }
-
-    auto getNumInputs() const { return m_graphInfo->numInputTensors; }
-
-    auto getNumOutputs() const { return m_graphInfo->numOutputTensors; }
-
-    auto operator[](const size_t index) -> auto& {
-        return (*m_graphsInfo)[index] /* NOLINT */;
-    }
-
-    auto getContext() -> auto& { return m_context; }
-
-    auto getSystemInterface() -> auto& { return m_qnnSystemInterface; }
 
     /* shared library setup */
     auto loadFromSharedLibrary(const std::filesystem::path& modelPath)
@@ -163,6 +134,8 @@ class GraphsInfo {
     auto execute() -> STATUS;
 
   private:
+    auto setGraph() { m_graphInfo = m_graphsInfo[0] /* NOLINT */; }
+
     auto setComposeGraphsFnHandle(
         ComposeGraphsFnHandleTypeT composeGraphsFnHandle) -> STATUS;
 
@@ -196,7 +169,7 @@ class GraphsInfo {
 
     Qnn_ContextHandle_t m_context {};
 
-    QNN_INTERFACE_VER_TYPE m_qnnInterface;
+    QNN_INTERFACE_VER_TYPE m_qnnInterface {};
 
     QNN_SYSTEM_INTERFACE_VER_TYPE m_qnnSystemInterface =
         QNN_SYSTEM_INTERFACE_VER_TYPE_INIT;

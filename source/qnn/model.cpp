@@ -9,13 +9,6 @@
 
 #include "edgerunner/model.hpp"
 
-#include <HTP/QnnHtpGraph.h>
-#include <QnnCommon.h>
-#include <QnnContext.h>
-#include <QnnGraph.h>
-#include <QnnInterface.h>
-#include <QnnTypes.h>
-#include <System/QnnSystemContext.h>
 #include <nonstd/span.hpp>
 
 #include "edgerunner/qnn/backend.hpp"
