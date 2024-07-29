@@ -90,6 +90,55 @@ auto ModelImpl::applyDelegate(const DELEGATE& delegate) -> STATUS {
     return STATUS::SUCCESS;
 }
 
+auto ModelImpl::execute() -> STATUS {
+    auto& qnnInterface = m_backend->getInterface();
+
+    const auto executeStatus =
+        qnnInterface.graphExecute(m_graphInfo.getGraph(),
+                                  m_graphInfo.getInputs().data(),
+                                  m_graphInfo.getNumInputs(),
+                                  m_graphInfo.getOutputs().data(),
+                                  m_graphInfo.getNumOutputs(),
+                                  nullptr,
+                                  nullptr);
+    if (QNN_GRAPH_NO_ERROR != executeStatus) {
+        return STATUS::FAIL;
+    }
+
+    return STATUS::SUCCESS;
+}
+
+auto ModelImpl::loadFromSharedLibrary(const std::filesystem::path& modelPath)
+    -> STATUS {
+    return m_graphInfo.loadFromSharedLibrary(modelPath);
+}
+
+auto ModelImpl::loadFromContextBinary(const nonstd::span<uint8_t>& modelBuffer)
+    -> STATUS {
+    auto& qnnInterface = m_backend->getInterface();
+    auto& backendHandle = m_backend->getHandle();
+    auto& deviceHandle = m_backend->getDeviceHandle();
+
+    if (m_graphInfo.loadContextFromBinary(
+            qnnInterface, backendHandle, deviceHandle, modelBuffer)
+        != STATUS::SUCCESS)
+    {
+        return STATUS::FAIL;
+    }
+
+    return m_graphInfo.retrieveGraphFromContext();
+}
+
+auto ModelImpl::composeGraphs() -> STATUS {
+    auto& qnnInterface = m_backend->getInterface();
+    auto& qnnBackendHandle = m_backend->getHandle();
+    auto& qnnDeviceHandle = m_backend->getDeviceHandle();
+
+    m_graphInfo.createContext(qnnInterface, qnnBackendHandle, qnnDeviceHandle);
+
+    return m_graphInfo.composeGraphs(qnnBackendHandle);
+}
+
 auto ModelImpl::detectPrecision() -> TensorType {
     const auto inputTensorSpecs = m_graphInfo.getInputs();
 
@@ -108,53 +157,6 @@ auto ModelImpl::detectPrecision() -> TensorType {
     }
 
     return TensorType::UINT8;
-}
-
-auto ModelImpl::allocate() -> STATUS {
-    auto& inputs = getInputs();
-    auto& outputs = getOutputs();
-
-    inputs.clear();
-    outputs.clear();
-
-    const auto inputTensorSpecs = m_graphInfo.getInputs();
-    const auto outputTensorSpecs = m_graphInfo.getOutputs();
-
-    if (inputTensorSpecs.data() == nullptr
-        || outputTensorSpecs.data() == nullptr)
-    {
-        return STATUS::FAIL;
-    }
-
-    inputs.reserve(inputTensorSpecs.size());
-    for (auto& inputTensorSpec : inputTensorSpecs) {
-        inputs.emplace_back(std::make_shared<TensorImpl>(&inputTensorSpec));
-    }
-
-    outputs.reserve(outputTensorSpecs.size());
-    for (auto& outputTensorSpec : outputTensorSpecs) {
-        outputs.emplace_back(std::make_shared<TensorImpl>(&outputTensorSpec));
-    }
-
-    return STATUS::SUCCESS;
-}
-
-auto ModelImpl::execute() -> STATUS {
-    auto& qnnInterface = m_backend->getInterface();
-
-    const auto executeStatus =
-        qnnInterface.graphExecute(m_graphInfo.getGraph(),
-                                  m_graphInfo.getInputs().data(),
-                                  m_graphInfo.getNumInputs(),
-                                  m_graphInfo.getOutputs().data(),
-                                  m_graphInfo.getNumOutputs(),
-                                  nullptr,
-                                  nullptr);
-    if (QNN_GRAPH_NO_ERROR != executeStatus) {
-        return STATUS::FAIL;
-    }
-
-    return STATUS::SUCCESS;
 }
 
 auto ModelImpl::setGraphConfig() -> STATUS {
@@ -200,16 +202,6 @@ auto ModelImpl::setGraphConfig() -> STATUS {
     }
 
     return STATUS::SUCCESS;
-}
-
-auto ModelImpl::composeGraphs() -> STATUS {
-    auto& qnnInterface = m_backend->getInterface();
-    auto& qnnBackendHandle = m_backend->getHandle();
-    auto& qnnDeviceHandle = m_backend->getDeviceHandle();
-
-    m_graphInfo.createContext(qnnInterface, qnnBackendHandle, qnnDeviceHandle);
-
-    return m_graphInfo.composeGraphs(qnnBackendHandle);
 }
 
 auto ModelImpl::finalizeGraphs() -> STATUS {
@@ -268,25 +260,33 @@ auto ModelImpl::saveContextBinary(const std::filesystem::path& binaryPath)
     return STATUS::SUCCESS;
 }
 
-auto ModelImpl::loadFromSharedLibrary(const std::filesystem::path& modelPath)
-    -> STATUS {
-    return m_graphInfo.loadFromSharedLibrary(modelPath);
-}
+auto ModelImpl::allocate() -> STATUS {
+    auto& inputs = getInputs();
+    auto& outputs = getOutputs();
 
-auto ModelImpl::loadFromContextBinary(const nonstd::span<uint8_t>& modelBuffer)
-    -> STATUS {
-    auto& qnnInterface = m_backend->getInterface();
-    auto& backendHandle = m_backend->getHandle();
-    auto& deviceHandle = m_backend->getDeviceHandle();
+    inputs.clear();
+    outputs.clear();
 
-    if (m_graphInfo.loadContextFromBinary(
-            qnnInterface, backendHandle, deviceHandle, modelBuffer)
-        != STATUS::SUCCESS)
+    const auto inputTensorSpecs = m_graphInfo.getInputs();
+    const auto outputTensorSpecs = m_graphInfo.getOutputs();
+
+    if (inputTensorSpecs.data() == nullptr
+        || outputTensorSpecs.data() == nullptr)
     {
         return STATUS::FAIL;
     }
 
-    return m_graphInfo.retrieveGraphFromContext();
+    inputs.reserve(inputTensorSpecs.size());
+    for (auto& inputTensorSpec : inputTensorSpecs) {
+        inputs.emplace_back(std::make_shared<TensorImpl>(&inputTensorSpec));
+    }
+
+    outputs.reserve(outputTensorSpecs.size());
+    for (auto& outputTensorSpec : outputTensorSpecs) {
+        outputs.emplace_back(std::make_shared<TensorImpl>(&outputTensorSpec));
+    }
+
+    return STATUS::SUCCESS;
 }
 
 }  // namespace edge::qnn
