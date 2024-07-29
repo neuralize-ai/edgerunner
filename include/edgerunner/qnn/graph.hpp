@@ -1,3 +1,9 @@
+/**
+ * @file GraphsInfo.hpp
+ * @brief Header file for the GraphsInfo class, which manages information about
+ * graphs for edge computing.
+ */
+
 #pragma once
 
 #include <cstring>
@@ -15,6 +21,10 @@
 
 namespace edge::qnn {
 
+/**
+ * @brief Enum representing possible errors that can occur during graph
+ * operations.
+ */
 using GraphErrorT = enum GraphError {
     GRAPH_NO_ERROR = 0,
     GRAPH_TENSOR_ERROR = 1,
@@ -31,6 +41,9 @@ using GraphErrorT = enum GraphError {
     GRAPH_UNKNOWN_ERROR = 0x7FFFFFFF
 };
 
+/**
+ * @brief Struct representing information about a graph.
+ */
 using GraphInfoT = struct GraphInfo {
     Qnn_GraphHandle_t graph;
     char* graphName;
@@ -40,11 +53,17 @@ using GraphInfoT = struct GraphInfo {
     uint32_t numOutputTensors;
 };
 
+/**
+ * @brief Struct representing configuration information for a graph.
+ */
 using GraphConfigInfoT = struct GraphConfigInfo {
     char* graphName;
     const QnnGraph_Config_t** graphConfigs;
 };
 
+/**
+ * @brief Function pointer type for composing graphs.
+ */
 using ComposeGraphsFnHandleTypeT = GraphErrorT (*)(Qnn_BackendHandle_t,
                                                    QNN_INTERFACE_VER_TYPE,
                                                    Qnn_ContextHandle_t,
@@ -56,8 +75,14 @@ using ComposeGraphsFnHandleTypeT = GraphErrorT (*)(Qnn_BackendHandle_t,
                                                    QnnLog_Callback_t,
                                                    QnnLog_Level_t);
 
+/**
+ * @brief Function pointer type for freeing graph information.
+ */
 using FreeGraphInfoFnHandleTypeT = GraphErrorT (*)(GraphInfoT***, uint32_t);
 
+/**
+ * @brief Class for managing information about graphs for edge computing.
+ */
 class GraphsInfo {
   public:
     GraphsInfo() = default;
@@ -69,47 +94,85 @@ class GraphsInfo {
 
     ~GraphsInfo();
 
-    auto getInputs() -> nonstd::span<Qnn_Tensor_t> {
-        return {m_graphInfo->inputTensors, m_graphInfo->numInputTensors};
-    }
+    /**
+     * @brief Get the input tensors for the current graph.
+     * @return A span of input tensors.
+     */
+    auto getInputs() -> nonstd::span<Qnn_Tensor_t>;
 
-    auto getOutputs() -> nonstd::span<Qnn_Tensor_t> {
-        return {m_graphInfo->outputTensors, m_graphInfo->numOutputTensors};
-    }
+    /**
+     * @brief Get the output tensors for the current graph.
+     * @return A span of output tensors.
+     */
+    auto getOutputs() -> nonstd::span<Qnn_Tensor_t>;
 
-    /* shared library setup */
+    /**
+     * Loads a model from a shared library located at the specified path.
+     *
+     * @param modelPath The path to the shared library containing the model.
+     * @return STATUS The status of the operation (SUCCESS or ERROR).
+     */
     auto loadFromSharedLibrary(const std::filesystem::path& modelPath)
         -> STATUS;
 
+    /**
+     * Creates a context for the QNN interface with the specified backend and
+     * device handles.
+     *
+     * GraphInfo keeps a reference to the qnnInterface
+     *
+     * @param qnnInterface The handle of the QNN interface.
+     * @param backendHandle The handle to the QNN backend.
+     * @param deviceHandle The handle to the QNN device.
+     * @return STATUS The status of the operation (SUCCESS or ERROR).
+     */
     auto createContext(QNN_INTERFACE_VER_TYPE& qnnInterface,
                        Qnn_BackendHandle_t& backendHandle,
                        Qnn_DeviceHandle_t& deviceHandle) -> STATUS;
 
+    /**
+     * Composes graphs using the specified QNN backend handle.
+     *
+     * @param qnnBackendHandle The handle to the QNN backend.
+     * @return STATUS The status of the operation (SUCCESS or ERROR).
+     */
     auto composeGraphs(Qnn_BackendHandle_t& qnnBackendHandle) -> STATUS;
 
     /**
      * @brief Sets the configuration for the composed graphs.
-     *
-     * This function sets the configuration for the composed graphs, operation
-     * precision, graph optimization level.
-     *
-     * @return STATUS The status of the operation (SUCCESS or FAIL).
+     * @param delegate The delegate for the operation.
+     * @param precision The precision of the operation.
+     * @return The status of the operation.
      */
     auto setGraphConfig(DELEGATE delegate, TensorType precision) -> STATUS;
 
     /**
      * @brief Finalizes the composed graphs.
-     *
-     * This function finalizes the composed graphs and prepares them for
-     * execution.
-     *
-     * @return STATUS The status of the operation (SUCCESS or FAIL).
+     * @return The status of the operation.
      */
     auto finalizeGraphs() -> STATUS;
 
-    /* context binary setup */
+    /**
+     * Loads the system library required for loading a cached context from a
+     * binary buffer
+     *
+     * @return STATUS indicating the success or failure of loading the system
+     * library.
+     */
     auto loadSystemLibrary() -> STATUS;
 
+    /**
+     * Loads the context from a binary model buffer.
+     *
+     * GraphInfo keeps a reference to the qnnInterface
+     *
+     * @param qnnInterface The handle of the QNN interface.
+     * @param backendHandle The handle to the QNN backend.
+     * @param deviceHandle The handle to the QNN device.
+     * @param modelBuffer The binary model buffer containing the model data.
+     * @return STATUS indicating the success or failure of loading the context
+     * from the binary model buffer.
+     */
     auto loadContextFromBinary(QNN_INTERFACE_VER_TYPE& qnnInterface,
                                Qnn_BackendHandle_t& backendHandle,
                                Qnn_DeviceHandle_t& deviceHandle,
@@ -117,20 +180,32 @@ class GraphsInfo {
         -> STATUS;
 
     /**
-     * Saves the current context to a binary file.
-     *
-     * This function saves the current context to a binary file specified by the
-     * input binaryPath.
-     *
-     * @param binaryPath The path to the binary file where the context will be
-     * saved.
-     * @return STATUS Returns a STATUS enum indicating the success or failure of
-     * the operation.
+     * @brief Saves the current context to a binary file.
+     * @param binaryPath The path to save the context binary file.
+     * @return The status of the operation.
      */
     auto saveContextBinary(const std::filesystem::path& binaryPath) -> STATUS;
 
+    /**
+     * @brief Retrieves a graph from the current context.
+     *
+     * This function retrieves a graph from the current context and returns a
+     * status code indicating the success or failure of the operation.
+     *
+     * @return STATUS - A status code indicating the success or failure of the
+     * operation.
+     */
     auto retrieveGraphFromContext() -> STATUS;
 
+    /**
+     * @brief Executes the graph.
+     *
+     * This function executes the graph and returns a status code indicating the
+     * success or failure of the operation.
+     *
+     * @return STATUS - A status code indicating the success or failure of the
+     * operation.
+     */
     auto execute() -> STATUS;
 
   private:
