@@ -102,11 +102,9 @@ class GraphsInfo {
         return (*m_graphsInfo)[index] /* NOLINT */;
     }
 
-    auto setComposeGraphsFnHandle(
-        ComposeGraphsFnHandleTypeT composeGraphsFnHandle) -> STATUS;
+    auto getContext() -> auto& { return m_context; }
 
-    auto setFreeGraphInfoFnHandle(
-        FreeGraphInfoFnHandleTypeT freeGraphInfoFnHandle) -> STATUS;
+    auto getSystemInterface() -> auto& { return m_qnnSystemInterface; }
 
     /* shared library setup */
     auto loadFromSharedLibrary(const std::filesystem::path& modelPath)
@@ -129,6 +127,13 @@ class GraphsInfo {
 
     auto retrieveGraphFromContext() -> STATUS;
 
+  private:
+    auto setComposeGraphsFnHandle(
+        ComposeGraphsFnHandleTypeT composeGraphsFnHandle) -> STATUS;
+
+    auto setFreeGraphInfoFnHandle(
+        FreeGraphInfoFnHandleTypeT freeGraphInfoFnHandle) -> STATUS;
+
     auto copyGraphsInfoV1(const QnnSystemContext_GraphInfoV1_t* graphInfoSrc,
                           GraphInfoT* graphInfoDst) -> bool;
 
@@ -138,11 +143,6 @@ class GraphsInfo {
     auto copyMetadataToGraphsInfo(
         const QnnSystemContext_BinaryInfo_t* binaryInfo) -> bool;
 
-    auto getContext() -> auto& { return m_context; }
-
-    auto getSystemInterface() -> auto& { return m_qnnSystemInterface; }
-
-  private:
     std::vector<GraphInfoT> m_graphs;
     std::vector<GraphInfoT*> m_graphPtrs;
 
