@@ -131,7 +131,7 @@ class ModelImpl final : public Model {
 
     static std::unique_ptr<Backend> m_backend;
 
-    GraphsInfo m_graphInfo;
+    Graph m_graph;
 
     bool m_loadCachedBinary {};
 };
