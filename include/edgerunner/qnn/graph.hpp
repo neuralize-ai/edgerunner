@@ -8,6 +8,7 @@
 #include <QnnInterface.h>
 #include <QnnTypes.h>
 #include <System/QnnSystemContext.h>
+#include <System/QnnSystemInterface.h>
 #include <dlfcn.h>
 #include <nonstd/span.hpp>
 
@@ -101,21 +102,32 @@ class GraphsInfo {
         return (*m_graphsInfo)[index] /* NOLINT */;
     }
 
-    auto loadFromSharedLibrary(const std::filesystem::path& modelPath)
-        -> STATUS;
-
     auto setComposeGraphsFnHandle(
         ComposeGraphsFnHandleTypeT composeGraphsFnHandle) -> STATUS;
 
     auto setFreeGraphInfoFnHandle(
         FreeGraphInfoFnHandleTypeT freeGraphInfoFnHandle) -> STATUS;
 
-    auto composeGraphs(Qnn_BackendHandle_t& qnnBackendHandle,
-                       QNN_INTERFACE_VER_TYPE& qnnInterface,
-                       Qnn_ContextHandle_t& qnnContext) -> STATUS;
+    /* shared library setup */
+    auto loadFromSharedLibrary(const std::filesystem::path& modelPath)
+        -> STATUS;
 
-    auto retrieveGraphFromContext(QNN_INTERFACE_VER_TYPE& qnnInterface,
-                                  Qnn_ContextHandle_t& qnnContext) -> STATUS;
+    auto createContext(QNN_INTERFACE_VER_TYPE& qnnInterface,
+                       Qnn_BackendHandle_t& backendHandle,
+                       Qnn_DeviceHandle_t& deviceHandle) -> STATUS;
+
+    auto composeGraphs(Qnn_BackendHandle_t& qnnBackendHandle) -> STATUS;
+
+    /* context binary setup */
+    auto loadSystemLibrary() -> STATUS;
+
+    auto loadContextFromBinary(QNN_INTERFACE_VER_TYPE& qnnInterface,
+                               Qnn_BackendHandle_t& backendHandle,
+                               Qnn_DeviceHandle_t& deviceHandle,
+                               const nonstd::span<uint8_t>& modelBuffer)
+        -> STATUS;
+
+    auto retrieveGraphFromContext() -> STATUS;
 
     auto copyGraphsInfoV1(const QnnSystemContext_GraphInfoV1_t* graphInfoSrc,
                           GraphInfoT* graphInfoDst) -> bool;
@@ -125,6 +137,10 @@ class GraphsInfo {
 
     auto copyMetadataToGraphsInfo(
         const QnnSystemContext_BinaryInfo_t* binaryInfo) -> bool;
+
+    auto getContext() -> auto& { return m_context; }
+
+    auto getSystemInterface() -> auto& { return m_qnnSystemInterface; }
 
   private:
     std::vector<GraphInfoT> m_graphs;
@@ -142,6 +158,13 @@ class GraphsInfo {
 
     std::vector<Qnn_Tensor_t> m_inputTensors;
     std::vector<Qnn_Tensor_t> m_outputTensors;
+
+    Qnn_ContextHandle_t m_context {};
+
+    QNN_INTERFACE_VER_TYPE m_qnnInterface;
+
+    QNN_SYSTEM_INTERFACE_VER_TYPE m_qnnSystemInterface =
+        QNN_SYSTEM_INTERFACE_VER_TYPE_INIT;
 };
 
 }  // namespace edge::qnn
