@@ -97,13 +97,17 @@ class Graph {
      * @brief Get the input tensors for the current graph.
      * @return A span of input tensors.
      */
-    auto getInputs() -> nonstd::span<Qnn_Tensor_t>;
+    auto getInputs() -> nonstd::span<Qnn_Tensor_t> {
+        return {m_graphInfo->inputTensors, m_graphInfo->numInputTensors};
+    }
 
     /**
      * @brief Get the output tensors for the current graph.
      * @return A span of output tensors.
      */
-    auto getOutputs() -> nonstd::span<Qnn_Tensor_t>;
+    auto getOutputs() -> nonstd::span<Qnn_Tensor_t> {
+        return {m_graphInfo->outputTensors, m_graphInfo->numOutputTensors};
+    }
 
     /**
      * Loads a model from a shared library located at the specified path.
