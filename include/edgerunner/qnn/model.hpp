@@ -80,17 +80,6 @@ class ModelImpl final : public Model {
 
   private:
     /**
-     * @brief Loads a QNN model from a shared library.
-     *
-     * This function loads a QNN model from a shared library located at the
-     * specified path.
-     *
-     * @param modelPath The path to the shared library containing the QNN model.
-     * @return STATUS The status of the operation (SUCCESS or FAIL).
-     */
-    auto loadFromSharedLibrary(const std::filesystem::path& modelPath)
-        -> STATUS;
-    /**
      * Loads a QNN model from a serialized binary buffer.
      *
      * This function takes a nonstd::span<uint8_t> modelBuffer as input and
@@ -121,39 +110,6 @@ class ModelImpl final : public Model {
      * be executed in. This is required in particular for QNN delegate
      */
     auto detectPrecision() -> TensorType;
-
-    /**
-     * @brief Sets the configuration for the composed graphs.
-     *
-     * This function sets the configuration for the composed graphs, operation
-     * precision, graph optimization level.
-     *
-     * @return STATUS The status of the operation (SUCCESS or FAIL).
-     */
-    auto setGraphConfig() -> STATUS;
-
-    /**
-     * @brief Finalizes the composed graphs.
-     *
-     * This function finalizes the composed graphs and prepares them for
-     * execution.
-     *
-     * @return STATUS The status of the operation (SUCCESS or FAIL).
-     */
-    auto finalizeGraphs() -> STATUS;
-
-    /**
-     * Saves the current context to a binary file.
-     *
-     * This function saves the current context to a binary file specified by the
-     * input binaryPath.
-     *
-     * @param binaryPath The path to the binary file where the context will be
-     * saved.
-     * @return STATUS Returns a STATUS enum indicating the success or failure of
-     * the operation.
-     */
-    auto saveContextBinary(const std::filesystem::path& binaryPath) -> STATUS;
 
     /**
      * @brief Allocates input and output tensors

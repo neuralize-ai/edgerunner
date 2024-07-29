@@ -3,12 +3,14 @@
 #include <cstring>
 #include <exception>
 #include <filesystem>
+#include <fstream>
 #include <functional>
 #include <variant>
 
 #include "edgerunner/qnn/graph.hpp"
 
 #include <HTP/QnnHtpContext.h>
+#include <HTP/QnnHtpGraph.h>
 #include <QnnCommon.h>
 #include <QnnInterface.h>
 #include <QnnLog.h>
@@ -161,6 +163,99 @@ auto GraphsInfo::composeGraphs(Qnn_BackendHandle_t& qnnBackendHandle)
     return STATUS::SUCCESS;
 }
 
+auto GraphsInfo::setGraphConfig(DELEGATE delegate,
+                                TensorType precision) -> STATUS {
+    Config<QnnGraph_Config_t, QnnHtpGraph_CustomConfig_t> graphConfigs {
+        QNN_GRAPH_CONFIG_INIT, QNN_HTP_GRAPH_CUSTOM_CONFIG_INIT};
+
+    if (delegate == DELEGATE::NPU) {
+        if (precision == TensorType::FLOAT16) {
+            auto& precisionCustomConfig = graphConfigs.createCustomConfig();
+            precisionCustomConfig.option =
+                QNN_HTP_GRAPH_CONFIG_OPTION_PRECISION;
+
+            precisionCustomConfig.precision /* NOLINT */ =
+                QNN_PRECISION_FLOAT16;
+
+            auto& precisionConfig = graphConfigs.createConfig();
+            precisionConfig.option = QNN_GRAPH_CONFIG_OPTION_CUSTOM;
+            precisionConfig.customConfig /* NOLINT */ = &precisionCustomConfig;
+        }
+
+        auto& optimizationCustomConfig = graphConfigs.createCustomConfig();
+        optimizationCustomConfig.option =
+            QNN_HTP_GRAPH_CONFIG_OPTION_OPTIMIZATION;
+        optimizationCustomConfig.optimizationOption /* NOLINT */.type =
+            QNN_HTP_GRAPH_OPTIMIZATION_TYPE_FINALIZE_OPTIMIZATION_FLAG;
+        static constexpr float GraphOptimizationLevel = 3.0F;
+        optimizationCustomConfig.optimizationOption /* NOLINT */.floatValue =
+            GraphOptimizationLevel;
+
+        auto& optimizationConfig = graphConfigs.createConfig();
+        optimizationConfig.option = QNN_GRAPH_CONFIG_OPTION_CUSTOM;
+        optimizationConfig.customConfig /* NOLINT */ =
+            &optimizationCustomConfig;
+    }
+
+    const auto status = m_qnnInterface.graphSetConfig(m_graphInfo->graph,
+                                                      graphConfigs.getPtr());
+
+    if (QNN_GRAPH_NO_ERROR != status) {
+        return STATUS::FAIL;
+    }
+
+    return STATUS::SUCCESS;
+}
+
+auto GraphsInfo::finalizeGraphs() -> STATUS {
+    const auto status =
+        m_qnnInterface.graphFinalize(m_graphInfo->graph, nullptr, nullptr);
+
+    if (QNN_GRAPH_NO_ERROR != status) {
+        return STATUS::FAIL;
+    }
+
+    return STATUS::SUCCESS;
+}
+
+auto GraphsInfo::saveContextBinary(const std::filesystem::path& binaryPath)
+    -> STATUS {
+    if (nullptr == m_qnnInterface.contextGetBinarySize
+        || nullptr == m_qnnInterface.contextGetBinary)
+    {
+        return STATUS::FAIL;
+    }
+    uint64_t requiredBufferSize {0};
+    if (QNN_CONTEXT_NO_ERROR
+        != m_qnnInterface.contextGetBinarySize(m_context, &requiredBufferSize))
+    {
+        return STATUS::FAIL;
+    }
+
+    std::vector<uint8_t> buffer(requiredBufferSize);
+
+    uint64_t writtenBufferSize {0};
+    if (QNN_CONTEXT_NO_ERROR
+        != m_qnnInterface.contextGetBinary(
+            m_context,
+            reinterpret_cast<void*> /* NOLINT */ (buffer.data()),
+            requiredBufferSize,
+            &writtenBufferSize))
+    {
+        return STATUS::FAIL;
+    }
+
+    if (requiredBufferSize < writtenBufferSize) {
+        return STATUS::FAIL;
+    }
+
+    std::ofstream file(binaryPath, std::ofstream::binary);
+    file.write(reinterpret_cast<const char*> /* NOLINT */ (buffer.data()),
+               static_cast<std::streamsize>(buffer.size()));
+
+    return STATUS::SUCCESS;
+}
+
 auto GraphsInfo::loadSystemLibrary() -> STATUS {
     void* systemLibraryHandle =
         dlopen("libQnnSystem.so", RTLD_NOW | RTLD_LOCAL);
@@ -282,6 +377,22 @@ auto GraphsInfo::retrieveGraphFromContext() -> STATUS {
     }
 
     setGraph();
+
+    return STATUS::SUCCESS;
+}
+
+auto GraphsInfo::execute() -> STATUS {
+    const auto executeStatus =
+        m_qnnInterface.graphExecute(m_graphInfo->graph,
+                                    m_graphInfo->inputTensors,
+                                    m_graphInfo->numInputTensors,
+                                    m_graphInfo->outputTensors,
+                                    m_graphInfo->numOutputTensors,
+                                    nullptr,
+                                    nullptr);
+    if (QNN_GRAPH_NO_ERROR != executeStatus) {
+        return STATUS::FAIL;
+    }
 
     return STATUS::SUCCESS;
 }

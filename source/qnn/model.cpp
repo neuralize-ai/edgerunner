@@ -19,7 +19,6 @@
 #include <nonstd/span.hpp>
 
 #include "edgerunner/qnn/backend.hpp"
-#include "edgerunner/qnn/config.hpp"
 #include "edgerunner/qnn/model.hpp"
 #include "edgerunner/qnn/tensor.hpp"
 #include "edgerunner/tensor.hpp"
@@ -39,10 +38,13 @@ ModelImpl::ModelImpl(const std::filesystem::path& modelPath)
         setCreationStatus(loadModel(modelPath));
         setCreationStatus(composeGraphs());
         setPrecision(detectPrecision());
-        setCreationStatus(setGraphConfig());
-        setCreationStatus(finalizeGraphs());
+        setCreationStatus(m_graphInfo.setGraphConfig(m_backend->getDelegate(),
+                                                     getPrecision()));
+        setCreationStatus(m_graphInfo.finalizeGraphs());
+
+        // m_graphInfo.saveContextBinary(name() + ".bin");
     } else {
-        m_graphInfo.loadSystemLibrary();
+        setCreationStatus(m_graphInfo.loadSystemLibrary());
 
         std::ifstream file(modelPath, std::ios::binary);
         if (!file) {
@@ -73,7 +75,7 @@ ModelImpl::ModelImpl(const nonstd::span<uint8_t>& modelBuffer) {
 }
 
 auto ModelImpl::loadModel(const std::filesystem::path& modelPath) -> STATUS {
-    return loadFromSharedLibrary(modelPath);
+    return m_graphInfo.loadFromSharedLibrary(modelPath);
 }
 
 auto ModelImpl::loadModel(const nonstd::span<uint8_t>& modelBuffer) -> STATUS {
@@ -91,26 +93,7 @@ auto ModelImpl::applyDelegate(const DELEGATE& delegate) -> STATUS {
 }
 
 auto ModelImpl::execute() -> STATUS {
-    auto& qnnInterface = m_backend->getInterface();
-
-    const auto executeStatus =
-        qnnInterface.graphExecute(m_graphInfo.getGraph(),
-                                  m_graphInfo.getInputs().data(),
-                                  m_graphInfo.getNumInputs(),
-                                  m_graphInfo.getOutputs().data(),
-                                  m_graphInfo.getNumOutputs(),
-                                  nullptr,
-                                  nullptr);
-    if (QNN_GRAPH_NO_ERROR != executeStatus) {
-        return STATUS::FAIL;
-    }
-
-    return STATUS::SUCCESS;
-}
-
-auto ModelImpl::loadFromSharedLibrary(const std::filesystem::path& modelPath)
-    -> STATUS {
-    return m_graphInfo.loadFromSharedLibrary(modelPath);
+    return m_graphInfo.execute();
 }
 
 auto ModelImpl::loadFromContextBinary(const nonstd::span<uint8_t>& modelBuffer)
@@ -157,107 +140,6 @@ auto ModelImpl::detectPrecision() -> TensorType {
     }
 
     return TensorType::UINT8;
-}
-
-auto ModelImpl::setGraphConfig() -> STATUS {
-    auto& qnnInterface = m_backend->getInterface();
-
-    Config<QnnGraph_Config_t, QnnHtpGraph_CustomConfig_t> graphConfigs {
-        QNN_GRAPH_CONFIG_INIT, QNN_HTP_GRAPH_CUSTOM_CONFIG_INIT};
-
-    if (m_backend->getDelegate() == DELEGATE::NPU) {
-        if (getPrecision() == TensorType::FLOAT16) {
-            auto& precisionCustomConfig = graphConfigs.createCustomConfig();
-            precisionCustomConfig.option =
-                QNN_HTP_GRAPH_CONFIG_OPTION_PRECISION;
-
-            precisionCustomConfig.precision /* NOLINT */ =
-                QNN_PRECISION_FLOAT16;
-
-            auto& precisionConfig = graphConfigs.createConfig();
-            precisionConfig.option = QNN_GRAPH_CONFIG_OPTION_CUSTOM;
-            precisionConfig.customConfig /* NOLINT */ = &precisionCustomConfig;
-        }
-
-        auto& optimizationCustomConfig = graphConfigs.createCustomConfig();
-        optimizationCustomConfig.option =
-            QNN_HTP_GRAPH_CONFIG_OPTION_OPTIMIZATION;
-        optimizationCustomConfig.optimizationOption /* NOLINT */.type =
-            QNN_HTP_GRAPH_OPTIMIZATION_TYPE_FINALIZE_OPTIMIZATION_FLAG;
-        static constexpr float GraphOptimizationLevel = 3.0F;
-        optimizationCustomConfig.optimizationOption /* NOLINT */.floatValue =
-            GraphOptimizationLevel;
-
-        auto& optimizationConfig = graphConfigs.createConfig();
-        optimizationConfig.option = QNN_GRAPH_CONFIG_OPTION_CUSTOM;
-        optimizationConfig.customConfig /* NOLINT */ =
-            &optimizationCustomConfig;
-    }
-
-    const auto status = qnnInterface.graphSetConfig(m_graphInfo.getGraph(),
-                                                    graphConfigs.getPtr());
-
-    if (QNN_GRAPH_NO_ERROR != status) {
-        return STATUS::FAIL;
-    }
-
-    return STATUS::SUCCESS;
-}
-
-auto ModelImpl::finalizeGraphs() -> STATUS {
-    auto& qnnInterface = m_backend->getInterface();
-
-    const auto status =
-        qnnInterface.graphFinalize(m_graphInfo.getGraph(), nullptr, nullptr);
-
-    if (QNN_GRAPH_NO_ERROR != status) {
-        return STATUS::FAIL;
-    }
-
-    // saveContextBinary(name() + ".bin");
-
-    return STATUS::SUCCESS;
-}
-
-auto ModelImpl::saveContextBinary(const std::filesystem::path& binaryPath)
-    -> STATUS {
-    auto& qnnInterface = m_backend->getInterface();
-    auto& context = m_graphInfo.getContext();
-
-    if (nullptr == qnnInterface.contextGetBinarySize
-        || nullptr == qnnInterface.contextGetBinary)
-    {
-        return STATUS::FAIL;
-    }
-    uint64_t requiredBufferSize {0};
-    if (QNN_CONTEXT_NO_ERROR
-        != qnnInterface.contextGetBinarySize(context, &requiredBufferSize))
-    {
-        return STATUS::FAIL;
-    }
-
-    std::vector<uint8_t> buffer(requiredBufferSize);
-
-    uint64_t writtenBufferSize {0};
-    if (QNN_CONTEXT_NO_ERROR
-        != qnnInterface.contextGetBinary(
-            context,
-            reinterpret_cast<void*> /* NOLINT */ (buffer.data()),
-            requiredBufferSize,
-            &writtenBufferSize))
-    {
-        return STATUS::FAIL;
-    }
-
-    if (requiredBufferSize < writtenBufferSize) {
-        return STATUS::FAIL;
-    }
-
-    std::ofstream file(binaryPath, std::ofstream::binary);
-    file.write(reinterpret_cast<const char*> /* NOLINT */ (buffer.data()),
-               static_cast<std::streamsize>(buffer.size()));
-
-    return STATUS::SUCCESS;
 }
 
 auto ModelImpl::allocate() -> STATUS {
