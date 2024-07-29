@@ -230,7 +230,62 @@ auto GraphsInfo::loadSystemLibrary() -> STATUS {
     return STATUS::FAIL;
 }
 
+auto GraphsInfo::loadContextFromBinary(QNN_INTERFACE_VER_TYPE& qnnInterface,
+                                       Qnn_BackendHandle_t& backendHandle,
+                                       Qnn_DeviceHandle_t& deviceHandle,
+                                       const nonstd::span<uint8_t>& modelBuffer)
     -> STATUS {
+    m_qnnInterface = qnnInterface;
+
+    auto& qnnSystemInterface = getSystemInterface();
+    QnnSystemContext_Handle_t sysCtxHandle {nullptr};
+    if (QNN_SUCCESS != qnnSystemInterface.systemContextCreate(&sysCtxHandle)) {
+        return STATUS::FAIL;
+    }
+    const QnnSystemContext_BinaryInfo_t* binaryInfo {nullptr};
+    Qnn_ContextBinarySize_t binaryInfoSize {0};
+    if (QNN_SUCCESS
+        != qnnSystemInterface.systemContextGetBinaryInfo(
+            sysCtxHandle,
+            static_cast<void*>(modelBuffer.data()),
+            modelBuffer.size(),
+            &binaryInfo,
+            &binaryInfoSize))
+    {
+        return STATUS::FAIL;
+    }
+
+    if (!copyMetadataToGraphsInfo(binaryInfo)) {
+        return STATUS::FAIL;
+    }
+
+    qnnSystemInterface.systemContextFree(sysCtxHandle);
+    sysCtxHandle = nullptr;
+
+    if (nullptr == m_qnnInterface.contextCreateFromBinary) {
+        return STATUS::FAIL;
+    }
+
+    Config<QnnContext_Config_t, QnnHtpContext_CustomConfig_t> contextConfigs {
+        QNN_CONTEXT_CONFIG_INIT, {}};
+
+    auto& contextCustomConfig = contextConfigs.createCustomConfig();
+    contextCustomConfig.option =
+        QNN_HTP_CONTEXT_CONFIG_OPTION_REGISTER_MULTI_CONTEXTS;
+
+    if (m_qnnInterface.contextCreateFromBinary(
+            backendHandle,
+            deviceHandle,
+            contextConfigs.getPtr(),
+            static_cast<void*>(modelBuffer.data()),
+            modelBuffer.size(),
+            &m_context,
+            nullptr)
+        != 0U)
+    {
+        return STATUS::FAIL;
+    }
+
     return STATUS::SUCCESS;
 }
 

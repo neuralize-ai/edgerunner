@@ -33,7 +33,7 @@ ModelImpl::ModelImpl(const std::filesystem::path& modelPath)
     const auto modelExtension = modelPath.extension().string().substr(1);
     m_loadCachedBinary = modelExtension == "bin";
 
-    initializeBackend(m_loadCachedBinary);
+    initializeBackend();
 
     if (!m_loadCachedBinary) {
         setCreationStatus(loadModel(modelPath));
@@ -42,6 +42,8 @@ ModelImpl::ModelImpl(const std::filesystem::path& modelPath)
         setCreationStatus(setGraphConfig());
         setCreationStatus(finalizeGraphs());
     } else {
+        m_graphInfo.loadSystemLibrary();
+
         std::ifstream file(modelPath, std::ios::binary);
         if (!file) {
             setCreationStatus(STATUS::FAIL);
@@ -202,11 +204,12 @@ auto ModelImpl::setGraphConfig() -> STATUS {
 
 auto ModelImpl::composeGraphs() -> STATUS {
     auto& qnnInterface = m_backend->getInterface();
-    auto& qnnContext = m_backend->getContext();
     auto& qnnBackendHandle = m_backend->getHandle();
+    auto& qnnDeviceHandle = m_backend->getDeviceHandle();
 
-    return m_graphInfo.composeGraphs(
-        qnnBackendHandle, qnnInterface, qnnContext);
+    m_graphInfo.createContext(qnnInterface, qnnBackendHandle, qnnDeviceHandle);
+
+    return m_graphInfo.composeGraphs(qnnBackendHandle);
 }
 
 auto ModelImpl::finalizeGraphs() -> STATUS {
@@ -219,7 +222,7 @@ auto ModelImpl::finalizeGraphs() -> STATUS {
         return STATUS::FAIL;
     }
 
-    saveContextBinary(name() + ".bin");
+    // saveContextBinary(name() + ".bin");
 
     return STATUS::SUCCESS;
 }
@@ -227,7 +230,7 @@ auto ModelImpl::finalizeGraphs() -> STATUS {
 auto ModelImpl::saveContextBinary(const std::filesystem::path& binaryPath)
     -> STATUS {
     auto& qnnInterface = m_backend->getInterface();
-    auto& context = m_backend->getContext();
+    auto& context = m_graphInfo.getContext();
 
     if (nullptr == qnnInterface.contextGetBinarySize
         || nullptr == qnnInterface.contextGetBinary)
@@ -272,57 +275,18 @@ auto ModelImpl::loadFromSharedLibrary(const std::filesystem::path& modelPath)
 
 auto ModelImpl::loadFromContextBinary(const nonstd::span<uint8_t>& modelBuffer)
     -> STATUS {
-    auto& qnnSystemInterface = m_backend->getSystemInterface();
-    QnnSystemContext_Handle_t sysCtxHandle {nullptr};
-    if (QNN_SUCCESS != qnnSystemInterface.systemContextCreate(&sysCtxHandle)) {
-        return STATUS::FAIL;
-    }
-    const QnnSystemContext_BinaryInfo_t* binaryInfo {nullptr};
-    Qnn_ContextBinarySize_t binaryInfoSize {0};
-    if (QNN_SUCCESS
-        != qnnSystemInterface.systemContextGetBinaryInfo(
-            sysCtxHandle,
-            static_cast<void*>(modelBuffer.data()),
-            modelBuffer.size(),
-            &binaryInfo,
-            &binaryInfoSize))
-    {
-        return STATUS::FAIL;
-    }
-
-    if (!m_graphInfo.copyMetadataToGraphsInfo(binaryInfo)) {
-        return STATUS::FAIL;
-    }
-
-    qnnSystemInterface.systemContextFree(sysCtxHandle);
-    sysCtxHandle = nullptr;
-
     auto& qnnInterface = m_backend->getInterface();
-
-    if (nullptr == qnnInterface.contextCreateFromBinary) {
-        return STATUS::FAIL;
-    }
-
     auto& backendHandle = m_backend->getHandle();
     auto& deviceHandle = m_backend->getDeviceHandle();
-    auto& context = m_backend->getContext();
 
-    Config<QnnContext_Config_t, void*> contextConfig {QNN_CONTEXT_CONFIG_INIT,
-                                                      {}};
-    if (qnnInterface.contextCreateFromBinary(
-            backendHandle,
-            deviceHandle,
-            contextConfig.getPtr(),
-            static_cast<void*>(modelBuffer.data()),
-            modelBuffer.size(),
-            &context,
-            nullptr)
-        != 0U)
+    if (m_graphInfo.loadContextFromBinary(
+            qnnInterface, backendHandle, deviceHandle, modelBuffer)
+        != STATUS::SUCCESS)
     {
         return STATUS::FAIL;
     }
 
-    return m_graphInfo.retrieveGraphFromContext(qnnInterface, context);
+    return m_graphInfo.retrieveGraphFromContext();
 }
 
 }  // namespace edge::qnn
