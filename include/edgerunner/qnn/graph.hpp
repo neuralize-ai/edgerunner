@@ -116,6 +116,26 @@ class GraphsInfo {
 
     auto composeGraphs(Qnn_BackendHandle_t& qnnBackendHandle) -> STATUS;
 
+    /**
+     * @brief Sets the configuration for the composed graphs.
+     *
+     * This function sets the configuration for the composed graphs, operation
+     * precision, graph optimization level.
+     *
+     * @return STATUS The status of the operation (SUCCESS or FAIL).
+     */
+    auto setGraphConfig(DELEGATE delegate, TensorType precision) -> STATUS;
+
+    /**
+     * @brief Finalizes the composed graphs.
+     *
+     * This function finalizes the composed graphs and prepares them for
+     * execution.
+     *
+     * @return STATUS The status of the operation (SUCCESS or FAIL).
+     */
+    auto finalizeGraphs() -> STATUS;
+
     /* context binary setup */
     auto loadSystemLibrary() -> STATUS;
 
@@ -125,7 +145,22 @@ class GraphsInfo {
                                const nonstd::span<uint8_t>& modelBuffer)
         -> STATUS;
 
+    /**
+     * Saves the current context to a binary file.
+     *
+     * This function saves the current context to a binary file specified by the
+     * input binaryPath.
+     *
+     * @param binaryPath The path to the binary file where the context will be
+     * saved.
+     * @return STATUS Returns a STATUS enum indicating the success or failure of
+     * the operation.
+     */
+    auto saveContextBinary(const std::filesystem::path& binaryPath) -> STATUS;
+
     auto retrieveGraphFromContext() -> STATUS;
+
+    auto execute() -> STATUS;
 
   private:
     auto setComposeGraphsFnHandle(
