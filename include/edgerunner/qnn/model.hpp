@@ -115,6 +115,14 @@ class ModelImpl final : public Model {
     auto composeGraphs() -> STATUS;
 
     /**
+     * Detects graph operation precision
+     *
+     * This function queries the graph to detect what precision the graph should
+     * be executed in. This is required in particular for QNN delegate
+     */
+    auto detectPrecision() -> TensorType;
+
+    /**
      * @brief Sets the configuration for the composed graphs.
      *
      * This function sets the configuration for the composed graphs, operation
@@ -156,14 +164,6 @@ class ModelImpl final : public Model {
      * @return STATUS The status of the operation (SUCCESS or FAIL).
      */
     auto allocate() -> STATUS;
-
-    /**
-     * Detects graph operation precision
-     *
-     * This function queries the graph to detect what precision the graph should
-     * be executed in. This is required in particular for QNN delegate
-     */
-    auto detectPrecision() -> TensorType;
 
     static void initializeBackend() {
         if (m_backend == nullptr) {
