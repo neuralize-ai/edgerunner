@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>edge::qnn::Graph class | edgerunner</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,600i%7CSource+Code+Pro:400,400i,600" />
+  <link rel="stylesheet" href="m-dark+documentation.compiled.css" />
+  <link rel="icon" href="favicon-dark.png" type="image/png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#22272e" />
+</head>
+<body>
+<header><nav id="navigation">
+  <div class="m-container">
+    <div class="m-row">
+      <a href="index.html" id="m-navbar-brand" class="m-col-t-8 m-col-m-none m-left-m">edgerunner</a>
+      <div class="m-col-t-4 m-hide-m m-text-right m-nopadr">
+        <a href="#search" class="m-doc-search-icon" title="Search" onclick="return showSearch()"><svg style="height: 0.9rem;" viewBox="0 0 16 16">
+          <path id="m-doc-search-icon-path" d="m6 0c-3.31 0-6 2.69-6 6 0 3.31 2.69 6 6 6 1.49 0 2.85-0.541 3.89-1.44-0.0164 0.338 0.147 0.759 0.5 1.15l3.22 3.79c0.552 0.614 1.45 0.665 2 0.115 0.55-0.55 0.499-1.45-0.115-2l-3.79-3.22c-0.392-0.353-0.812-0.515-1.15-0.5 0.895-1.05 1.44-2.41 1.44-3.89 0-3.31-2.69-6-6-6zm0 1.56a4.44 4.44 0 0 1 4.44 4.44 4.44 4.44 0 0 1-4.44 4.44 4.44 4.44 0 0 1-4.44-4.44 4.44 4.44 0 0 1 4.44-4.44z"/>
+        </svg></a>
+        <a id="m-navbar-show" href="#navigation" title="Show navigation"></a>
+        <a id="m-navbar-hide" href="#" title="Hide navigation"></a>
+      </div>
+      <div id="m-navbar-collapse" class="m-col-t-12 m-show-m m-col-m-none m-right-m">
+        <div class="m-row">
+          <ol class="m-col-t-6 m-col-m-none">
+            <li>
+              <a href="pages.html">Pages</a>
+              <ol>
+                <li><a href="about.html">About</a></li>
+              </ol>
+            </li>
+            <li><a href="namespaces.html">Namespaces</a></li>
+          </ol>
+          <ol class="m-col-t-6 m-col-m-none" start="3">
+            <li><a href="annotated.html">Classes</a></li>
+            <li><a href="files.html">Files</a></li>
+            <li class="m-show-m"><a href="#search" class="m-doc-search-icon" title="Search" onclick="return showSearch()"><svg style="height: 0.9rem;" viewBox="0 0 16 16">
+              <use href="#m-doc-search-icon-path" />
+            </svg></a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav></header>
+<main><article>
+  <div class="m-container m-container-inflatable">
+    <div class="m-row">
+      <div class="m-col-l-10 m-push-l-1">
+        <h1>
+          <span class="m-breadcrumb"><a href="namespaceedge.html">edge</a>::<wbr/></span><span class="m-breadcrumb"><a href="namespaceedge_1_1qnn.html">qnn</a>::<wbr/></span>Graph <span class="m-thin">class</span>
+          <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="graph_8hpp.html">&lt;graph.hpp&gt;</a></div>
+        </h1>
+        <p>Class for managing QNN graphs.</p>
+        <div class="m-block m-default">
+          <h3>Contents</h3>
+          <ul>
+            <li>
+              Reference
+              <ul>
+                <li><a href="#typeless-methods">Constructors, destructors, conversion operators</a></li>
+                <li><a href="#pub-methods">Public functions</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+        <section id="typeless-methods">
+          <h2><a href="#typeless-methods">Constructors, destructors, conversion operators</a></h2>
+          <dl class="m-doc">
+            <dt id="a3d75c327b038ba9c35c11c53c30b5e79">
+              <span class="m-doc-wrap-bumper"><a href="#a3d75c327b038ba9c35c11c53c30b5e79" class="m-doc-self">Graph</a>(</span><span class="m-doc-wrap">) <span class="m-label m-flat m-info">defaulted</span></span>
+            </dt>
+            <dd><span></span></dd>
+            <dt id="ae7d88e9f0f6592f3cabb9ebb73d399a0">
+              <span class="m-doc-wrap-bumper"><a href="#ae7d88e9f0f6592f3cabb9ebb73d399a0" class="m-doc-self">Graph</a>(</span><span class="m-doc-wrap">const <a href="classedge_1_1qnn_1_1Graph.html" class="m-doc">Graph</a>&amp;) <span class="m-label m-flat m-danger">deleted</span></span>
+            </dt>
+            <dd><span></span></dd>
+            <dt id="ab2733ff7efc0241c33f54426bfd85037">
+              <span class="m-doc-wrap-bumper"><a href="#ab2733ff7efc0241c33f54426bfd85037" class="m-doc-self">Graph</a>(</span><span class="m-doc-wrap"><a href="classedge_1_1qnn_1_1Graph.html" class="m-doc">Graph</a>&amp;&amp;) <span class="m-label m-flat m-danger">deleted</span></span>
+            </dt>
+            <dd><span></span></dd>
+            <dt id="a2d8f9f8383bc6ac098d5ea4c62958393">
+              <span class="m-doc-wrap-bumper"><a href="#a2d8f9f8383bc6ac098d5ea4c62958393" class="m-doc-self">~Graph</a>(</span><span class="m-doc-wrap">)</span>
+            </dt>
+            <dd><span></span></dd>
+          </dl>
+        </section>
+        <section id="pub-methods">
+          <h2><a href="#pub-methods">Public functions</a></h2>
+          <dl class="m-doc">
+            <dt id="ae9ced95b278df766b6dd53a6d946e05f">
+              <span class="m-doc-wrap-bumper">auto <a href="#ae9ced95b278df766b6dd53a6d946e05f" class="m-doc-self">operator=</a>(</span><span class="m-doc-wrap">const <a href="classedge_1_1qnn_1_1Graph.html" class="m-doc">Graph</a>&amp;) -&gt; Graph &amp; <span class="m-label m-flat m-danger">deleted</span></span>
+            </dt>
+            <dd><span></span></dd>
+            <dt id="a026b28789a719e3cd429ebf62ad5ebd0">
+              <span class="m-doc-wrap-bumper">auto <a href="#a026b28789a719e3cd429ebf62ad5ebd0" class="m-doc-self">operator=</a>(</span><span class="m-doc-wrap"><a href="classedge_1_1qnn_1_1Graph.html" class="m-doc">Graph</a>&amp;&amp;) -&gt; Graph &amp; <span class="m-label m-flat m-danger">deleted</span></span>
+            </dt>
+            <dd><span></span></dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#aded7e58741658e13cfe451f6d7ab18ab" class="m-doc">getInputs</a>(</span><span class="m-doc-wrap">) -&gt; nonstd::span&lt; Qnn_Tensor_t &gt;</span>
+            </dt>
+            <dd>Get the input tensors for the current graph.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#a0093ddf616b7d5c91b9a62126b1b2781" class="m-doc">getOutputs</a>(</span><span class="m-doc-wrap">) -&gt; nonstd::span&lt; Qnn_Tensor_t &gt;</span>
+            </dt>
+            <dd>Get the output tensors for the current graph.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#a5f95e5fab3ee75b04ea5c425b74f2ef3" class="m-doc">loadFromSharedLibrary</a>(</span><span class="m-doc-wrap">const std::filesystem::path&amp; modelPath) -&gt; STATUS</span>
+            </dt>
+            <dd></dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#a506b51d97623bd46f93c87b40a273f3e" class="m-doc">createContext</a>(</span><span class="m-doc-wrap">QNN_INTERFACE_VER_TYPE&amp; qnnInterface,
+              Qnn_BackendHandle_t&amp; backendHandle,
+              Qnn_DeviceHandle_t&amp; deviceHandle) -&gt; STATUS</span>
+            </dt>
+            <dd></dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#a7d5ad4cbba35d3ee82e822a631b40738" class="m-doc">composeGraphs</a>(</span><span class="m-doc-wrap">Qnn_BackendHandle_t&amp; qnnBackendHandle) -&gt; STATUS</span>
+            </dt>
+            <dd></dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#aa56db98ccb9bb29e040b393a2ffe43b3" class="m-doc">setGraphConfig</a>(</span><span class="m-doc-wrap"><a href="namespaceedge.html#a2a339162b70a461c879db12d3832592d" class="m-doc">DELEGATE</a> delegate,
+              <a href="namespaceedge.html#a35bf76c8f50658546b6dc23d80b9798c" class="m-doc">TensorType</a> precision) -&gt; STATUS</span>
+            </dt>
+            <dd>Sets the configuration for the composed graphs.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#a10ea4f81ecd6b1856aa86433df7e9155" class="m-doc">finalizeGraphs</a>(</span><span class="m-doc-wrap">) -&gt; STATUS</span>
+            </dt>
+            <dd>Finalizes the composed graphs.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#a9d4edcbfc245a3d3d6571b3ecd2fe206" class="m-doc">loadSystemLibrary</a>(</span><span class="m-doc-wrap">) -&gt; STATUS</span>
+            </dt>
+            <dd></dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#a5ece3a732e4d4cd6f09e79b5ef0f2829" class="m-doc">loadContextFromBinary</a>(</span><span class="m-doc-wrap">QNN_INTERFACE_VER_TYPE&amp; qnnInterface,
+              Qnn_BackendHandle_t&amp; backendHandle,
+              Qnn_DeviceHandle_t&amp; deviceHandle,
+              const nonstd::span&lt;uint8_t&gt;&amp; modelBuffer) -&gt; STATUS</span>
+            </dt>
+            <dd></dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#aec946a5b5cb76c447c47dfa227994f55" class="m-doc">saveContextBinary</a>(</span><span class="m-doc-wrap">const std::filesystem::path&amp; binaryPath) -&gt; STATUS</span>
+            </dt>
+            <dd>Saves the current context to a binary file.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#a7083d5044e6ccd7330a79acca362c606" class="m-doc">retrieveGraphFromContext</a>(</span><span class="m-doc-wrap">) -&gt; STATUS</span>
+            </dt>
+            <dd>Retrieves a graph from the current context.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#a577a4cb902f18e94bdcd29add3789ede" class="m-doc">execute</a>(</span><span class="m-doc-wrap">) -&gt; STATUS</span>
+            </dt>
+            <dd>Executes the graph.</dd>
+          </dl>
+        </section>
+        <section>
+          <h2>Function documentation</h2>
+          <section class="m-doc-details" id="aded7e58741658e13cfe451f6d7ab18ab"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">auto edge::<wbr />qnn::<wbr />Graph::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#aded7e58741658e13cfe451f6d7ab18ab" class="m-doc-self">getInputs</a>(</span><span class="m-doc-wrap">) -&gt; nonstd::span&lt; Qnn_Tensor_t &gt;</span></span>
+            </h3>
+            <p>Get the input tensors for the current graph.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <tfoot>
+                <tr>
+                  <th style="width: 1%">Returns</th>
+                  <td>A span of input tensors.</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="a0093ddf616b7d5c91b9a62126b1b2781"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">auto edge::<wbr />qnn::<wbr />Graph::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a0093ddf616b7d5c91b9a62126b1b2781" class="m-doc-self">getOutputs</a>(</span><span class="m-doc-wrap">) -&gt; nonstd::span&lt; Qnn_Tensor_t &gt;</span></span>
+            </h3>
+            <p>Get the output tensors for the current graph.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <tfoot>
+                <tr>
+                  <th style="width: 1%">Returns</th>
+                  <td>A span of output tensors.</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="a5f95e5fab3ee75b04ea5c425b74f2ef3"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">auto edge::<wbr />qnn::<wbr />Graph::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a5f95e5fab3ee75b04ea5c425b74f2ef3" class="m-doc-self">loadFromSharedLibrary</a>(</span><span class="m-doc-wrap">const std::filesystem::path&amp; modelPath) -&gt; STATUS</span></span>
+            </h3>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">modelPath</td>
+                  <td>The path to the shared library containing the model.</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>Returns</th>
+                  <td>STATUS The status of the operation (SUCCESS or ERROR).</td>
+                </tr>
+              </tfoot>
+            </table>
+<p>Loads a model from a shared library located at the specified path.</p>
+          </div></section>
+          <section class="m-doc-details" id="a506b51d97623bd46f93c87b40a273f3e"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">auto edge::<wbr />qnn::<wbr />Graph::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a506b51d97623bd46f93c87b40a273f3e" class="m-doc-self">createContext</a>(</span><span class="m-doc-wrap">QNN_INTERFACE_VER_TYPE&amp; qnnInterface,
+              Qnn_BackendHandle_t&amp; backendHandle,
+              Qnn_DeviceHandle_t&amp; deviceHandle) -&gt; STATUS</span></span>
+            </h3>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">qnnInterface</td>
+                  <td>The handle of the QNN interface.</td>
+                </tr>
+                <tr>
+                  <td>backendHandle</td>
+                  <td>The handle to the QNN backend.</td>
+                </tr>
+                <tr>
+                  <td>deviceHandle</td>
+                  <td>The handle to the QNN device.</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>Returns</th>
+                  <td>STATUS The status of the operation (SUCCESS or ERROR).</td>
+                </tr>
+              </tfoot>
+            </table>
+<p>Creates a context for the QNN interface with the specified backend and device handles.</p><p><a href="classedge_1_1qnn_1_1Graph.html" class="m-doc">Graph</a> keeps a reference to the qnnInterface</p>
+          </div></section>
+          <section class="m-doc-details" id="a7d5ad4cbba35d3ee82e822a631b40738"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">auto edge::<wbr />qnn::<wbr />Graph::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a7d5ad4cbba35d3ee82e822a631b40738" class="m-doc-self">composeGraphs</a>(</span><span class="m-doc-wrap">Qnn_BackendHandle_t&amp; qnnBackendHandle) -&gt; STATUS</span></span>
+            </h3>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">qnnBackendHandle</td>
+                  <td>The handle to the QNN backend.</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>Returns</th>
+                  <td>STATUS The status of the operation (SUCCESS or ERROR).</td>
+                </tr>
+              </tfoot>
+            </table>
+<p>Composes graphs using the specified QNN backend handle.</p>
+          </div></section>
+          <section class="m-doc-details" id="aa56db98ccb9bb29e040b393a2ffe43b3"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">auto edge::<wbr />qnn::<wbr />Graph::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#aa56db98ccb9bb29e040b393a2ffe43b3" class="m-doc-self">setGraphConfig</a>(</span><span class="m-doc-wrap"><a href="namespaceedge.html#a2a339162b70a461c879db12d3832592d" class="m-doc">DELEGATE</a> delegate,
+              <a href="namespaceedge.html#a35bf76c8f50658546b6dc23d80b9798c" class="m-doc">TensorType</a> precision) -&gt; STATUS</span></span>
+            </h3>
+            <p>Sets the configuration for the composed graphs.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">delegate</td>
+                  <td>The delegate for the operation.</td>
+                </tr>
+                <tr>
+                  <td>precision</td>
+                  <td>The precision of the operation.</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>Returns</th>
+                  <td>The status of the operation.</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="a10ea4f81ecd6b1856aa86433df7e9155"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">auto edge::<wbr />qnn::<wbr />Graph::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a10ea4f81ecd6b1856aa86433df7e9155" class="m-doc-self">finalizeGraphs</a>(</span><span class="m-doc-wrap">) -&gt; STATUS</span></span>
+            </h3>
+            <p>Finalizes the composed graphs.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <tfoot>
+                <tr>
+                  <th style="width: 1%">Returns</th>
+                  <td>The status of the operation.</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="a9d4edcbfc245a3d3d6571b3ecd2fe206"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">auto edge::<wbr />qnn::<wbr />Graph::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a9d4edcbfc245a3d3d6571b3ecd2fe206" class="m-doc-self">loadSystemLibrary</a>(</span><span class="m-doc-wrap">) -&gt; STATUS</span></span>
+            </h3>
+            <table class="m-table m-fullwidth m-flat">
+              <tfoot>
+                <tr>
+                  <th style="width: 1%">Returns</th>
+                  <td>STATUS indicating the success or failure of loading the system library.</td>
+                </tr>
+              </tfoot>
+            </table>
+<p>Loads the system library required for loading a cached context from a binary buffer</p>
+          </div></section>
+          <section class="m-doc-details" id="a5ece3a732e4d4cd6f09e79b5ef0f2829"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">auto edge::<wbr />qnn::<wbr />Graph::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a5ece3a732e4d4cd6f09e79b5ef0f2829" class="m-doc-self">loadContextFromBinary</a>(</span><span class="m-doc-wrap">QNN_INTERFACE_VER_TYPE&amp; qnnInterface,
+              Qnn_BackendHandle_t&amp; backendHandle,
+              Qnn_DeviceHandle_t&amp; deviceHandle,
+              const nonstd::span&lt;uint8_t&gt;&amp; modelBuffer) -&gt; STATUS</span></span>
+            </h3>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">qnnInterface</td>
+                  <td>The handle of the QNN interface.</td>
+                </tr>
+                <tr>
+                  <td>backendHandle</td>
+                  <td>The handle to the QNN backend.</td>
+                </tr>
+                <tr>
+                  <td>deviceHandle</td>
+                  <td>The handle to the QNN device.</td>
+                </tr>
+                <tr>
+                  <td>modelBuffer</td>
+                  <td>The binary model buffer containing the model data.</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>Returns</th>
+                  <td>STATUS indicating the success or failure of loading the context from the binary model buffer.</td>
+                </tr>
+              </tfoot>
+            </table>
+<p>Loads the context from a binary model buffer.</p><p><a href="classedge_1_1qnn_1_1Graph.html" class="m-doc">Graph</a> keeps a reference to the qnnInterface</p>
+          </div></section>
+          <section class="m-doc-details" id="aec946a5b5cb76c447c47dfa227994f55"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">auto edge::<wbr />qnn::<wbr />Graph::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#aec946a5b5cb76c447c47dfa227994f55" class="m-doc-self">saveContextBinary</a>(</span><span class="m-doc-wrap">const std::filesystem::path&amp; binaryPath) -&gt; STATUS</span></span>
+            </h3>
+            <p>Saves the current context to a binary file.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">binaryPath</td>
+                  <td>The path to save the context binary file.</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>Returns</th>
+                  <td>The status of the operation.</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="a7083d5044e6ccd7330a79acca362c606"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">auto edge::<wbr />qnn::<wbr />Graph::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a7083d5044e6ccd7330a79acca362c606" class="m-doc-self">retrieveGraphFromContext</a>(</span><span class="m-doc-wrap">) -&gt; STATUS</span></span>
+            </h3>
+            <p>Retrieves a graph from the current context.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <tfoot>
+                <tr>
+                  <th style="width: 1%">Returns</th>
+                  <td>STATUS - A status code indicating the success or failure of the operation.</td>
+                </tr>
+              </tfoot>
+            </table>
+<p>This function retrieves a graph from the current context and returns a status code indicating the success or failure of the operation.</p>
+          </div></section>
+          <section class="m-doc-details" id="a577a4cb902f18e94bdcd29add3789ede"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">auto edge::<wbr />qnn::<wbr />Graph::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a577a4cb902f18e94bdcd29add3789ede" class="m-doc-self">execute</a>(</span><span class="m-doc-wrap">) -&gt; STATUS</span></span>
+            </h3>
+            <p>Executes the graph.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <tfoot>
+                <tr>
+                  <th style="width: 1%">Returns</th>
+                  <td>STATUS - A status code indicating the success or failure of the operation.</td>
+                </tr>
+              </tfoot>
+            </table>
+<p>This function executes the graph and returns a status code indicating the success or failure of the operation.</p>
+          </div></section>
+        </section>
+      </div>
+    </div>
+  </div>
+</article></main>
+<div class="m-doc-search" id="search">
+  <a href="#!" onclick="return hideSearch()"></a>
+  <div class="m-container">
+    <div class="m-row">
+      <div class="m-col-m-8 m-push-m-2">
+        <div class="m-doc-search-header m-text m-small">
+          <div><span class="m-label m-default">Tab</span> / <span class="m-label m-default">T</span> to search, <span class="m-label m-default">Esc</span> to close</div>
+          <div id="search-symbolcount">&hellip;</div>
+        </div>
+        <div class="m-doc-search-content">
+          <form>
+            <input type="search" name="q" id="search-input" placeholder="Loading &hellip;" disabled="disabled" autofocus="autofocus" autocomplete="off" spellcheck="false" />
+          </form>
+          <noscript class="m-text m-danger m-text-center">Unlike everything else in the docs, the search functionality <em>requires</em> JavaScript.</noscript>
+          <div id="search-help" class="m-text m-dim m-text-center">
+            <p class="m-noindent">Search for symbols, directories, files, pages or
+            modules. You can omit any prefix from the symbol or file path; adding a
+            <code>:</code> or <code>/</code> suffix lists all members of given symbol or
+            directory.</p>
+            <p class="m-noindent">Use <span class="m-label m-dim">&darr;</span>
+            / <span class="m-label m-dim">&uarr;</span> to navigate through the list,
+            <span class="m-label m-dim">Enter</span> to go.
+            <span class="m-label m-dim">Tab</span> autocompletes common prefix, you can
+            copy a link to the result using <span class="m-label m-dim">⌘</span>
+            <span class="m-label m-dim">L</span> while <span class="m-label m-dim">⌘</span>
+            <span class="m-label m-dim">M</span> produces a Markdown link.</p>
+          </div>
+          <div id="search-notfound" class="m-text m-warning m-text-center">Sorry, nothing was found.</div>
+          <ul id="search-results"></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="search-v1.js"></script>
+<script src="searchdata-v1.js" async="async"></script>
+<footer><nav>
+  <div class="m-container">
+    <div class="m-row">
+      <div class="m-col-l-10 m-push-l-1">
+        <p>edgerunner. Created with <a href="https://doxygen.org/">Doxygen</a> 1.9.1 and <a href="https://mcss.mosra.cz/">m.css</a>.</p>
+      </div>
+    </div>
+  </div>
+</nav></footer>
+</body>
+</html>

@@ -79,9 +79,9 @@
             </dt>
             <dd>A class template for managing QNN backend configurations.</dd>
             <dt>
-              class <a href="classedge_1_1qnn_1_1GraphsInfo.html" class="m-doc">GraphsInfo</a>
+              class <a href="classedge_1_1qnn_1_1Graph.html" class="m-doc">Graph</a>
             </dt>
-            <dd><span></span></dd>
+            <dd>Class for managing QNN graphs.</dd>
             <dt>
               class <a href="classedge_1_1qnn_1_1ModelImpl.html" class="m-doc">ModelImpl</a>
             </dt>
@@ -98,23 +98,23 @@
             <dt>
               using <a href="#a3b033b2f41a153b25dc6802e2294d4d5" class="m-doc">GraphErrorT</a> = enum GraphError { GRAPH_NO_ERROR=0, GRAPH_TENSOR_ERROR=1, GRAPH_PARAMS_ERROR=2, GRAPH_NODES_ERROR=3, GRAPH_GRAPH_ERROR=4, GRAPH_CONTEXT_ERROR=5, GRAPH_GENERATION_ERROR=6, GRAPH_SETUP_ERROR=7, GRAPH_INVALID_ARGUMENT_ERROR=8, GRAPH_FILE_ERROR=9, GRAPH_MEMORY_ALLOCATE_ERROR=10, GRAPH_UNKNOWN_ERROR=0x7FFFFFFF }
             </dt>
-            <dd><span></span></dd>
+            <dd>Enum representing possible errors that can occur during graph operations.</dd>
             <dt>
               using <a href="#a1b0701966da6adde86ebd7436baf1e8d" class="m-doc">GraphInfoT</a> = struct GraphInfo { Qnn_GraphHandle_t graph
             </dt>
-            <dd><span></span></dd>
+            <dd>Struct representing information about a graph.</dd>
             <dt>
               using <a href="#ab0c216e0a9fee6408905cbed81fad34b" class="m-doc">GraphConfigInfoT</a> = struct GraphConfigInfo { char*<a href="namespaceedge_1_1qnn.html#a92f77ec2932792bbc8dc3a3a808ffd2a" class="m-doc">graphName</a>
             </dt>
-            <dd><span></span></dd>
+            <dd>Struct representing configuration information for a graph.</dd>
             <dt>
               using <a href="#a8409df1e1cfefbf36eec8ecf83d31694" class="m-doc">ComposeGraphsFnHandleTypeT</a> = <a href="namespaceedge_1_1qnn.html#a3b033b2f41a153b25dc6802e2294d4d5" class="m-doc">GraphErrorT</a>(*)(Qnn_BackendHandle_t, QNN_INTERFACE_VER_TYPE, Qnn_ContextHandle_t, const <a href="namespaceedge_1_1qnn.html#ab0c216e0a9fee6408905cbed81fad34b" class="m-doc">GraphConfigInfoT</a>**, const uint32_t, <a href="namespaceedge_1_1qnn.html#a1b0701966da6adde86ebd7436baf1e8d" class="m-doc">GraphInfoT</a>***, uint32_t*, bool, QnnLog_Callback_t, QnnLog_Level_t)
             </dt>
-            <dd><span></span></dd>
+            <dd>Function pointer type for composing graphs.</dd>
             <dt>
               using <a href="#a4fbe505ba12f6679cfe912003658b2fd" class="m-doc">FreeGraphInfoFnHandleTypeT</a> = <a href="namespaceedge_1_1qnn.html#a3b033b2f41a153b25dc6802e2294d4d5" class="m-doc">GraphErrorT</a>(*)(<a href="namespaceedge_1_1qnn.html#a1b0701966da6adde86ebd7436baf1e8d" class="m-doc">GraphInfoT</a>***, uint32_t)
             </dt>
-            <dd><span></span></dd>
+            <dd>Function pointer type for freeing graph information.</dd>
             <dt>
               using <a href="#abae732455879e74a89f555996c322e29" class="m-doc">TensorVariant</a> = std::variant&lt;std::reference_wrapper&lt;Qnn_TensorV1_t&gt;, std::reference_wrapper&lt;Qnn_TensorV2_t&gt;&gt;
             </dt>
@@ -313,35 +313,35 @@
               using edge::<wbr />qnn::<wbr /><a href="#a3b033b2f41a153b25dc6802e2294d4d5" class="m-doc-self">GraphErrorT</a> = enum GraphError { GRAPH_NO_ERROR=0, GRAPH_TENSOR_ERROR=1, GRAPH_PARAMS_ERROR=2, GRAPH_NODES_ERROR=3, GRAPH_GRAPH_ERROR=4, GRAPH_CONTEXT_ERROR=5, GRAPH_GENERATION_ERROR=6, GRAPH_SETUP_ERROR=7, GRAPH_INVALID_ARGUMENT_ERROR=8, GRAPH_FILE_ERROR=9, GRAPH_MEMORY_ALLOCATE_ERROR=10, GRAPH_UNKNOWN_ERROR=0x7FFFFFFF }
               <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="graph_8hpp.html">&lt;edgerunner/qnn/graph.hpp&gt;</a></div>
             </h3>
-            <p><span></span></p>
+            <p>Enum representing possible errors that can occur during graph operations.</p>
           </div></section>
           <section class="m-doc-details" id="a1b0701966da6adde86ebd7436baf1e8d"><div>
             <h3>
               using edge::<wbr />qnn::<wbr /><a href="#a1b0701966da6adde86ebd7436baf1e8d" class="m-doc-self">GraphInfoT</a> = struct GraphInfo { Qnn_GraphHandle_t graph
               <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="graph_8hpp.html">&lt;edgerunner/qnn/graph.hpp&gt;</a></div>
             </h3>
-            <p><span></span></p>
+            <p>Struct representing information about a graph.</p>
           </div></section>
           <section class="m-doc-details" id="ab0c216e0a9fee6408905cbed81fad34b"><div>
             <h3>
               using edge::<wbr />qnn::<wbr /><a href="#ab0c216e0a9fee6408905cbed81fad34b" class="m-doc-self">GraphConfigInfoT</a> = struct GraphConfigInfo { char*<a href="namespaceedge_1_1qnn.html#a92f77ec2932792bbc8dc3a3a808ffd2a" class="m-doc">graphName</a>
               <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="graph_8hpp.html">&lt;edgerunner/qnn/graph.hpp&gt;</a></div>
             </h3>
-            <p><span></span></p>
+            <p>Struct representing configuration information for a graph.</p>
           </div></section>
           <section class="m-doc-details" id="a8409df1e1cfefbf36eec8ecf83d31694"><div>
             <h3>
               using edge::<wbr />qnn::<wbr /><a href="#a8409df1e1cfefbf36eec8ecf83d31694" class="m-doc-self">ComposeGraphsFnHandleTypeT</a> = <a href="namespaceedge_1_1qnn.html#a3b033b2f41a153b25dc6802e2294d4d5" class="m-doc">GraphErrorT</a>(*)(Qnn_BackendHandle_t, QNN_INTERFACE_VER_TYPE, Qnn_ContextHandle_t, const <a href="namespaceedge_1_1qnn.html#ab0c216e0a9fee6408905cbed81fad34b" class="m-doc">GraphConfigInfoT</a>**, const uint32_t, <a href="namespaceedge_1_1qnn.html#a1b0701966da6adde86ebd7436baf1e8d" class="m-doc">GraphInfoT</a>***, uint32_t*, bool, QnnLog_Callback_t, QnnLog_Level_t)
               <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="graph_8hpp.html">&lt;edgerunner/qnn/graph.hpp&gt;</a></div>
             </h3>
-            <p><span></span></p>
+            <p>Function pointer type for composing graphs.</p>
           </div></section>
           <section class="m-doc-details" id="a4fbe505ba12f6679cfe912003658b2fd"><div>
             <h3>
               using edge::<wbr />qnn::<wbr /><a href="#a4fbe505ba12f6679cfe912003658b2fd" class="m-doc-self">FreeGraphInfoFnHandleTypeT</a> = <a href="namespaceedge_1_1qnn.html#a3b033b2f41a153b25dc6802e2294d4d5" class="m-doc">GraphErrorT</a>(*)(<a href="namespaceedge_1_1qnn.html#a1b0701966da6adde86ebd7436baf1e8d" class="m-doc">GraphInfoT</a>***, uint32_t)
               <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="graph_8hpp.html">&lt;edgerunner/qnn/graph.hpp&gt;</a></div>
             </h3>
-            <p><span></span></p>
+            <p>Function pointer type for freeing graph information.</p>
           </div></section>
           <section class="m-doc-details" id="abae732455879e74a89f555996c322e29"><div>
             <h3>
