@@ -23,9 +23,11 @@ namespace edge {
  * library
  *
  * @param modelPath The file path to the model file
+ * @param delegate The Delegate to use for model inference
+ * @param load Whether to load the model during instantiation
  * @return A unique pointer to the created Model object
  */
-auto EDGERUNNER_EXPORT createModel(const std::filesystem::path& modelPath)
+auto EDGERUNNER_EXPORT createModel(const std::filesystem::path& modelPath, DELEGATE delegate = DELEGATE::DEFAULT, bool load = true)
     -> std::unique_ptr<Model>;
 
 /**
@@ -38,10 +40,16 @@ auto EDGERUNNER_EXPORT createModel(const std::filesystem::path& modelPath)
  * library
  *
  * @param modelBuffer The buffer of the model file
+ * @param framework The framework of the model buffer
+ * @param delegate The Delegate to use for model inference
+ * @param load Whether to load the model during instantiation
  * @return A unique pointer to the created Model object
  */
 auto EDGERUNNER_EXPORT createModel(const nonstd::span<uint8_t>& modelBuffer,
-                                   const std::string& modelExtension = "tflite")
+                                   const std::string& framework = "TFLITE",
+                                   DELEGATE delegate = DELEGATE::DEFAULT,
+                                   bool load = true
+                                   )
     -> std::unique_ptr<Model>;
 
 }  // namespace edge
