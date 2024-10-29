@@ -1,4 +1,5 @@
 from conan import ConanFile
+from conan.tools.apple import is_apple_os
 from conan.tools.cmake import CMakeToolchain, CMake, cmake_layout
 from conan.tools.files import load, copy
 import os
@@ -46,6 +47,13 @@ class EdgerunnerRecipe(ConanFile):
         if self.settings.os == "Windows":
             del self.options.fPIC
 
+        if not self.settings.os == "Android":
+            del self.options.with_tflite
+
+        if is_apple_os(self):
+            del self.options.with_gpu
+            del self.options.with_npu
+
     def set_version(self):
         self.version = load(self, "version.txt")[:-1]
 
@@ -56,23 +64,23 @@ class EdgerunnerRecipe(ConanFile):
     def requirements(self):
         self.requires("fmt/10.2.1")
         self.requires("span-lite/0.11.0", transitive_headers=True)
-        if self.options.with_tflite:
+        if self.options.get_safe("with_tflite"):
             self.requires("tensorflow-lite/2.12.0")
+
+        if self.options.get_safe("with_npu"):
+            self.requires("qnn/2.23.0.24.06.24")
 
         if self.options.examples:
             self.requires("opencv/4.9.0")
 
-        if self.options.with_npu:
-            self.requires("qnn/2.23.0.24.06.24")
-
     def build_requirements(self):
-        self.test_requires("catch2/3.6.0")
+        self.test_requires("catch2/3.7.0")
 
     def configure(self):
-        if self.options.with_tflite:
+        if self.options.get_safe("with_tflite"):
             self.options["tensorflow-lite"].with_gpu = self.options.with_gpu
 
-        if self.options.with_npu:
+        if self.options.get_safe("with_npu"):
             self.options["qnn"].with_tflite = self.options.with_tflite
 
         if self.options.examples:
@@ -94,9 +102,12 @@ class EdgerunnerRecipe(ConanFile):
         toolchain = CMakeToolchain(self)
 
         toolchain.variables["BUILD_EXAMPLES"] = self.options.examples
-        toolchain.variables["edgerunner_ENABLE_GPU"] = self.options.with_gpu
-        toolchain.variables["edgerunner_ENABLE_NPU"] = self.options.with_npu
-        toolchain.variables["edgerunner_ENABLE_TFLITE"] = self.options.with_tflite
+        if self.options.get_safe("with_gpu"):
+            toolchain.variables["edgerunner_ENABLE_GPU"] = True
+        if self.options.get_safe("with_npu"):
+            toolchain.variables["edgerunner_ENABLE_NPU"] = True
+        if self.options.get_safe("with_tflite"):
+            toolchain.variables["edgerunner_ENABLE_TFLITE"] = True
 
         toolchain.generate()
 
@@ -111,21 +122,20 @@ class EdgerunnerRecipe(ConanFile):
 
     def package_info(self):
         self.cpp_info.set_property("cmake_file_name", "edgerunner")
-        self.cpp_info.set_property(
-            "cmake_target_name", "edgerunner::edgerunner")
+        self.cpp_info.set_property("cmake_target_name", "edgerunner::edgerunner")
 
         self.cpp_info.names["cmake_find_package"] = "edgerunner"
         self.cpp_info.names["cmake_find_package_multi"] = "edgerunner"
 
         defines = []
 
-        if self.options.with_gpu:
+        if self.options.get_safe("with_gpu"):
             defines.append("EDGERUNNER_GPU")
 
-        if self.options.with_npu:
+        if self.options.get_safe("with_npu"):
             defines.append("EDGERUNNER_QNN")
 
-        if self.options.with_tflite:
+        if self.options.get_safe("with_tflite"):
             defines.append("EDGERUNNER_TFLITE")
 
         self.cpp_info.defines = defines

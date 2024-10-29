@@ -67,6 +67,10 @@ target_link_libraries(edgerunner_edgerunner PRIVATE fmt::fmt)
 find_package(span-lite REQUIRED)
 target_link_libraries(edgerunner_edgerunner PUBLIC nonstd::span-lite)
 
+if(APPLE)
+    target_compile_definitions(edgerunner_edgerunner PUBLIC EDGERUNNER_APPLE)
+endif()
+
 if(edgerunner_ENABLE_TFLITE)
     find_package(tensorflowlite REQUIRED)
     target_link_libraries(
