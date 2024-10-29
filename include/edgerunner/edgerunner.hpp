@@ -27,7 +27,7 @@ namespace edge {
  * @param load Whether to load the model during instantiation
  * @return A unique pointer to the created Model object
  */
-auto EDGERUNNER_EXPORT createModel(const std::filesystem::path& modelPath, DELEGATE delegate = DELEGATE::DEFAULT, bool load = true)
+auto EDGERUNNER_EXPORT createModel(const std::filesystem::path& modelPath, DELEGATE delegate = DELEGATE::DEFAULT, bool load = false)
     -> std::unique_ptr<Model>;
 
 /**
@@ -48,7 +48,7 @@ auto EDGERUNNER_EXPORT createModel(const std::filesystem::path& modelPath, DELEG
 auto EDGERUNNER_EXPORT createModel(const nonstd::span<uint8_t>& modelBuffer,
                                    const std::string& framework = "TFLITE",
                                    DELEGATE delegate = DELEGATE::DEFAULT,
-                                   bool load = true
+                                   bool load = false
                                    )
     -> std::unique_ptr<Model>;
 

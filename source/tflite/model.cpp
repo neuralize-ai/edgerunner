@@ -122,7 +122,7 @@ auto ModelImpl::detectPrecision() -> TensorType {
     return TensorType::UINT8;
 }
 
-auto ModelImpl::applyDelegate(const DELEGATE& delegate) -> STATUS {
+auto ModelImpl::applyDelegate(const DELEGATE delegate) -> STATUS {
     /* undo any previous delegate */
     if (createInterpreter() != STATUS::SUCCESS) {
         return STATUS::FAIL;

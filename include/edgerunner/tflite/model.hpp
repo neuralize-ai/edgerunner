@@ -73,7 +73,7 @@ class ModelImpl final : public Model {
      * @param delegate The delegate to apply.
      * @return The status of the operation.
      */
-    auto applyDelegate(const DELEGATE& delegate) -> STATUS final;
+    auto applyDelegate(DELEGATE delegate) -> STATUS final;
 
     /**
      * @brief Executes the TensorFlow Lite model.

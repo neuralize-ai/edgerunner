@@ -78,7 +78,7 @@ auto ModelImpl::loadModel(const nonstd::span<uint8_t>& modelBuffer) -> STATUS {
     return loadFromContextBinary(modelBuffer);
 }
 
-auto ModelImpl::applyDelegate(const DELEGATE& delegate) -> STATUS {
+auto ModelImpl::applyDelegate(const DELEGATE delegate) -> STATUS {
     if (delegate != DELEGATE::NPU) {
         return STATUS::FAIL;
     }

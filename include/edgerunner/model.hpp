@@ -163,7 +163,7 @@ class EDGERUNNER_EXPORT Model {
      * @param delegate The delegate to apply
      * @return The status of the operation
      */
-    virtual auto applyDelegate(const DELEGATE& delegate) -> STATUS = 0;
+    virtual auto applyDelegate(DELEGATE delegate) -> STATUS = 0;
 
     /**
      * @brief Execute the model.
@@ -204,7 +204,7 @@ class EDGERUNNER_EXPORT Model {
      *
      * @param delegate The delegate to set
      */
-    void setDelegate(const DELEGATE& delegate) { m_delegate = delegate; }
+    void setDelegate(const DELEGATE delegate) { m_delegate = delegate; }
 
     /**
      * @brief Set the precision for model execution.
