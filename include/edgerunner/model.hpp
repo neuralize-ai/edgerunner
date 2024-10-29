@@ -22,6 +22,7 @@ namespace edge {
  * execution.
  */
 enum class DELEGATE : uint8_t {
+    DEFAULT, /**< Framework-dependent default delegate */
     CPU, /**< CPU delegate */
     GPU, /**< GPU delegate */
     NPU /**< NPU delegate */
@@ -243,7 +244,7 @@ class EDGERUNNER_EXPORT Model {
 
     EDGERUNNER_SUPPRESS_C4251
     DELEGATE m_delegate =
-        DELEGATE::CPU; /**< Delegate used for model execution */
+        DELEGATE::DEFAULT; /**< Delegate used for model execution */
 
     EDGERUNNER_SUPPRESS_C4251
     TensorType m_precision =

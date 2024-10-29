@@ -19,7 +19,7 @@
 
 namespace edge {
 
-auto createModel(const std::filesystem::path& modelPath)
+auto createModel(const std::filesystem::path& modelPath, const DELEGATE delegate, const bool load)
     -> std::unique_ptr<Model> {
     const auto modelExtension = modelPath.extension().string().substr(1);
 
@@ -46,18 +46,20 @@ auto createModel(const std::filesystem::path& modelPath)
 }
 
 auto createModel(const nonstd::span<uint8_t>& modelBuffer,
-                 const std::string& modelExtension) -> std::unique_ptr<Model> {
+                                   const std::string& framework,
+                                   const DELEGATE delegate,
+                                   const bool load) -> std::unique_ptr<Model> {
     std::unique_ptr<Model> model;
 
 #ifdef EDGERUNNER_TFLITE
-    if (modelExtension == "tflite") {
-        model = std::make_unique<tflite::ModelImpl>(modelBuffer);
+    if (framework == "TFLITE") {
+        model = std::make_unique<tflite::ModelImpl>(modelBuffer, delegate);
     }
 #endif
 
 #ifdef EDGERUNNER_QNN
-    if (modelExtension == "so" || modelExtension == "bin") {
-        model = std::make_unique<qnn::ModelImpl>(modelBuffer);
+    if (framework == "QNN") {
+        model = std::make_unique<qnn::ModelImpl>(modelBuffer, delegate);
     }
 #endif
 
