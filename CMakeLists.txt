@@ -68,7 +68,23 @@ find_package(span-lite REQUIRED)
 target_link_libraries(edgerunner_edgerunner PUBLIC nonstd::span-lite)
 
 if(APPLE)
-    target_compile_definitions(edgerunner_edgerunner PUBLIC EDGERUNNER_APPLE)
+    enable_language(OBJCXX)
+
+    find_library(COREML_FRAMEWORK CoreML REQUIRED)
+    target_link_libraries(coreml PRIVATE
+        "-framework Foundation"
+        "-framework CoreML"
+        "-framework Vision"
+        "-framework CoreVideo"
+    )
+
+    target_sources(
+        edgerunner_edgerunner PRIVATE source/tflite/model.mm
+    )
+
+    target_compile_options(edgerunner_edgerunner PRIVATE -x objective-c++)
+
+    target_compile_definitions(edgerunner_edgerunner PUBLIC EDGERUNNER_COREML)
 endif()
 
 if(edgerunner_ENABLE_TFLITE)

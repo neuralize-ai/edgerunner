@@ -9,6 +9,10 @@
 
 #include "edgerunner/model.hpp"
 
+#ifdef EDGERUNNER_COREML
+#    include "edgerunner/coreml/model.hpp"
+#endif
+
 #ifdef EDGERUNNER_TFLITE
 #    include "edgerunner/tflite/model.hpp"
 #endif
@@ -24,6 +28,12 @@ auto createModel(const std::filesystem::path& modelPath, const DELEGATE delegate
     const auto modelExtension = modelPath.extension().string().substr(1);
 
     std::unique_ptr<Model> model;
+
+#ifdef EDGERUNNER_COREML
+    if (modelExtension == "mlpackage" || modelExtension == "mlmodel" || modelExtension == "mlmodelc") {
+        model = std::make_unique<coreml::ModelImpl>(modelPath);
+    }
+#endif
 
 #ifdef EDGERUNNER_TFLITE
     if (modelExtension == "tflite") {

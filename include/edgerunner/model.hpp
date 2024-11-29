@@ -74,6 +74,16 @@ class EDGERUNNER_EXPORT Model {
      * This function is a pure virtual function that must be implemented by any
      * derived classes. It is used to load a model from a file path.
      *
+     * @return STATUS The status of the model loading operation
+     */
+    virtual auto loadModel() -> STATUS = 0;
+
+    /**
+     * @brief Pure virtual function to load a model from a file path.
+     *
+     * This function is a pure virtual function that must be implemented by any
+     * derived classes. It is used to load a model from a file path.
+     *
      * @param modelPath The path to the model file
      * @return STATUS The status of the model loading operation
      */
